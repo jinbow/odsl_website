@@ -1,0 +1,554 @@
+/* Reset and General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    line-height: 1.6;
+    background-color: #f9fcff;
+    color: #333;
+}
+
+/* Header and Navigation */
+header {
+    position: sticky;
+    top: 0;
+    background-color: #ffffff;
+    padding: 1rem;
+    z-index: 1000;
+    box-shadow: 0 4px 2px rgba(163, 182, 188, 0.5);
+    height: 80px;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.logo img {
+    height: 50px;
+    padding: 0; /* Prevent padding on logo */
+    margin: 0; /* Prevent margin on logo */
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+}
+
+nav ul li {
+    margin-left: 2rem;
+}
+
+nav ul li a {
+    color: #000000;
+    text-decoration: none;
+    font-family: 'Montserrat', sans-serif;
+}
+
+nav ul li a:hover {
+    color: #33CC99;
+}
+
+/* Hero Section */
+.hero {
+    height: 80vh;
+    background: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url('../assets/intro.jpg') center/cover no-repeat;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #ffffff;
+}
+
+.hero h1 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 3rem;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    margin-top: 1rem;
+}
+
+/* Content Sections */
+.intro, .content {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    text-align: center;
+}
+
+.featured {
+    max-width: 1200px;
+    margin: 2rem auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    padding: 0 1rem;
+}
+
+.card {
+    background: #fff;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+/* Gallery */
+.gallery {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.gallery-item p {
+    text-align: center;
+    margin-top: 0.5rem;
+}
+
+/* Footer */
+footer {
+    background: #003366;
+    color: #fff;
+    text-align: center;
+    padding: 1rem;
+    margin-top: 2rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    nav ul {
+        flex-direction: column;
+        text-align: center;
+    }
+    nav ul li {
+        margin: 0.5rem 0;
+    }
+    .hero h1 {
+        font-size: 2rem;
+    }
+}
+
+/* Research Section */
+.research {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    text-align: center;
+}
+
+.research h1 {
+    font-family: 'Montserrat', sans-serif;
+    color: #003366;
+    margin-bottom: 1rem;
+}
+
+.research p {
+    margin-bottom: 2rem;
+}
+
+.research-directions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.direction {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.direction h2 {
+    font-family: 'Montserrat', sans-serif;
+    color: #003366;
+    margin-bottom: 1rem;
+}
+
+.direction p {
+    margin-bottom: 1.5rem;
+}
+
+.project {
+    margin-bottom: 1.5rem;
+}
+
+.project h3 {
+    color: #3399CC;
+    margin-bottom: 0.5rem;
+}
+
+.project p {
+    margin-bottom: 0.5rem;
+}
+
+.publications {
+    list-style: none;
+    margin-left: 1rem;
+}
+
+.publications li {
+    margin-bottom: 0.5rem;
+    text-align: left;
+}
+
+.publications a {
+    color: #000000;
+    text-decoration: none;
+}
+
+.publications a:hover {
+    text-decoration: underline;
+    color: #3399CC;
+}
+
+/* Responsive Design for Research */
+@media (max-width: 768px) {
+    .research-directions {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Direction Header with Icon */
+.direction-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.direction-icon {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+}
+
+/* Adjust h2 margin in direction to align with icon */
+.direction h2 {
+    font-family: 'Montserrat', sans-serif;
+    color: #003366;
+    margin: 0; /* Remove default margin to align with icon */
+}
+
+/* Publications Section */
+.publications {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    text-align: center;
+}
+
+.publications h1 {
+    font-family: 'Montserrat', sans-serif;
+    color: #003366;
+    margin-bottom: 1rem;
+}
+
+.publications p {
+    margin-bottom: 2rem;
+}
+
+.sort-controls {
+    margin-bottom: 2rem;
+}
+
+.sort-controls label {
+    font-weight: bold;
+    margin-right: 0.5rem;
+}
+
+.sort-controls select {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: 'Open Sans', sans-serif;
+    background: #fff;
+    cursor: pointer;
+}
+
+.publication-list {
+    list-style: none;
+    text-align: left;
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.publication-list li {
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.publication-list li:last-child {
+    border-bottom: none;
+}
+
+.publication-list strong {
+    color: #3399CC;
+}
+
+.publication-list .topic {
+    color: #33CC99;
+    font-style: italic;
+}
+
+/* Data & Tools Section */
+.data-tools {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    text-align: center;
+}
+
+.data-tools h1 {
+    font-family: 'Montserrat', sans-serif;
+    color: #003366;
+    margin-bottom: 1rem;
+}
+
+.data-tools p {
+    margin-bottom: 2rem;
+}
+
+.data-tools-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 columns */
+    grid-template-rows: repeat(2, auto); /* 2 rows */
+    gap: 2rem;
+}
+
+.tool {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.tool h2 {
+    font-family: 'Montserrat', sans-serif;
+    color: #003366;
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+}
+
+.tool p {
+    margin-bottom: 1rem;
+}
+
+.github-embed {
+    margin-top: 1rem;
+}
+
+.github-embed iframe {
+    border-radius: 4px;
+}
+
+/* Responsive Design for Data & Tools */
+@media (max-width: 1024px) {
+    .data-tools-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns on medium screens */
+        grid-template-rows: repeat(4, auto); /* 4 rows */
+    }
+}
+
+@media (max-width: 768px) {
+    .data-tools-grid {
+        grid-template-columns: 1fr; /* 1 column on small screens */
+        grid-template-rows: repeat(8, auto); /* 8 rows */
+    }
+}
+
+/*latest updates*/
+.latest {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: left;
+}
+
+.latest h2 {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+}
+
+.latest-news-list li {
+    display: flex; /* Use flexbox to align text and image */
+    align-items: flex-start; /* Align items at the top */
+    margin-bottom: 20px;
+    gap: 20px; /* Space between text and image */
+}
+
+.latest-news-list li .content {
+    flex: 1; /* Text content takes remaining space */
+}
+
+.latest-news-list li img {
+    width: 100px; /* Adjust size as needed */
+    height: auto;
+    margin-left: 20px; /* Space between text and image */
+}
+/* News Section */
+.news {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    text-align: center;
+}
+
+.news h1 {
+    font-family: 'Montserrat', sans-serif;
+    color: #003366;
+    margin-bottom: 1rem;
+}
+
+.news p {
+    margin-bottom: 2rem;
+}
+
+.news-list {
+    list-style: none;
+    text-align: left;
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.news-list li {
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.news-list li:last-child {
+    border-bottom: none;
+}
+
+.news-list strong {
+    color: #3399CC;
+}
+
+.news-list .category {
+    color: #33CC99;
+    font-style: italic;
+}
+
+/* X Updates Section */
+.x-updates {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    text-align: center;
+}
+
+.x-updates h2 {
+    font-family: 'Montserrat', sans-serif;
+    color: #003366;
+    margin-bottom: 1rem;
+}
+
+.x-updates p {
+    margin-bottom: 1rem;
+}
+
+.x-embed {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .x-embed {
+        max-width: 100%;
+    }
+}
+
+/* Team Section */
+.team-section {
+    margin-top: 2rem;
+}
+
+.team-section h3 {
+    font-family: 'Montserrat', sans-serif;
+    color: #003366;
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+}
+
+.member {
+    background: #fff;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.member img {
+    width: 100%;
+    max-width: 150px;
+    height: auto;
+    border-radius: 50%; /* Circular photos */
+    margin-bottom: 0.5rem;
+}
+
+.member a {
+    color: #3399CC;
+    text-decoration: none;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.1rem;
+}
+
+.member a:hover {
+    color: #33CC99;
+    text-decoration: underline;
+}
+
+/* Responsive Design for Team */
+@media (max-width: 768px) {
+    .team-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+}
