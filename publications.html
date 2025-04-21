@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Publications - Ocean Dynamics from Space</title>
+    <!-- Import Open Sans and Montserrat fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -12,7 +14,12 @@
             <div class="logo">
                 <img src="assets/logo.png" alt="Ocean Dynamics Logo">
             </div>
-            <ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-menu">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="about.html">Team</a></li>
                 <li><a href="research.html">Research</a></li>
@@ -26,12 +33,11 @@
 
     <section class="publications">
         <h1>Publications</h1>
-        ||<a href="https://scholar.google.com/citations?hl=en&user=97cDSCsAAAAJ" class="google-scholar">Google Scholar Profile</a> || 
-        <a href="https://www.researchgate.net/profile/Jinbo-Wang-2" class="research-gate">ResearchGate Profile</a> ||
-        <br>
-        <br>
+        <p>
+            <a href="https://scholar.google.com/citations?hl=en&user=97cDSCsAAAAJ" class="google-scholar" target="_blank" rel="noopener noreferrer">Google Scholar Profile</a> | 
+            <a href="https://www.researchgate.net/profile/Jinbo-Wang-2" class="research-gate" target="_blank" rel="noopener noreferrer">ResearchGate Profile</a>
+        </p>
         <div class="sort-controls">
-
             <div class="filter-control">
                 <label for="filter-by-tag">Filter by Tag:</label>
                 <select id="filter-by-tag" onchange="updatePublications()">
@@ -50,344 +56,342 @@
                     <option value="Machine Learning">Machine Learning</option>
                     <option value="SWOT">SWOT</option>
                 </select>
-
                 <label for="sort-by">Sort by:</label>
                 <select id="sort-by" onchange="updatePublications()">
                     <option value="year-desc">Year (Newest First)</option>
                     <option value="year-asc">Year (Oldest First)</option>
                     <option value="tags">Tags</option>
                 </select>
-
             </div>
-
         </div>
 
-        <ul id="publication-list" class="publication-list">
-            <!-- Publications will be populated by JavaScript -->
-        </ul>
+        <ul id="publication-list" class="publication-list"></ul>
     </section>
 
     <footer>
-        <p>© 2025 Ocean Dynamics from Space. All rights reserved.</p>
+        <p>© 2025 Ocean Dynamics from Space Lab. All rights reserved.</p>
         <div class="social-links">
-            <a href="https://twitter.com/yourXhandle" target="_blank" rel="noopener noreferrer" class="social-icon">
+            <a href="https://x.com/jinbowang" target="_blank" rel="noopener noreferrer" class="social-icon">
                 <img src="https://img.icons8.com/ios-filled/30/ffffff/twitterx.png" alt="X">
             </a>
-            <a href="https://linkedin.com/company/your-linkedin" target="_blank" rel="noopener noreferrer" class="social-icon">
+            <a href="https://www.linkedin.com/in/jinbo-wang-b5138521/" target="_blank" rel="noopener noreferrer" class="social-icon">
                 <img src="https://img.icons8.com/ios-filled/30/ffffff/linkedin.png" alt="LinkedIn">
             </a>
         </div>
     </footer>
 
+    <script src="js/script.js"></script>
     <script>
         // Publication data with multiple tags
         const publications = [
-        {
-            title: "Wide-swath satellite altimetry unveils global submesoscale ocean dynamics",
-            year: 2025,
-            tags: ["SWOT", "Submesoscale"],
-            authors: "Matthew Archer, Jinbo Wang, Patrice Klein, Gerald Dibarboure & Lee-Lueng Fu ",
-            journal: "Nature, 640, 691–696"
-        },
-        {
-            title: "A new mechanism for the generation of quasi-zonal jets in the ocean",
-            year: 2012,
-            tags: ["Ocean Currents", "GFD", "Satellite Altimetry"],
-            authors: "Wang J.*, Spall M.A., Flierl G.R., Malanotte-Rizzoli P.",
-            journal: "Geophysical Research Letters, Vol. 39, No. 10, doi:L10601"
-        },
-        {
-            title: "Instabilities of an eastern boundary current with and without large-scale flow influence",
-            year: 2011,
-            tags: ["Ocean Currents", "GFD"],
-            authors: "Wang J.",
-            journal: "Massachusetts Institute of Technology (PhD Thesis)"
-        },
-        {
-            title: "Nonlinear radiating instability of a barotropic eastern boundary current",
-            year: 2013,
-            tags: ["Ocean Currents", "GFD"],
-            authors: "Wang J., Spall M.A., Flierl G.R., Malanotte-Rizzoli P.",
-            journal: "Journal of Physical Oceanography, Vol. 43, No. 7, pp. 1439-1452"
-        },
-        {
-            title: "Reconstructing the ocean's interior from surface data",
-            year: 2013,
-            tags: ["Data Assimilation", "Satellite Altimetry"],
-            authors: "Wang J., Flierl G.R., LaCasce J.H., McClean J.L., Mahadevan A.",
-            journal: "Journal of Physical Oceanography, Vol. 43, No. 8, pp. 1611-1626"
-        },
-        {
-            title: "Pathways of the Agulhas waters poleward of 29 S",
-            year: 2014,
-            tags: ["Southern Ocean"],
-            authors: "Wang J., Mazloff M.R., Gille S.T.",
-            journal: "Journal of Geophysical Research: Oceans, Vol. 119, No. 7, pp. 4234-4250"
-        },
-        {
-            title: "Retrieving density and velocity fields of the ocean's interior from surface data",
-            year: 2014,
-            tags: ["Reconstruction"],
-            authors: "Liu L., Peng S., Wang J., Huang R.X.",
-            journal: "Journal of Geophysical Research: Oceans, Vol. 119, No. 12, pp. 8512-8529"
-        },
-        {
-            title: "Statistic analysis of tropical cyclone impact on the China mainland during the last half century",
-            year: 2005,
-            tags: ["Climate"],
-            authors: "Wang J., Qian W.",
-            journal: "Chinese Journal of Geophysics, Vol. 48, No. 5, pp. 1069-1077"
-        },
-        {
-            title: "Estimating subsurface velocities from surface fields with idealized stratification",
-            year: 2015,
-            tags: ["Reconstruction","Satellite Altimetry"],
-            authors: "LaCasce J.H., Wang J.",
-            journal: "Journal of Physical Oceanography, Vol. 45, No. 9, pp. 2424-2435"
-        },
-        {
-            title: "The Effect of the Kerguelen Plateau on the Ocean Circulation",
-            year: 2016,
-            tags: ["Southern Ocean", "Climate"],
-            authors: "Wang J., Mazloff M.R., Gille S.T.",
-            journal: "Journal of Physical Oceanography, Vol. 46, No. 11, pp. 3385-3396"
-        },
-        {
-            title: "Pathways of upwelling deep waters to the surface of the Southern Ocean",
-            year: 2017,
-            tags: ["Southern Ocean", "Ocean Currents"],
-            authors: "Tamsitt V., Drake H., Morrison A., Talley L., Dufour C., Gray A., Griffies S., Mazloff M., Sarmiento J., Wang J.",
-            journal: "EGU General Assembly Conference Abstracts, pp. 10971"
-        },
-        {
-            title: "Relationship between the tropical cyclone genesis over the Northwest Pacific and the sea surface temperature anomalies",
-            year: 2007,
-            tags: ["Climate"],
-            authors: "Wang J., Qian W., Zhang X.",
-            journal: "Progress in Natural Science, Vol. 17, No. 10"
-        },
-        {
-            title: "An observing system simulation experiment for the calibration and validation of the surface water ocean topography sea surface height measurement using in situ platforms",
-            year: 2018,
-            tags: ["SWOT","Mission Development"],
-            authors: "Wang J., Fu L., Qiu B., Menemenlis D., Farrar J.T., Chao Y., Thompson A.F., Flexas M.M.",
-            journal: "Journal of Atmospheric and Oceanic Technology, Vol. 35, No. 2, pp. 281-297"
-        },
-        {
-            title: "Seasonality in transition scale from balanced to unbalanced motions in the world ocean",
-            year: 2018,
-            tags: ["Ocean Dynamics", "SWOT"],
-            authors: "Qiu B., Chen S., Klein P., Wang J., Torres H., Fu L., Menemenlis D.",
-            journal: "Journal of Physical Oceanography, Vol. 48, No. 3, pp. 591-605"
-        },
-        {
-            title: "Ocean submesoscales as a key component of the global heat budget",
-            year: 2018,
-            tags: ["Heat Flux", "Submesoscale"],
-            authors: "Su Z., Wang J., Klein P., Thompson A.F., Menemenlis D.",
-            journal: "Nature Communications, Vol. 9, No. 1, pp. 775, doi:775"
-        },
-        {
-            title: "Partitioning ocean motions into balanced motions and internal gravity waves: A modeling study in anticipation of future space missions",
-            year: 2018,
-            tags: ["Ocean Dynamics",'SWOT'],
-            authors: "Torres H.S., Klein P., Menemenlis D., Qiu B., Su Z., Wang J., Chen S., Fu L.",
-            journal: "Journal of Geophysical Research: Oceans, Vol. 123, No. 11, pp. 8084-8105"
-        },
-        {
-            title: "On the spatial scales to be resolved by the surface water and ocean topography Ka-band radar interferometer",
-            year: 2019,
-            tags: ["SWOT", "Satellite Technology"],
-            authors: "Wang J., Fu L., Torres H.S., Chen S., Qiu B., Menemenlis D.",
-            journal: "Journal of Atmospheric and Oceanic Technology, Vol. 36, No. 1, pp. 87-99"
-        },
-        {
-            title: "Spiraling pathways of global deep waters to the surface of the Southern Ocean",
-            year: 2017,
-            tags: ["Southern Ocean", "Ocean Currents"],
-            authors: "Tamsitt V., Drake H.F., Morrison A.K., Talley L.D., Dufour C.O., Gray A.R., Griffies S.M., Mazloff M.R., Sarmiento J.L., Wang J.",
-            journal: "Nature Communications, Vol. 8, No. 1, pp. 172, doi:172"
-        },
-        {
-            title: "Lagrangian ocean analysis: Fundamentals and practices",
-            year: 2018,
-            tags: ["Ocean Dynamics"],
-            authors: "Van Sebille E., Griffies S.M., Abernathey R., Adams T.P., Berloff P., Biastoch A., Blanke B., Chassignet E.P., Cheng Y., Cotter C.J.",
-            journal: "Ocean Modelling, Vol. 121, pp. 49-75"
-        },
-        {
-            title: "Global observations of fine-scale ocean surface topography with the surface water and ocean topography (SWOT) mission",
-            year: 2019,
-            tags: ["Satellite Altimetry",'SWOT'],
-            authors: "Morrow R., Fu L., Ardhuin F., Benkiran M., Chapron B., Cosme E., d’Ovidio F., Farrar J.T., Gille S.T., Lapeyre G.",
-            journal: "Frontiers in Marine Science, Vol. 6, pp. 232, doi:232"
-        },
-        {
-            title: "Frontiers in fine-scale in situ studies: Opportunities during the SWOT fast sampling phase",
-            year: 2019,
-            tags: ["Satellite Altimetry",'SWOT'],
-            authors: "d’Ovidio F., Pascual A., Wang J., Doglioli A.M., Jing Z., Moreau S., Grégori G., Swart S., Speich S., Cyr F.",
-            journal: "Frontiers in Marine Science, Vol. 6, pp. 168, doi:168"
-        },
-        {
-            title: "On the long-wavelength validation of the SWOT KaRIn measurement",
-            year: 2019,
-            tags: ["Satellite Altimetry",'SWOT'],
-            authors: "Wang J., Fu L.",
-            journal: "Journal of Atmospheric and Oceanic Technology, Vol. 36, No. 5, pp. 843-848"
-        },
-        {
-            title: "Decomposition of the multimodal multidirectional M 2 internal tide field",
-            year: 2019,
-            tags: ["Internal Waves","Satellite Altimetry"],
-            authors: "Zhao Z., Wang J., Menemenlis D., Fu L., Chen S., Qiu B.",
-            journal: "Journal of Atmospheric and Oceanic Technology, Vol. 36, No. 6, pp. 1157-1173"
-        },
-        {
-            title: "An observing system simulation experiment for ocean state estimation to assess the performance of the SWOT mission: Part 1—A twin experiment",
-            year: 2019,
-            tags: ["SWOT","Mission Development"],
-            authors: "Li Z., Wang J., Fu L.",
-            journal: "Journal of Geophysical Research: Oceans, Vol. 124, No. 7, pp. 4838-4855"
-        },
-        {
-            title: "The importance of remote forcing for regional modeling of internal waves",
-            year: 2020,
-            tags: ["Internal Waves", "Ocean Dynamics"],
-            authors: "Mazloff M.R., Cornuelle B., Gille S.T., Wang J.",
-            journal: "Journal of Geophysical Research: Oceans, Vol. 125, No. 2, doi:e2019JC015623"
-        },
-        {
-            title: "Reconstructing upper-ocean vertical velocity field from sea surface height in the presence of unbalanced motion",
-            year: 2020,
-            tags: ["Reconstruction", "Ocean Dynamics"],
-            authors: "Qiu B., Chen S., Klein P., Torres H., Wang J., Fu L., Menemenlis D.",
-            journal: "Journal of Physical Oceanography, Vol. 50, No. 1, pp. 55-79"
-        },
-        {
-            title: "High‐frequency submesoscale motions enhance the upward vertical heat transport in the global ocean",
-            year: 2020,
-            tags: ["Ocean Dynamics","Heat Flux"],
-            authors: "Su Z., Torres H., Klein P., Thompson A.F., Siegelman L., Wang J., Menemenlis D., Hill C.",
-            journal: "Journal of Geophysical Research: Oceans, Vol. 125, No. 9, doi:e2020JC016544"
-        },
-        {
-            title: "Reconstructing fine‐scale ocean variability via data assimilation of the SWOT pre‐launch in situ observing system",
-            year: 2022,
-            tags: ["Satellite Altimetry", "Reconstruction"],
-            authors: "Archer M.R., Li Z., Wang J., Fu L.",
-            journal: "Journal of Geophysical Research: Oceans, Vol. 127, No. 2, doi:e2021JC017362"
-        },
-        {
-            title: "Formulation and demonstration of an extended-3DVAR multi-scale data assimilation system for the SWOT altimetry era",
-            year: 2021,
-            tags: ["Satellite Altimetry", "Data Assimilation","SWOT"],
-            authors: "Li Z., Archer M., Wang J., Fu L.",
-            journal: "Ocean Science Discussions, pp. 1-26"
-        },
-        {
-            title: "On the development of SWOT in situ calibration/validation for short-wavelength ocean topography",
-            year: 2022,
-            tags: ["SWOT","Mission Development"],
-            authors: "Wang J., Fu L., Haines B., Lankhorst M., Lucas A.J., Farrar J.T., Send U., Meinig C., Schofield O., Ray R.",
-            journal: "Journal of Atmospheric and Oceanic Technology, Vol. 39, No. 5, pp. 595-617"
-        },
-        {
-            title: "A review of earth artificial intelligence",
-            year: 2022,
-            tags: ["Machine Learning"],
-            authors: "Sun Z., Sandoval L., Crystal-Ornelas R., Mousavi S.M., Wang J., Lin C., Cristea N., Tong D., Carande W.H., Ma X.",
-            journal: "Computers & Geosciences, Vol. 159, pp. 105034, doi:105034"
-        },
-        {
-            title: "Separating energetic internal gravity waves and small‐scale frontal dynamics",
-            year: 2022,
-            tags: ["Internal Waves", "Ocean Dynamics","Submesoscale"],
-            authors: "Torres H.S., Klein P., D’Asaro E., Wang J., Thompson A.F., Siegelman L., Menemenlis D., Rodriguez E., Wineteer A., Perkovic‐Martin D.",
-            journal: "Geophysical Research Letters, Vol. 49, No. 6, doi:e2021GL096249"
-        },
-        {
-            title: "Wind work at the air-sea interface: A Modeling Study in Anticipation of Future Space Missions",
-            year: 2022,
-            tags: ["Mission Development", "Air-Sea Interaction"],
-            authors: "Torres H.S., Klein P., Wang J., Wineteer A., Qiu B., Thompson A.F., Rodriguez E., Menemenlis D., Molod A., Hill C.N., Strobach E., Zhang H., Flexas M., Perkovic-Martin D.",
-            journal: "EGUsphere, pp. 1-26"
-        },
-        {
-            title: "Increasing the observability of near inertial oscillations by a future ODYSEA satellite mission",
-            year: 2023,
-            tags: ["Mission Development"],
-            authors: "Wang J., Torres H., Klein P., Wineteer A., Zhang H., Menemenlis D., Ubelmann C., Rodriguez E.",
-            journal: "Remote Sensing, Vol. 15, No. 18, pp. 4526, doi:4526"
-        },
-        {
-            title: "MAESSTRO: Masked Autoencoders for Sea Surface Temperature Reconstruction under Occlusion",
-            year: 2023,
-            tags: ["Sea Surface Temperature", "Machine Learning"],
-            authors: "Goh E., Yepremyan A.R., Wang J., Wilson B.",
-            journal: "EGUsphere, pp. 1-20"
-        },
-        {
-            title: "Observed equatorward propagation and chimney effect of near‐inertial waves in the midlatitude ocean",
-            year: 2022,
-            tags: ["Waves","GFD"],
-            authors: "Yu X., Naveira Garabato A.C., Vic C., Gula J., Savage A.C., Wang J., Waterhouse A.F., MacKinnon J.A.",
-            journal: "Geophysical Research Letters, Vol. 49, No. 13, doi:e2022GL098522"
-        },
-        {
-            title: "CNN based ocean eddy detection using cloud services",
-            year: 2023,
-            tags: ["Machine Learning","Submesoscale"],
-            authors: "Mostafa S.A.M., Wang J., Holt B., Purushotham S., Wang J.",
-            journal: "IGARSS 2023-2023 IEEE International Geoscience and Remote Sensing Symposium, pp. 4052-4055"
-        },
-        {
-            title: "Anticipated capabilities of the ODYSEA wind and current mission concept to estimate wind work at the air–sea interface",
-            year: 2023,
-            tags: ["Mission Development", "Air-Sea Interaction"],
-            authors: "Torres H., Wineteer A., Klein P., Lee T., Wang J., Rodriguez E., Menemenlis D., Zhang H.",
-            journal: "Remote Sensing, Vol. 15, No. 13, pp. 3337, doi:3337"
-        },
-        {
-            title: "Observational constraints on the submesoscale sea surface height variance of balanced motion",
-            year: 2023,
-            tags: ["Ocean Dynamics", "Satellite Altimetry","In-situ"],
-            authors: "de Marez C., Callies J., Haines B., Rodriguez-Chavez D., Wang J.",
-            journal: "Journal of Physical Oceanography, Vol. 53, No. 5, pp. 1221-1235"
-        },
-        {
-            title: "Accuracy and resolution of SWOT altimetry: Foundation seamounts",
-            year: 2024,
-            tags: ["Satellite Altimetry","SWOT"],
-            authors: "Yu Y., Sandwell D.T., Dibarboure G., Chen C., Wang J.",
-            journal: "Earth and Space Science, Vol. 11, No. 6, doi:e2024EA003581"
-        },
-        {
-            title: "Seasonal and fortnight variations in internal solitary waves in the Indonesian seas from the SWOT measurements",
-            year: 2024,
-            tags: ["Internal Waves", "Satellite Altimetry","SWOT"],
-            authors: "Qiu B., Chen S., Wang J., Fu L.",
-            journal: "Journal of Geophysical Research: Oceans, Vol. 129, No. 7, doi:e2024feriorJC021086"
-        },
-        {
-            title: "A breakthrough of radar remote sensing of the ocean: the Surface Water and Ocean Topography (SWOT) Mission",
-            year: 2024,
-            tags: ["Satellite Altimetry","SWOT"],
-            authors: "Fu L., Morrow R., Farrar J.T., Wang J.",
-            journal: "EGU General Assembly Conference Abstracts, pp. 12599"
-        }
+            {
+                title: "Wide-swath satellite altimetry unveils global submesoscale ocean dynamics",
+                year: 2025,
+                tags: ["SWOT", "Submesoscale"],
+                authors: "Matthew Archer, Jinbo Wang, Patrice Klein, Gerald Dibarboure & Lee-Lueng Fu",
+                journal: "Nature, 640, 691–696"
+            },
+            {
+                title: "A new mechanism for the generation of quasi-zonal jets in the ocean",
+                year: 2012,
+                tags: ["Ocean Currents", "GFD", "Satellite Altimetry"],
+                authors: "Wang J.*, Spall M.A., Flierl G.R., Malanotte-Rizzoli P.",
+                journal: "Geophysical Research Letters, Vol. 39, No. 10, doi:L10601"
+            },
+            {
+                title: "Instabilities of an eastern boundary current with and without large-scale flow influence",
+                year: 2011,
+                tags: ["Ocean Currents", "GFD"],
+                authors: "Wang J.",
+                journal: "Massachusetts Institute of Technology (PhD Thesis)"
+            },
+            {
+                title: "Nonlinear radiating instability of a barotropic eastern boundary current",
+                year: 2013,
+                tags: ["Ocean Currents", "GFD"],
+                authors: "Wang J., Spall M.A., Flierl G.R., Malanotte-Rizzoli P.",
+                journal: "Journal of Physical Oceanography, Vol. 43, No. 7, pp. 1439-1452"
+            },
+            {
+                title: "Reconstructing the ocean's interior from surface data",
+                year: 2013,
+                tags: ["Data Assimilation", "Satellite Altimetry"],
+                authors: "Wang J., Flierl G.R., LaCasce J.H., McClean J.L., Mahadevan A.",
+                journal: "Journal of Physical Oceanography, Vol. 43, No. 8, pp. 1611-1626"
+            },
+            {
+                title: "Pathways of the Agulhas waters poleward of 29 S",
+                year: 2014,
+                tags: ["Southern Ocean"],
+                authors: "Wang J., Mazloff M.R., Gille S.T.",
+                journal: "Journal of Geophysical Research: Oceans, Vol. 119, No. 7, pp. 4234-4250"
+            },
+            {
+                title: "Retrieving density and velocity fields of the ocean's interior from surface data",
+                year: 2014,
+                tags: ["Reconstruction"],
+                authors: "Liu L., Peng S., Wang J., Huang R.X.",
+                journal: "Journal of Geophysical Research: Oceans, Vol. 119, No. 12, pp. 8512-8529"
+            },
+            {
+                title: "Statistic analysis of tropical cyclone impact on the China mainland during the last half century",
+                year: 2005,
+                tags: ["Climate"],
+                authors: "Wang J., Qian W.",
+                journal: "Chinese Journal of Geophysics, Vol. 48, No. 5, pp. 1069-1077"
+            },
+            {
+                title: "Estimating subsurface velocities from surface fields with idealized stratification",
+                year: 2015,
+                tags: ["Reconstruction", "Satellite Altimetry"],
+                authors: "LaCasce J.H., Wang J.",
+                journal: "Journal of Physical Oceanography, Vol. 45, No. 9, pp. 2424-2435"
+            },
+            {
+                title: "The Effect of the Kerguelen Plateau on the Ocean Circulation",
+                year: 2016,
+                tags: ["Southern Ocean", "Climate"],
+                authors: "Wang J., Mazloff M.R., Gille S.T.",
+                journal: "Journal of Physical Oceanography, Vol. 46, No. 11, pp. 3385-3396"
+            },
+            {
+                title: "Pathways of upwelling deep waters to the surface of the Southern Ocean",
+                year: 2017,
+                tags: ["Southern Ocean", "Ocean Currents"],
+                authors: "Tamsitt V., Drake H., Morrison A., Talley L., Dufour C., Gray A., Griffies S., Mazloff M., Sarmiento J., Wang J.",
+                journal: "EGU General Assembly Conference Abstracts, pp. 10971"
+            },
+            {
+                title: "Relationship between the tropical cyclone genesis over the Northwest Pacific and the sea surface temperature anomalies",
+                year: 2007,
+                tags: ["Climate"],
+                authors: "Wang J., Qian W., Zhang X.",
+                journal: "Progress in Natural Science, Vol. 17, No. 10"
+            },
+            {
+                title: "An observing system simulation experiment for the calibration and validation of the surface water ocean topography sea surface height measurement using in situ platforms",
+                year: 2018,
+                tags: ["SWOT", "Mission Development"],
+                authors: "Wang J., Fu L., Qiu B., Menemenlis D., Farrar J.T., Chao Y., Thompson A.F., Flexas M.M.",
+                journal: "Journal of Atmospheric and Oceanic Technology, Vol. 35, No. 2, pp. 281-297"
+            },
+            {
+                title: "Seasonality in transition scale from balanced to unbalanced motions in the world ocean",
+                year: 2018,
+                tags: ["Ocean Dynamics", "SWOT"],
+                authors: "Qiu B., Chen S., Klein P., Wang J., Torres H., Fu L., Menemenlis D.",
+                journal: "Journal of Physical Oceanography, Vol. 48, No. 3, pp. 591-605"
+            },
+            {
+                title: "Ocean submesoscales as a key component of the global heat budget",
+                year: 2018,
+                tags: ["Heat Flux", "Submesoscale"],
+                authors: "Su Z., Wang J., Klein P., Thompson A.F., Menemenlis D.",
+                journal: "Nature Communications, Vol. 9, No. 1, pp. 775, doi:775"
+            },
+            {
+                title: "Partitioning ocean motions into balanced motions and internal gravity waves: A modeling study in anticipation of future space missions",
+                year: 2018,
+                tags: ["Ocean Dynamics", "SWOT"],
+                authors: "Torres H.S., Klein P., Menemenlis D., Qiu B., Su Z., Wang J., Chen S., Fu L.",
+                journal: "Journal of Geophysical Research: Oceans, Vol. 123, No. 11, pp. 8084-8105"
+            },
+            {
+                title: "On the spatial scales to be resolved by the surface water and ocean topography Ka-band radar interferometer",
+                year: 2019,
+                tags: ["SWOT", "Satellite Technology"],
+                authors: "Wang J., Fu L., Torres H.S., Chen S., Qiu B., Menemenlis D.",
+                journal: "Journal of Atmospheric and Oceanic Technology, Vol. 36, No. 1, pp. 87-99"
+            },
+            {
+                title: "Spiraling pathways of global deep waters to the surface of the Southern Ocean",
+                year: 2017,
+                tags: ["Southern Ocean", "Ocean Currents"],
+                authors: "Tamsitt V., Drake H.F., Morrison A.K., Talley L.D., Dufour C.O., Gray A.R., Griffies S.M., Mazloff M.R., Sarmiento J.L., Wang J.",
+                journal: "Nature Communications, Vol. 8, No. 1, pp. 172, doi:172"
+            },
+            {
+                title: "Lagrangian ocean analysis: Fundamentals and practices",
+                year: 2018,
+                tags: ["Ocean Dynamics"],
+                authors: "Van Sebille E., Griffies S.M., Abernathey R., Adams T.P., Berloff P., Biastoch A., Blanke B., Chassignet E.P., Cheng Y., Cotter C.J.",
+                journal: "Ocean Modelling, Vol. 121, pp. 49-75"
+            },
+            {
+                title: "Global observations of fine-scale ocean surface topography with the surface water and ocean topography (SWOT) mission",
+                year: 2019,
+                tags: ["Satellite Altimetry", "SWOT"],
+                authors: "Morrow R., Fu L., Ardhuin F., Benkiran M., Chapron B., Cosme E., d’Ovidio F., Farrar J.T., Gille S.T., Lapeyre G.",
+                journal: "Frontiers in Marine Science, Vol. 6, pp. 232, doi:232"
+            },
+            {
+                title: "Frontiers in fine-scale in situ studies: Opportunities during the SWOT fast sampling phase",
+                year: 2019,
+                tags: ["Satellite Altimetry", "SWOT"],
+                authors: "d’Ovidio F., Pascual A., Wang J., Doglioli A.M., Jing Z., Moreau S., Grégori G., Swart S., Speich S., Cyr F.",
+                journal: "Frontiers in Marine Science, Vol. 6, pp. 168, doi:168"
+            },
+            {
+                title: "On the long-wavelength validation of the SWOT KaRIn measurement",
+                year: 2019,
+                tags: ["Satellite Altimetry", "SWOT"],
+                authors: "Wang J., Fu L.",
+                journal: "Journal of Atmospheric and Oceanic Technology, Vol. 36, No. 5, pp. 843-848"
+            },
+            {
+                title: "Decomposition of the multimodal multidirectional M 2 internal tide field",
+                year: 2019,
+                tags: ["Internal Waves", "Satellite Altimetry"],
+                authors: "Zhao Z., Wang J., Menemenlis D., Fu L., Chen S., Qiu B.",
+                journal: "Journal of Atmospheric and Oceanic Technology, Vol. 36, No. 6, pp. 1157-1173"
+            },
+            {
+                title: "An observing system simulation experiment for ocean state estimation to assess the performance of the SWOT mission: Part 1—A twin experiment",
+                year: 2019,
+                tags: ["SWOT", "Mission Development"],
+                authors: "Li Z., Wang J., Fu L.",
+                journal: "Journal of Geophysical Research: Oceans, Vol. 124, No. 7, pp. 4838-4855"
+            },
+            {
+                title: "The importance of remote forcing for regional modeling of internal waves",
+                year: 2020,
+                tags: ["Internal Waves", "Ocean Dynamics"],
+                authors: "Mazloff M.R., Cornuelle B., Gille S.T., Wang J.",
+                journal: "Journal of Geophysical Research: Oceans, Vol. 125, No. 2, doi:e2019JC015623"
+            },
+            {
+                title: "Reconstructing upper-ocean vertical velocity field from sea surface height in the presence of unbalanced motion",
+                year: 2020,
+                tags: ["Reconstruction", "Ocean Dynamics"],
+                authors: "Qiu B., Chen S., Klein P., Torres H., Wang J., Fu L., Menemenlis D.",
+                journal: "Journal of Physical Oceanography, Vol. 50, No. 1, pp. 55-79"
+            },
+            {
+                title: "High‐frequency submesoscale motions enhance the upward vertical heat transport in the global ocean",
+                year: 2020,
+                tags: ["Ocean Dynamics", "Heat Flux"],
+                authors: "Su Z., Torres H., Klein P., Thompson A.F., Siegelman L., Wang J., Menemenlis D., Hill C.",
+                journal: "Journal of Geophysical Research: Oceans, Vol. 125, No. 9, doi:e2020JC016544"
+            },
+            {
+                title: "Reconstructing fine‐scale ocean variability via data assimilation of the SWOT pre‐launch in situ observing system",
+                year: 2022,
+                tags: ["Satellite Altimetry", "Reconstruction"],
+                authors: "Archer M.R., Li Z., Wang J., Fu L.",
+                journal: "Journal of Geophysical Research: Oceans, Vol. 127, No. 2, doi:e2021JC017362"
+            },
+            {
+                title: "Formulation and demonstration of an extended-3DVAR multi-scale data assimilation system for the SWOT altimetry era",
+                year: 2021,
+                tags: ["Satellite Altimetry", "Data Assimilation", "SWOT"],
+                authors: "Li Z., Archer M., Wang J., Fu L.",
+                journal: "Ocean Science Discussions, pp. 1-26"
+            },
+            {
+                title: "On the development of SWOT in situ calibration/validation for short-wavelength ocean topography",
+                year: 2022,
+                tags: ["SWOT", "Mission Development"],
+                authors: "Wang J., Fu L., Haines B., Lankhorst M., Lucas A.J., Farrar J.T., Send U., Meinig C., Schofield O., Ray R.",
+                journal: "Journal of Atmospheric and Oceanic Technology, Vol. 39, No. 5, pp. 595-617"
+            },
+            {
+                title: "A review of earth artificial intelligence",
+                year: 2022,
+                tags: ["Machine Learning"],
+                authors: "Sun Z., Sandoval L., Crystal-Ornelas R., Mousavi S.M., Wang J., Lin C., Cristea N., Tong D., Carande W.H., Ma X.",
+                journal: "Computers & Geosciences, Vol. 159, pp. 105034, doi:105034"
+            },
+            {
+                title: "Separating energetic internal gravity waves and small‐scale frontal dynamics",
+                year: 2022,
+                tags: ["Internal Waves", "Ocean Dynamics", "Submesoscale"],
+                authors: "Torres H.S., Klein P., D’Asaro E., Wang J., Thompson A.F., Siegelman L., Menemenlis D., Rodriguez E., Wineteer A., Perkovic‐Martin D.",
+                journal: "Geophysical Research Letters, Vol. 49, No. 6, doi:e2021GL096249"
+            },
+            {
+                title: "Wind work at the air-sea interface: A Modeling Study in Anticipation of Future Space Missions",
+                year: 2022,
+                tags: ["Mission Development", "Air-Sea Interaction"],
+                authors: "Torres H.S., Klein P., Wang J., Wineteer A., Qiu B., Thompson A.F., Rodriguez E., Menemenlis D., Molod A., Hill C.N., Strobach E., Zhang H., Flexas M., Perkovic-Martin D.",
+                journal: "EGUsphere, pp. 1-26"
+            },
+            {
+                title: "Increasing the observability of near inertial oscillations by a future ODYSEA satellite mission",
+                year: 2023,
+                tags: ["Mission Development"],
+                authors: "Wang J., Torres H., Klein P., Wineteer A., Zhang H., Menemenlis D., Ubelmann C., Rodriguez E.",
+                journal: "Remote Sensing, Vol. 15, No. 18, pp. 4526, doi:4526"
+            },
+            {
+                title: "MAESSTRO: Masked Autoencoders for Sea Surface Temperature Reconstruction under Occlusion",
+                year: 2023,
+                tags: ["Sea Surface Temperature", "Machine Learning"],
+                authors: "Goh E., Yepremyan A.R., Wang J., Wilson B.",
+                journal: "EGUsphere, pp. 1-20"
+            },
+            {
+                title: "Observed equatorward propagation and chimney effect of near‐inertial waves in the midlatitude ocean",
+                year: 2022,
+                tags: ["Waves", "GFD"],
+                authors: "Yu X., Naveira Garabato A.C., Vic C., Gula J., Savage A.C., Wang J., Waterhouse A.F., MacKinnon J.A.",
+                journal: "Geophysical Research Letters, Vol. 49, No. 13, doi:e2022GL098522"
+            },
+            {
+                title: "CNN based ocean eddy detection using cloud services",
+                year: 2023,
+                tags: ["Machine Learning", "Submesoscale"],
+                authors: "Mostafa S.A.M., Wang J., Holt B., Purushotham S., Wang J.",
+                journal: "IGARSS 2023-2023 IEEE International Geoscience and Remote Sensing Symposium, pp. 4052-4055"
+            },
+            {
+                title: "Anticipated capabilities of the ODYSEA wind and current mission concept to estimate wind work at the air–sea interface",
+                year: 2023,
+                tags: ["Mission Development", "Air-Sea Interaction"],
+                authors: "Torres H., Wineteer A., Klein P., Lee T., Wang J., Rodriguez E., Menemenlis D., Zhang H.",
+                journal: "Remote Sensing, Vol. 15, No. 13, pp. 3337, doi:3337"
+            },
+            {
+                title: "Observational constraints on the submesoscale sea surface height variance of balanced motion",
+                year: 2023,
+                tags: ["Ocean Dynamics", "Satellite Altimetry", "In-situ"],
+                authors: "de Marez C., Callies J., Haines B., Rodriguez-Chavez D., Wang J.",
+                journal: "Journal of Physical Oceanography, Vol. 53, No. 5, pp. 1221-1235"
+            },
+            {
+                title: "Accuracy and resolution of SWOT altimetry: Foundation seamounts",
+                year: 2024,
+                tags: ["Satellite Altimetry", "SWOT"],
+                authors: "Yu Y., Sandwell D.T., Dibarboure G., Chen C., Wang J.",
+                journal: "Earth and Space Science, Vol. 11, No. 6, doi:e2024EA003581"
+            },
+            {
+                title: "Seasonal and fortnight variations in internal solitary waves in the Indonesian seas from the SWOT measurements",
+                year: 2024,
+                tags: ["Internal Waves", "Satellite Altimetry", "SWOT"],
+                authors: "Qiu B., Chen S., Wang J., Fu L.",
+                journal: "Journal of Geophysical Research: Oceans, Vol. 129, No. 7, doi:e2024JC021086"
+            },
+            {
+                title: "A breakthrough of radar remote sensing of the ocean: the Surface Water and Ocean Topography (SWOT) Mission",
+                year: 2024,
+                tags: ["Satellite Altimetry", "SWOT"],
+                authors: "Fu L., Morrow R., Farrar J.T., Wang J.",
+                journal: "EGU General Assembly Conference Abstracts, pp. 12599"
+            }
         ];
 
         // Function to display publications
         function displayPublications(pubList) {
             const list = document.getElementById('publication-list');
-            list.innerHTML = ''; // Clear current list
-            pubList.forEach(pub => {
-                const li = document.createElement('li');
-                const tagsString = pub.tags.join(', ');
-                li.innerHTML = `${pub.authors} - <strong>${pub.title}</strong> (${pub.year}), ${pub.journal} `;
-                list.appendChild(li);
-            });
+            if (list) {
+                list.innerHTML = ''; // Clear current list
+                pubList.forEach(pub => {
+                    const li = document.createElement('li');
+                    const tagsString = pub.tags.join(', ');
+                    li.innerHTML = `${pub.authors} - <strong>${pub.title}</strong> (${pub.year}), ${pub.journal}`;
+                    list.appendChild(li);
+                });
+            }
         }
 
         // Function to filter publications by tag
@@ -398,8 +402,8 @@
 
         // Function to sort and filter publications
         function updatePublications() {
-            const sortBy = document.getElementById('sort-by').value;
-            const filterTag = document.getElementById('filter-by-tag').value;
+            const sortBy = document.getElementById('sort-by')?.value;
+            const filterTag = document.getElementById('filter-by-tag')?.value;
             
             // Filter first
             let filteredPubs = filterPublications(filterTag);
@@ -422,7 +426,9 @@
 
         // Initial display
         document.addEventListener('DOMContentLoaded', () => {
-            updatePublications();
+            if (document.getElementById('publication-list')) {
+                updatePublications();
+            }
         });
     </script>
 </body>

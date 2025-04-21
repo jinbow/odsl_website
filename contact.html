@@ -4,53 +4,124 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact - Ocean Dynamics from Space</title>
+    <!-- Import Open Sans and Montserrat fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        .contact {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            text-align: center;
+        }
+
+        .contact h1 {
+            font-family: 'Montserrat', sans-serif;
+            color: #003366;
+            margin-bottom: 1rem;
+        }
+
+        .contact-info {
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+
+        .contact-info h2 {
+            font-family: 'Montserrat', sans-serif;
+            color: #3399CC;
+            margin-bottom: 1rem;
+        }
+
+        .contact-info p {
+            margin-bottom: 1rem;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .contact .social-links {
+            margin: 1rem 0;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .map {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .map iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        @media (max-width: 768px) {
+            .contact-info {
+                padding: 1rem;
+            }
+
+            .map {
+                padding-bottom: 75%; /* Adjust aspect ratio for smaller screens */
+            }
+        }
+    </style>
 </head>
 <body>
     <header>
         <nav>
             <div class="logo">
-                <img src="assets/logo.png" alt="Ocean Dynamics Logo">
+                <img src="assets/logo.png" alt="ODSL Logo">
             </div>
-            <ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-menu">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="about.html">Team</a></li>
                 <li><a href="research.html">Research</a></li>
                 <li><a href="publications.html">Publications</a></li>
-                <li><a href="datatools.html">Data & Tools</a></li>
-                 <li><a href="news.html">News</a></li>
+                <li><a href="data-tools.html">Data & Tools</a></li>
+                <li><a href="news.html">News</a></li>
                 <li><a href="contact.html">Contact</a></li>
             </ul>
         </nav>
     </header>
 
-
     <section class="contact">
         <h1>Contact</h1>
-        <div class="contact-container">
-            <div class="contact-info">
-                <h2>Get in Touch</h2>
-                <p>Email: jinbo.wang@tamu.edu</p>
-                <p>Address: Eller Oceanography and Meteorology Building
-                    797 Lamar St, College Station, TX 77840</p>
-                
-                
+        <div class="contact-info">
+            <h2>Get in Touch</h2>
+            <p>Email: <a href="mailto:jinbo.wang@tamu.edu">jinbo.wang@tamu.edu</a></p>
+            <p>Address: Eller Oceanography and Meteorology Building, 797 Lamar St, College Station, TX 77840</p>
             <div class="social-links">
                 <a href="https://x.com/jinbowang" target="_blank" rel="noopener noreferrer" class="social-icon">
-                    <img src="assets/x-icon.jpg" alt="X" sizes="(24px)">
+                    <img src="https://img.icons8.com/ios-filled/30/000000/twitterx.png" alt="X">
                 </a>
-            </div>   
-                <!-- Google Maps Embed -->
-                <div class="map">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1238.6058003573091!2d-96.33722866614467!3d30.617529681645976!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x86468390e4fc04e5%3A0x92bb0f59d205f05!2sEller%20Oceanography%20and%20Meteorology%20Building%2C%20797%20Lamar%20St%2C%20College%20Station%2C%20TX%2077840!5e1!3m2!1sen!2sus!4v1740022127741!5m2!1sen!2sus" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                </div>
+                <a href="https://www.linkedin.com/in/jinbo-wang-b5138521/" target="_blank" rel="noopener noreferrer" class="social-icon">
+                    <img src="https://img.icons8.com/ios-filled/30/000000/linkedin.png" alt="LinkedIn">
+                </a>
             </div>
-            
+        </div>
+        <div class="map">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1238.6058003573091!2d-96.33722866614467!3d30.617529681645976!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x86468390e4fc04e5%3A0x92bb0f59d205f05!2sEller%20Oceanography%20and%20Meteorology%20Building%2C%20797%20Lamar%20St%2C%20College%20Station%2C%20TX%2077840!5e1!3m2!1sen!2sus!4v1740022127741!5m2!1sen!2sus" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
         </div>
     </section>
 
     <footer>
-        <p>© 2025 Ocean Dynamics from Space. All rights reserved.</p>
+        <p>© 2025 Ocean Dynamics from Space Lab. All rights reserved.</p>
         <div class="social-links">
             <a href="https://x.com/jinbowang" target="_blank" rel="noopener noreferrer" class="social-icon">
                 <img src="https://img.icons8.com/ios-filled/30/ffffff/twitterx.png" alt="X">
@@ -60,6 +131,7 @@
             </a>
         </div>
     </footer>
+
     <script src="js/script.js"></script>
 </body>
 </html>

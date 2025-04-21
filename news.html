@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>News - Ocean Dynamics from Space</title>
+    <!-- Import Open Sans and Montserrat fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -12,13 +14,18 @@
             <div class="logo">
                 <img src="assets/logo.png" alt="Ocean Dynamics Logo">
             </div>
-            <ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-menu">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="about.html">Team</a></li>
                 <li><a href="research.html">Research</a></li>
                 <li><a href="publications.html">Publications</a></li>
                 <li><a href="data-tools.html">Data & Tools</a></li>
-                 <li><a href="news.html">News</a></li>
+                <li><a href="news.html">News</a></li>
                 <li><a href="contact.html">Contact</a></li>
             </ul>
         </nav>
@@ -37,131 +44,153 @@
             </select>
         </div>
 
-        <ul id="news-list" class="news-list">
-            <!-- News items will be populated by JavaScript -->
-        </ul>
+        <ul id="news-list" class="news-list"></ul>
     </section>
 
-
     <footer>
-        <p>© 2025 Ocean Dynamics from Space. All rights reserved.</p>
+        <p>© 2025 Ocean Dynamics from Space Lab. All rights reserved.</p>
         <div class="social-links">
             <a href="https://x.com/jinbowang" target="_blank" rel="noopener noreferrer" class="social-icon">
                 <img src="https://img.icons8.com/ios-filled/30/ffffff/twitterx.png" alt="X">
             </a>
-            <a href="https://linkedin.com/company/your-linkedin" target="_blank" rel="noopener noreferrer" class="social-icon">
+            <a href="https://www.linkedin.com/in/jinbo-wang-b5138521/" target="_blank" rel="noopener noreferrer" class="social-icon">
                 <img src="https://img.icons8.com/ios-filled/30/ffffff/linkedin.png" alt="LinkedIn">
             </a>
         </div>
     </footer>
+
+    <script src="js/script.js"></script>
     <script>
+        // News list data
         const newsItems = [
-        { 
-            title: "This website was created.", 
-            comment: "This website was created by Jinbo Wang.", 
-            commentLinks: [],
-            date: "2025-04-19", 
-            category: "Misc.", 
-            href: ""
-        },
-            { 
-                title: "New Papers Submitted: Tchonang et al., SWOT Geostrophic Velocity Validation against In-situ Measurements in the California Current", 
-                comment: "Babette submitted her manuscript to Earth and Space Science. This study investigated the SWOT-derived velocity and in-situ velocity observed by a ADCP mooring deployed during the SWOT calibartion cruise in the California Current System.", 
+            {
+                title: "This website was created.",
+                comment: "This website was created by Jinbo Wang.",
+                commentLinks: [],
+                date: "2025-04-19",
+                category: "Misc.",
+                href: ""
+            },
+            {
+                title: "New Papers Submitted: Tchonang et al., SWOT Geostrophic Velocity Validation against In-situ Measurements in the California Current",
+                comment: "Babette submitted her manuscript to Earth and Space Science. This study investigated the SWOT-derived velocity and in-situ velocity observed by a ADCP mooring deployed during the SWOT calibration cruise in the California Current System.",
                 commentLinks: [
                     { url: "https://www.example.com/journal-oceanography", text: "Journal of Oceanography" },
                     { url: "https://www.example.com/geophysical-research-letters", text: "Geophysical Research Letters" }
                 ],
-                date: "2025-04-14", 
-                category: "Publications", 
+                date: "2025-04-14",
+                category: "Publications",
                 href: ""
             },
-            { 
-                title: "New Papers Submitted: Kachelein et al., Sub-100 km Ocean Processes Revealed by Structure Functions of SWOT Sea Surface Height and In Situ Observing Network", 
-                comment: "Luke submitted his manuscript. This study investigated the nature of the SSH signal below 100 km by applying structure function on the SWOT and mooring steric height collected during the SWOT calval campaign.", 
+            {
+                title: "New Papers Submitted: Kachelein et al., Sub-100 km Ocean Processes Revealed by Structure Functions of SWOT Sea Surface Height and In Situ Observing Network",
+                comment: "Luke submitted his manuscript. This study investigated the nature of the SSH signal below 100 km by applying structure function on the SWOT and mooring steric height collected during the SWOT calval campaign.",
                 commentLinks: [
                     { url: "https://doi.org/10.22541/essoar.174250725.56102978/v1", text: "his manuscript" },
                     { url: "https://www.example.com/geophysical-research-letters", text: "Geophysical Research Letters" }
                 ],
-                date: "2025-03-20", 
-                category: "Publications", 
+                date: "2025-03-20",
+                category: "Publications",
                 href: ""
             },
-            {title: "Jinbo gave a talk at University of Washington School of Oceanography",
-                comment: "Jinbo was invited to give a Banse Seminar to talk about SWOT.", 
+            {
+                title: "Jinbo gave a talk at University of Washington School of Oceanography",
+                comment: "Jinbo was invited to give a Banse Seminar to talk about SWOT.",
                 commentLinks: [
                     { url: "https://www.ocean.washington.edu", text: "University of Washington School of Oceanography" }
                 ],
-                date: "2025-03-12", 
-                category: "Talks", 
+                date: "2025-03-12",
+                category: "Talks",
                 href: ""
             },
-            { 
-                title: "New Papers Submitted: Wang et al., SWOT Geostrophic Velocity Validation against In-situ Measurements in the California Current", 
-                comment: "Part of the SWOT mission validation with SIO and NOAA/PMEL", 
+            {
+                title: "New Papers Submitted: Wang et al., SWOT Geostrophic Velocity Validation against In-situ Measurements in the California Current",
+                comment: "Part of the SWOT mission validation with SIO and NOAA/PMEL",
                 commentLinks: [
-                    { url: "https://swot.jpl.nasa.gov", text: "SWOT mission" },
+                    { url: "https://swot.jpl.nasa.gov", text: "SWOT mission" }
                 ],
-                date: "2025-01-20", 
-                category: "Publications", 
+                date: "2025-01-20",
+                category: "Publications",
                 href: ""
-        
-        },
-            { 
-                title: "Jinbo Started as Associate Professor at TAMU", 
-                comment: "The beginning of an exciting journey! Learn more about the TAMU Oceanography Department", 
+            },
+            {
+                title: "Jinbo Started as Associate Professor at TAMU",
+                comment: "The beginning of an exciting journey! Learn more about the TAMU Oceanography Department",
                 commentLinks: [
                     { url: "https://ocean.tamu.edu", text: "TAMU Oceanography Department" },
                     { url: "https://artsci.tamu.edu/oceanography/contact/profiles/jinbo-wang.html", text: "Jinbo" }
                 ],
-                date: "2025-01-01", 
-                category: "Team Updates", 
+                date: "2025-01-01",
+                category: "Team Updates",
                 href: ""
             },
-            { 
-                title: "Minghai Huang Joined as Postdoc", 
-                comment: "Minghai graduated from University of Delaware. He is good at ocean dynamics. He is working on ocean mesoscale eddies and their sea surface height and sea surface temperature signals from satellite images.", 
+            {
+                title: "Minghai Huang Joined as Postdoc",
+                comment: "Minghai graduated from University of Delaware. He is good at ocean dynamics. He is working on ocean mesoscale eddies and their sea surface height and sea surface temperature signals from satellite images.",
                 commentLinks: [
                     { url: "https://www.udel.edu", text: "University of Delaware" }
                 ],
-                date: "2024-11-01", 
-                category: "Team Updates", 
+                date: "2024-11-01",
+                category: "Team Updates",
                 href: ""
             },
-            { 
-                title: "Jinbo Wang Accepted TAMU Offer", 
-                comment: "Not an easy decision. Learn more about TAMU Oceanography", 
+            {
+                title: "Jinbo Wang Accepted TAMU Offer",
+                comment: "Not an easy decision. Learn more about TAMU Oceanography",
                 commentLinks: [
                     { url: "https://ocean.tamu.edu", text: "TAMU Oceanography" }
                 ],
-                date: "2024-07-01", 
-                category: "Team Updates", 
+                date: "2024-07-01",
+                category: "Team Updates",
                 href: ""
             }
         ];
 
-        const newsList = document.getElementById('news-list');
-        // Sort newsItems by date in descending order (newest first)
-        const sortedNewsItems = newsItems.sort((a, b) => new Date(b.date) - new Date(a.date));
-        newsList.innerHTML = sortedNewsItems.map(item => {
-            // Start with the plain comment text
-            let commentText = item.comment || '';
-            // Replace each link's text with an <a> tag
-            if (item.commentLinks && item.commentLinks.length > 0) {
-                item.commentLinks.forEach(link => {
-                    commentText = commentText.replace(
-                        link.text,
-                        `<a href="${link.url}" target="_blank">${link.text}</a>`
-                    );
-                });
+        // Function to display news items
+        function displayNews(newsList) {
+            const list = document.getElementById('news-list');
+            if (list) {
+                list.innerHTML = newsList.map(item => {
+                    let commentText = item.comment || '';
+                    if (item.commentLinks && item.commentLinks.length > 0) {
+                        item.commentLinks.forEach(link => {
+                            commentText = commentText.replace(
+                                link.text,
+                                `<a href="${link.url}" target="_blank">${link.text}</a>`
+                            );
+                        });
+                    }
+                    return `
+                        <li>
+                            <h4>${item.href ? `<a href="${item.href}" target="_blank">${item.title}</a>` : item.title}</h4>
+                            ${commentText ? `${commentText}` : ''}
+                            <br> Date: ${item.date} | Category: ${item.category}
+                        </li>
+                    `;
+                }).join('');
             }
-            return `
-                <li>
-                    <h4>${item.href ? `<a href="${item.href}" target="_blank">${item.title}</a>` : item.title}</h4>
-                    ${commentText ? `${commentText}` : ''}
-                    <br> Date: ${item.date} | Category: ${item.category} 
-                </li>
-            `;
-        }).join('');
+        }
+
+        // Function to sort news items
+        function sortNews() {
+            const sortBy = document.getElementById('sort-by')?.value;
+            let sortedNews = [...newsItems];
+            if (sortBy === 'date-desc') {
+                sortedNews.sort((a, b) => new Date(b.date) - new Date(a.date));
+            } else if (sortBy === 'date-asc') {
+                sortedNews.sort((a, b) => new Date(a.date) - new Date(a.date));
+            } else if (sortBy === 'category') {
+                sortedNews.sort((a, b) => a.category.localeCompare(b.category) || new Date(b.date) - new Date(a.date));
+            }
+            displayNews(sortedNews);
+        }
+
+        // Initial display of news items
+        document.addEventListener('DOMContentLoaded', () => {
+            if (document.getElementById('news-list')) {
+                sortNews();
+            }
+        });
     </script>
 </body>
 </html>

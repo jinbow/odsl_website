@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Research - Ocean Dynamics from Space</title>
+    <!-- Import Open Sans and Montserrat fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -12,13 +14,18 @@
             <div class="logo">
                 <img src="assets/logo.png" alt="Ocean Dynamics Logo">
             </div>
-            <ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-menu">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="about.html">Team</a></li>
                 <li><a href="research.html">Research</a></li>
                 <li><a href="publications.html">Publications</a></li>
                 <li><a href="data-tools.html">Data & Tools</a></li>
-                 <li><a href="news.html">News</a></li>
+                <li><a href="news.html">News</a></li>
                 <li><a href="contact.html">Contact</a></li>
             </ul>
         </nav>
@@ -28,28 +35,25 @@
         <h1>Our Research</h1>
         <p>Our group explores ocean dynamics using satellite data.</p>
 
-    <!-- Direction 1 -->
-
+        <!-- Direction 1 -->
         <div class="research-directions">
             <div class="direction">
                 <div class="direction-header">
                     <img src="assets/swot_model.png" alt="SWOT" class="direction-icon">
                     <h2>SWOT</h2>
                 </div>
-
                 <p>The Surface Water and Ocean Topography (SWOT) mission, a pioneering international oceanography initiative led by NASA and CNES, with contributions from UK and Canadian space agencies, was launched on December 16, 2022. This trailblazing "water mission" measures water elevation across Earth's oceans, lakes, rivers, and coastal regions, delivering unprecedented data as the first of its kind.<br>
-                
-                Our laboratory focuses on analyzing SWOT's groundbreaking dataset. We use traditional physical oceanography techniques to study small-scale ocean dynamics while integrating modern tools, such as machine learning, to identify ocean features. </p>
-                
+                Our laboratory focuses on analyzing SWOT's groundbreaking dataset. We use traditional physical oceanography techniques to study small-scale ocean dynamics while integrating modern tools, such as machine learning, to identify ocean features.</p>
                 <div class="project">
                     <h3>Selected Publication</h3>
                     <ul class="publications">
-                        <li><a href="https://www.nature.com/articles/s41586-025-08722-8"> >>> Archer, M., Wang, J., Klein, P. et al. Wide-swath satellite altimetry unveils global submesoscale ocean dynamics. Nature 640, 691–696 (2025)</a> <br>This paper showcased the capability of SWOT in a short form. </li> 
-                        <li><a href="https://journals.ametsoc.org/view/journals/atot/39/5/JTECH-D-21-0039.1.xml"> >>> Wang et al., On the development of SWOT in situ calibration/validation for short-wavelength ocean topography (2022), Journal of Atmospheric and Oceanic Technology, Vol. 39, No. 5, pp. 595-617</a> <br> This paper is a result of a ~4 year effort to establish the plan for the SWOT oceanography calibraion and validation plan. It is rather a long paper, but used to document everything we have done with rigirous quatification of the errors from in-situ platforms. This study is the foundation for the postlaunch field campaign, which was conducted between March and July 2023 during the SWOT fast-repeat calval phase. </li>
-                        <li><a href="https://www.frontiersin.org/journals/marine-science/articles/10.3389/fmars.2019.00168/full"> >>> d’Ovidio et al., Frontiers in fine-scale in situ studies: Opportunities during the SWOT fast sampling phase (2019), Frontiers in Marine Science, Vol. 6, pp. 168, doi:168</a><br> This a community paper to layout our expectations of SWOT before it was launched. </li>
+                        <li><a href="https://www.nature.com/articles/s41586-025-08722-8"> >>> Archer, M., Wang, J., Klein, P. et al. Wide-swath satellite altimetry unveils global submesoscale ocean dynamics. Nature 640, 691–696 (2025)</a> <br>This paper showcased the capability of SWOT in a short form.</li>
+                        <li><a href="https://journals.ametsoc.org/view/journals/atot/39/5/JTECH-D-21-0039.1.xml"> >>> Wang et al., On the development of SWOT in situ calibration/validation for short-wavelength ocean topography (2022), Journal of Atmospheric and Oceanic Technology, Vol. 39, No. 5, pp. 595-617</a> <br>This paper is a result of a ~4 year effort to establish the plan for the SWOT oceanography calibration and validation plan. It is rather a long paper, but used to document everything we have done with rigorous quantification of the errors from in-situ platforms. This study is the foundation for the postlaunch field campaign, which was conducted between March and July 2023 during the SWOT fast-repeat calval phase.</li>
+                        <li><a href="https://www.frontiersin.org/journals/marine-science/articles/10.3389/fmars.2019.00168/full"> >>> d’Ovidio et al., Frontiers in fine-scale in situ studies: Opportunities during the SWOT fast sampling phase (2019), Frontiers in Marine Science, Vol. 6, pp. 168, doi:168</a><br>This a community paper to lay out our expectations of SWOT before it was launched.</li>
                     </ul>
                 </div>
-                <a href="" class="read-more">Read more about SWOT and our effort</a>
+                <!-- Placeholder link; replace with actual URL -->
+                <a href="#" class="read-more">Read more about SWOT and our effort</a>
             </div>
         </div>
     </section>
@@ -57,94 +61,78 @@
     <!-- Direction 2 -->
     <section class="research">
         <div class="research-directions">
-            
             <div class="direction">
                 <div class="direction-header">
                     <img src="assets/mesoscale_eddy.png" alt="Ocean Eddies" class="direction-icon">
-                    <h2>Ocean eddies</h2>
+                    <h2>Ocean Eddies</h2>
                 </div>
-
                 <p>The ocean is a dynamic, turbulent system where eddies—swirling features resembling pond ripples—drive over 80% of its kinetic energy. These eddies significantly influence the transport of heat, nutrients, and tracers like carbon, profoundly impacting the atmosphere, cryosphere, and hydrosphere.<br>
-
-                    Mesoscale eddies, spanning hundreds of kilometers, have been extensively studied over the past three decades, enabled by the mordern technologies such as space-borne altimetry. Their critical role in ocean dynamics is well recognized.<br>
-                    
-                    Submesoscale eddies, ranging from a few kilometers to about tens of kilometers, are less understood but vital for vertical transport of heat, nutrients, and tracers.<br>
-                    
-                    Our research focuses on understanding these small-scale processes by measuring and surveying their horizontal and vertical structures. A key aspect of the research involves reconstructing mechanisms from incomplete datasets to reveal their nature and broader significance. We integrate satellite and in-situ measurements with numerical modeling and theoretical approaches to study ocean dynamics. <br>
-            
-                </p>
-                
+                Mesoscale eddies, spanning hundreds of kilometers, have been extensively studied over the past three decades, enabled by modern technologies such as space-borne altimetry. Their critical role in ocean dynamics is well recognized.<br>
+                Submesoscale eddies, ranging from a few kilometers to tens of kilometers, are less understood but vital for vertical transport of heat, nutrients, and tracers.<br>
+                Our research focuses on understanding these small-scale processes by measuring and surveying their horizontal and vertical structures. A key aspect of the research involves reconstructing mechanisms from incomplete datasets to reveal their nature and broader significance. We integrate satellite and in-situ measurements with numerical modeling and theoretical approaches to study ocean dynamics.</p>
                 <div class="project">
                     <h3>Selected Publication</h3>
                     <ul class="publications">
-                        <li><a href="https://www.nature.com/articles/s41586-025-08722-8"> >>> Wang J., Flierl G.R., LaCasce J.H., McClean J.L., Mahadevan A. - Reconstructing the ocean's interior from surface data (2013), Journal of Physical Oceanography, Vol. 43, No. 8, pp. 1611-1626</a> <br>This study builds on the established eSQG method by proposing a novel decoupling of interior and surface dynamics. The new methodology leverages two surface observables—sea surface height (SSH) and sea surface temperature (SST)—to reconstruct the ocean's interior structure from surface fields. This decoupling of surface pressure (SSH) and buoyancy (SST) is critical, as it enables the reconstruction of the vertical tilt of mesoscale eddies, a fundamental property essential for understanding their dynamics. </li> 
+                        <li><a href="https://www.nature.com/articles/s41586-025-08722-8"> >>> Wang J., Flierl G.R., LaCasce J.H., McClean J.L., Mahadevan A. - Reconstructing the ocean's interior from surface data (2013), Journal of Physical Oceanography, Vol. 43, No. 8, pp. 1611-1626</a> <br>This study builds on the established eSQG method by proposing a novel decoupling of interior and surface dynamics. The new methodology leverages two surface observables—sea surface height (SSH) and sea surface temperature (SST)—to reconstruct the ocean's interior structure from surface fields. This decoupling of surface pressure (SSH) and buoyancy (SST) is critical, as it enables the reconstruction of the vertical tilt of mesoscale eddies, a fundamental property essential for understanding their dynamics.</li>
                     </ul>
                 </div>
-                <a href="" class="read-more">Read more about ocean eddies</a>
+                <!-- Placeholder link; replace with actual URL -->
+                <a href="#" class="read-more">Read more about ocean eddies</a>
             </div>
         </div>
     </section>
 
-
     <!-- Direction 3 -->
     <section class="research">
         <div class="research-directions">
-            
             <div class="direction">
                 <div class="direction-header">
                     <img src="assets/ml4ocean.jpeg" alt="Machine Learning" class="direction-icon">
                     <h2>Machine Learning for Ocean Science</h2>
                 </div>
-                <p>Machine learning (ML) is a powerful tool for analyzing large datasets, and it has gained significant traction in oceanography. With collobrators from ML domain, we start to explore applying ML techniques to oceanographic data, particularly in the context of the Surface Water and Ocean Topography (SWOT) mission. We aim to develop innovative methods for feature identification, data assimilation, and predictive modeling in ocean dynamics.<br>
-                                    
+                <p>Machine learning (ML) is a powerful tool for analyzing large datasets, and it has gained significant traction in oceanography. With collaborators from the ML domain, we explore applying ML techniques to oceanographic data, particularly in the context of the Surface Water and Ocean Topography (SWOT) mission. We aim to develop innovative methods for feature identification, data assimilation, and predictive modeling in ocean dynamics.</p>
                 <div class="project">
                     <h3>Selected Publication</h3>
                     <ul class="publications">
-                        <li><a href="https://os.copernicus.org/articles/20/1309/2024/"> >>> Goh, E., Yepremyan, A., Wang, J., and Wilson, B.: MAESSTRO: Masked Autoencoders for Sea Surface Temperature Reconstruction under Occlusion, Ocean Sci., 20, 1309–1323, https://doi.org/10.5194/os-20-1309-2024, 2024. </a> <br>This study presents a proof-of-concept by adapting and repurposing Facebook's Masked Autoencoder (MAE) architecture to reconstruct missing satellite data from incomplete images. We utilized high-resolution numerical simulations and sea surface temperature as a test case. Although derived from numerical simulation experiments, the results bolster our confidence in further refining the code to incorporate multiple satellite sources and variables for enhanced high-resolution satellite data assimilation.</li> 
+                        <li><a href="https://os.copernicus.org/articles/20/1309/2024/"> >>> Goh, E., Yepremyan, A., Wang, J., and Wilson, B.: MAESSTRO: Masked Autoencoders for Sea Surface Temperature Reconstruction under Occlusion, Ocean Sci., 20, 1309–1323, https://doi.org/10.5194/os-20-1309-2024, 2024.</a> <br>This study presents a proof-of-concept by adapting and repurposing Facebook's Masked Autoencoder (MAE) architecture to reconstruct missing satellite data from incomplete images. We utilized high-resolution numerical simulations and sea surface temperature as a test case. Although derived from numerical simulation experiments, the results bolster our confidence in further refining the code to incorporate multiple satellite sources and variables for enhanced high-resolution satellite data assimilation.</li>
                     </ul>
                 </div>
-                <a href="" class="read-more">Read more about ocean eddies</a>
+                <!-- Placeholder link; replace with actual URL -->
+                <a href="#" class="read-more">Read more about machine learning for ocean science</a>
             </div>
         </div>
     </section>
 
-
     <!-- Direction 4 -->
     <section class="research">
         <div class="research-directions">
-            
             <div class="direction">
                 <div class="direction-header">
                     <img src="assets/gfdlogo.png" alt="GFD" class="direction-icon">
                     <h2>Geophysical Fluid Dynamics</h2>
                 </div>
-                <p>Geophysical Fluid Dynamics (GFD) forms the cornerstone of physical oceanography. It enables us to comprehend the essence of observed phenomena and develop improved models for predicting future ocean circulation and climate. <br>
-                
-                GFD studies the complex movements of air and water on Earth. These flows are nonlinear, chaotic and complex in nature. They are hard to solve with just pencil and paper. We often simplify these equations by making practical assumptions, then use computer program to solve the simplified equations or direct simulate them using discretized numerical models.<br>
-
-                </p>
-                                    
+                <p>Geophysical Fluid Dynamics (GFD) forms the cornerstone of physical oceanography. It enables us to comprehend the essence of observed phenomena and develop improved models for predicting future ocean circulation and climate.<br>
+                GFD studies the complex movements of air and water on Earth. These flows are nonlinear, chaotic, and complex in nature. They are hard to solve with just pencil and paper. We often simplify these equations by making practical assumptions, then use computer programs to solve the simplified equations or directly simulate them using discretized numerical models.</p>
                 <div class="project">
                     <h3>Selected Publication</h3>
                     <ul class="publications">
-                        <li><a href="https://journals.ametsoc.org/view/journals/phoc/43/7/jpo-d-12-0174.1.xml"> >>> Wang J., Spall M.A., Flierl G.R., Malanotte-Rizzoli P. - Nonlinear radiating instability of a barotropic eastern boundary current (2013), Journal of Physical Oceanography, Vol. 43, No. 7, pp. 1439-1452 </a> <br>This study directly showed the nonlinear energy transfer from most unstable mode to radiating model from a meridional boundary current. It illustrates the route of energy transfer in a weakly nonlinear set up and indicates the energy sink of a regional system through Rossy wave radiation. </li>
-                        <li><a href="https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2012GL051861"> >>> Wang J.*, Spall M.A., Flierl G.R., Malanotte-Rizzoli P. - A new mechanism for the generation of quasi-zonal jets in the ocean (2012), Geophysical Research Letters, Vol. 39, No. 10, doi:L10601 </a> <br>This study builds on the findings of Wang et al. (2013) to provide a compelling explanation for the zonal jets observed in the ocean.</li> 
+                        <li><a href="https://journals.ametsoc.org/view/journals/phoc/43/7/jpo-d-12-0174.1.xml"> >>> Wang J., Spall M.A., Flierl G.R., Malanotte-Rizzoli P. - Nonlinear radiating instability of a barotropic eastern boundary current (2013), Journal of Physical Oceanography, Vol. 43, No. 7, pp. 1439-1452</a> <br>This study directly showed the nonlinear energy transfer from most unstable mode to radiating model from a meridional boundary current. It illustrates the route of energy transfer in a weakly nonlinear setup and indicates the energy sink of a regional system through Rossby wave radiation.</li>
+                        <li><a href="https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2012GL051861"> >>> Wang J., Spall M.A., Flierl G.R., Malanotte-Rizzoli P. - A new mechanism for the generation of quasi-zonal jets in the ocean (2012), Geophysical Research Letters, Vol. 39, No. 10, doi:L10601</a> <br>This study builds on the findings of Wang et al. (2013) to provide a compelling explanation for the zonal jets observed in the ocean.</li>
                     </ul>
                 </div>
-                <a href="" class="read-more">Read more</a>
+                <!-- Placeholder link; replace with actual URL -->
+                <a href="#" class="read-more">Read more about geophysical fluid dynamics</a>
             </div>
         </div>
     </section>
 
-    
-
     <footer>
-        <p>© 2025 Ocean Dynamics from Space. All rights reserved.</p>
+        <p>© 2025 Ocean Dynamics from Space Lab. All rights reserved.</p>
         <div class="social-links">
-            <a href="https://twitter.com/yourXhandle" target="_blank" rel="noopener noreferrer" class="social-icon">
+            <a href="https://x.com/jinbowang" target="_blank" rel="noopener noreferrer" class="social-icon">
                 <img src="https://img.icons8.com/ios-filled/30/ffffff/twitterx.png" alt="X">
             </a>
-            <a href="https://linkedin.com/company/your-linkedin" target="_blank" rel="noopener noreferrer" class="social-icon">
+            <a href="https://www.linkedin.com/in/jinbo-wang-b5138521/" target="_blank" rel="noopener noreferrer" class="social-icon">
                 <img src="https://img.icons8.com/ios-filled/30/ffffff/linkedin.png" alt="LinkedIn">
             </a>
         </div>

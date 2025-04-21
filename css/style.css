@@ -33,39 +33,53 @@ nav {
 
 .logo img {
     height: 50px;
-    padding: 0; /* Prevent padding on logo */
-    margin: 0; /* Prevent margin on logo */
+    padding: 0;
+    margin: 0;
 }
 
-nav ul {
+.nav-menu {
     list-style: none;
     display: flex;
+    gap: 2rem;
+    transition: all 0.3s ease; /* Smooth transition for mobile menu */
 }
 
-nav ul li {
-    margin-left: 2rem;
-}
-
-nav ul li a {
+.nav-menu li a {
     color: #000000;
     text-decoration: none;
     font-family: 'Montserrat', sans-serif;
 }
 
-nav ul li a:hover {
+.nav-menu li a:hover {
     color: #33CC99;
+}
+
+.hamburger {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.hamburger span {
+    width: 25px;
+    height: 3px;
+    background-color: #000000;
+    margin: 2px 0;
+    transition: all 0.3s ease; /* Smooth transition for hamburger animation */
 }
 
 /* Hero Section */
 .hero {
     height: 80vh;
-    background: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url('../assets/intro.jpg') center/cover no-repeat;
+    min-height: 400px; /* Ensure minimum height for mobile */
+    background: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url('../assets/intro.jpg') no-repeat center center/cover;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
     color: #ffffff;
+    background-size: cover; /* Ensure background scales properly */
 }
 
 .hero h1 {
@@ -76,6 +90,7 @@ nav ul li a:hover {
 .hero p {
     font-size: 1.2rem;
     margin-top: 1rem;
+    max-width: 600px;
 }
 
 /* Content Sections */
@@ -136,6 +151,49 @@ nav ul li a:hover {
     margin-top: 0.5rem;
 }
 
+/* Latest News */
+.latest {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+}
+
+.latest h2 {
+    font-family: 'Montserrat', sans-serif;
+    color: #003366;
+    margin-bottom: 1rem;
+}
+
+.latest-news-list {
+    list-style: none;
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.latest-news-list li {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    gap: 20px;
+}
+
+.latest-news-list li .content {
+    flex: 1;
+}
+
+.latest-news-list li img {
+    width: 100px;
+    height: auto;
+    margin-left: 20px;
+}
+
+.responsive-img {
+    max-width: 100%;
+    height: auto;
+}
+
 /* Footer */
 footer {
     background: #003366;
@@ -145,18 +203,13 @@ footer {
     margin-top: 2rem;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    nav ul {
-        flex-direction: column;
-        text-align: center;
-    }
-    nav ul li {
-        margin: 0.5rem 0;
-    }
-    .hero h1 {
-        font-size: 2rem;
-    }
+.social-links {
+    margin-top: 1rem;
+}
+
+.social-icon img {
+    width: 30px;
+    margin: 0 0.5rem;
 }
 
 /* Research Section */
@@ -234,13 +287,6 @@ footer {
     color: #3399CC;
 }
 
-/* Responsive Design for Research */
-@media (max-width: 768px) {
-    .research-directions {
-        grid-template-columns: 1fr;
-    }
-}
-
 /* Direction Header with Icon */
 .direction-header {
     display: flex;
@@ -253,13 +299,6 @@ footer {
     width: 100px;
     height: 100px;
     object-fit: contain;
-}
-
-/* Adjust h2 margin in direction to align with icon */
-.direction h2 {
-    font-family: 'Montserrat', sans-serif;
-    color: #003366;
-    margin: 0; /* Remove default margin to align with icon */
 }
 
 /* Publications Section */
@@ -346,8 +385,8 @@ footer {
 
 .data-tools-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4 columns */
-    grid-template-rows: repeat(2, auto); /* 2 rows */
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, auto);
     gap: 2rem;
 }
 
@@ -366,7 +405,7 @@ footer {
     font-size: 1.2rem;
 }
 
-.tool p {
+.tool just p {
     margin-bottom: 1rem;
 }
 
@@ -378,52 +417,6 @@ footer {
     border-radius: 4px;
 }
 
-/* Responsive Design for Data & Tools */
-@media (max-width: 1024px) {
-    .data-tools-grid {
-        grid-template-columns: repeat(2, 1fr); /* 2 columns on medium screens */
-        grid-template-rows: repeat(4, auto); /* 4 rows */
-    }
-}
-
-@media (max-width: 768px) {
-    .data-tools-grid {
-        grid-template-columns: 1fr; /* 1 column on small screens */
-        grid-template-rows: repeat(8, auto); /* 8 rows */
-    }
-}
-
-/*latest updates*/
-.latest {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-    text-align: left;
-}
-
-.latest h2 {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-    text-align: center;
-}
-
-.latest-news-list li {
-    display: flex; /* Use flexbox to align text and image */
-    align-items: flex-start; /* Align items at the top */
-    margin-bottom: 20px;
-    gap: 20px; /* Space between text and image */
-}
-
-.latest-news-list li .content {
-    flex: 1; /* Text content takes remaining space */
-}
-
-.latest-news-list li img {
-    width: 100px; /* Adjust size as needed */
-    height: auto;
-    margin-left: 20px; /* Space between text and image */
-}
 /* News Section */
 .news {
     max-width: 1200px;
@@ -493,13 +486,6 @@ footer {
     margin: 0 auto;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .x-embed {
-        max-width: 100%;
-    }
-}
-
 /* Team Section */
 .team-section {
     margin-top: 2rem;
@@ -530,7 +516,7 @@ footer {
     width: 100%;
     max-width: 150px;
     height: auto;
-    border-radius: 50%; /* Circular photos */
+    border-radius: 50%;
     margin-bottom: 0.5rem;
 }
 
@@ -546,9 +532,107 @@ footer {
     text-decoration: underline;
 }
 
-/* Responsive Design for Team */
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .data-tools-grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(4, auto);
+    }
+}
+
 @media (max-width: 768px) {
+    .nav-menu {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 80px;
+        left: 0;
+        width: 100%;
+        background-color: #ffffff;
+        padding: 1rem;
+        box-shadow: 0 4px 2px rgba(163, 182, 188, 0.5);
+    }
+
+    .nav-menu.active {
+        display: flex;
+    }
+
+    .hamburger {
+        display: flex;
+    }
+
+    .hero {
+        height: 60vh;
+        min-height: 300px;
+        padding: 3rem 1rem;
+    }
+
+    .hero h1 {
+        font-size: 2rem;
+    }
+
+    .hero p {
+        font-size: 1rem;
+    }
+
+    .research-directions {
+        grid-template-columns: 1fr;
+    }
+
+    .data-tools-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(8, auto);
+    }
+
     .team-grid {
         grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     }
+
+    .x-embed {
+        max-width: 100%;
+    }
+
+    .latest-news-list li {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .latest-news-list li img {
+        margin-left: 0;
+        width: 100%;
+        max-width: 200px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero h1 {
+        font-size: 1.5rem;
+    }
+
+    .hero p {
+        font-size: 0.9rem;
+    }
+
+    .logo img {
+        height: 40px;
+    }
+}
+
+/* Fallback for no JavaScript */
+.no-js .nav-menu {
+    display: flex;
+    flex-direction: row;
+}
+
+/* Hamburger Animation */
+.hamburger.open span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+
+.hamburger.open span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.open span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -7px);
 }
