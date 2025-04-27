@@ -37,6 +37,13 @@
             <a href="https://scholar.google.com/citations?hl=en&user=97cDSCsAAAAJ" class="google-scholar" target="_blank" rel="noopener noreferrer">Google Scholar Profile</a> | 
             <a href="https://www.researchgate.net/profile/Jinbo-Wang-2" class="research-gate" target="_blank" rel="noopener noreferrer">ResearchGate Profile</a>
         </p>
+
+        <h2>Submitted Papers</h2>
+        <ul id="submitted-papers-list" class="publication-list"></ul>
+
+        <br>
+        <h2>Published Papers</h2>
+        <br>
         <div class="sort-controls">
             <div class="filter-control">
                 <label for="filter-by-tag">Filter by Tag:</label>
@@ -66,6 +73,8 @@
         </div>
 
         <ul id="publication-list" class="publication-list"></ul>
+        
+        
     </section>
 
     <footer>
@@ -82,6 +91,39 @@
 
     <script src="js/script.js"></script>
     <script>
+        // Submitted papers data
+        const submittedPapers = [
+            {
+                title: "SWOT KaRIn performance at short wavelength below 100 km",
+                year: 2025,
+                tags: ["SWOT", "Validation"],
+                authors: "Wang J., et al.",
+                journal: "Geophysical Research Letters (in revision)"
+            },
+            {
+                title: "In-situ validation of small-scale spatial variability in significant wave height observations from SWOT ",
+                year: 2025,
+                tags: ["Validation", "SWOT"],
+                authors: "Allison Ho, Jinbo Wang, Bruce Haines, Andy Wu, Scott Stalin",
+                journal: "Earth and Space Science (Under Review)"
+            },
+            {
+                title: "Sub-100 km Ocean Processes Revealed by Structure Functions of SWOT Sea Surface Height and In Situ Observing Network",
+                year: 2025,
+                tags: ["SWOT","submesoscale"],
+                authors: "Luke Kachelein, Jinbo Wang",
+                journal: "Earth and Space Science (Under Review)"
+            },
+            {
+                title: "SWOT Geostrophic Velocity Validation against in-situ measurements in the California Current ",
+                year: 2025,
+                tags: ["Validation", "SWOT", "Ocean Currents"],
+                authors: "Babette Tchonang, Jinbo Wang, Amy Frances Waterhouse, Andrew Lucas, Caeli Griffin, Matthew Robert Archer, Luke Kachelein, Matthias Lankhorst, Jeffrey Sevadjian, Lee-Lueng Fu",
+                journal: "Earth and Space Science (Under Review)"
+            }
+
+        ];
+
         // Publication data with multiple tags
         const publications = [
             {
@@ -380,6 +422,19 @@
             }
         ];
 
+        // Function to display submitted papers
+        function displaySubmittedPapers(pubList) {
+            const list = document.getElementById('submitted-papers-list');
+            if (list) {
+                list.innerHTML = ''; // Clear current list
+                pubList.forEach(pub => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `${pub.authors} - <strong>${pub.title}</strong> (${pub.year}), ${pub.journal}`;
+                    list.appendChild(li);
+                });
+            }
+        }
+
         // Function to display publications
         function displayPublications(pubList) {
             const list = document.getElementById('publication-list');
@@ -426,6 +481,9 @@
 
         // Initial display
         document.addEventListener('DOMContentLoaded', () => {
+            if (document.getElementById('submitted-papers-list')) {
+                displaySubmittedPapers(submittedPapers);
+            }
             if (document.getElementById('publication-list')) {
                 updatePublications();
             }
