@@ -1,4 +1,4 @@
-// Simple BibTeX parser
+// Enhanced BibTeX parser with URL and abstract support
 class BibtexParser {
     constructor() {
         this.entries = [];
@@ -29,7 +29,7 @@ class BibtexParser {
     parseFields(fieldsString) {
         const entry = {};
         
-        // Match field = {value} or field = "value"
+        // Match field = {value} or field = "value", handling multi-line values
         const fieldRegex = /(\w+)\s*=\s*\{([^}]*)\}|(\w+)\s*=\s*"([^"]*)"/g;
         let match;
 
@@ -40,6 +40,9 @@ class BibtexParser {
             if (fieldName === 'tags') {
                 // Split tags by comma
                 entry[fieldName] = fieldValue.split(',').map(tag => tag.trim());
+            } else if (fieldName === 'abstract') {
+                // Clean up abstract formatting
+                entry[fieldName] = fieldValue.trim().replace(/\s+/g, ' ');
             } else {
                 entry[fieldName] = fieldValue;
             }
@@ -54,7 +57,10 @@ class BibtexParser {
             authors: entry.author ? entry.author.replace(/ and /g, ', ') : '',
             year: parseInt(entry.year) || 0,
             journal: '',
-            tags: entry.tags || []
+            tags: entry.tags || [],
+            url: entry.url || (entry.doi ? `https://doi.org/${entry.doi}` : ''),
+            abstract: entry.abstract || 'No abstract available.',
+            key: entry.key || ''
         };
 
         // Format journal string based on entry type

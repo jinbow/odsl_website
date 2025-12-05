@@ -6,6 +6,54 @@
     <title>Publications - Ocean Dynamics from Space</title>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        .publication-item {
+            margin-bottom: 1.5em;
+            padding: 0.5em 0;
+        }
+        
+        .publication-title {
+            color: #0066cc;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .publication-title:hover {
+            text-decoration: underline;
+        }
+        
+        .abstract-toggle {
+            color: #0066cc;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-left: 10px;
+            text-decoration: none;
+            user-select: none;
+        }
+        
+        .abstract-toggle:hover {
+            text-decoration: underline;
+        }
+        
+        .abstract-content {
+            display: none;
+            margin-top: 0.5em;
+            padding: 1em;
+            background-color: #f5f5f5;
+            border-left: 3px solid #0066cc;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+        
+        .abstract-content.show {
+            display: block;
+        }
+        
+        .external-link-icon {
+            font-size: 0.8em;
+            margin-left: 3px;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -89,25 +137,45 @@
                 year: 2025,
                 tags: ["SWOT", "Internal Waves"],
                 authors: "Zaron, Waterhouse, Wang, Send, Lucas",
-                journal: "JGR Oceans (revision submitted)"
+                journal: "JGR Oceans (revision submitted)",
+                url: "",
+                abstract: "This study combines SWOT satellite measurements with in situ data to observe baroclinic tides in the California Current, providing new insights into internal wave dynamics."
             },
             { 
                 title: "Multi-satellite U-Net for high-resolution sea surface temperature reconstruction",
                 year: 2025,
                 tags: ["machine learning", "sea surface temperature"],
                 authors: "Ellin Zhao, Edwin Goh, Alice Yepremyan, Jinbo Wang, and Brian Wilson",
-                journal: "Ocean Science (submitted) EGUsphere preprint: https://doi.org/10.5194/egusphere-2025-4847"
+                journal: "Ocean Science (submitted) EGUsphere preprint: https://doi.org/10.5194/egusphere-2025-4847",
+                url: "https://doi.org/10.5194/egusphere-2025-4847",
+                abstract: "We develop a multi-satellite U-Net deep learning approach for reconstructing high-resolution sea surface temperature fields, demonstrating improved accuracy over traditional interpolation methods."
             },
             {
-                title: "SWOT Geostrophic Velocity Validation against in-situ measurements in the California Current ",
+                title: "SWOT Geostrophic Velocity Validation against in-situ measurements in the California Current",
                 year: 2025,
                 tags: ["Validation", "SWOT", "Ocean Currents"],
                 authors: "Babette Tchonang, Jinbo Wang, Amy Frances Waterhouse, Andrew Lucas, Caeli Griffin, Matthew Robert Archer, Luke Kachelein, Matthias Lankhorst, Jeffrey Sevadjian, Lee-Lueng Fu",
-                journal: "Earth and Space Science (revision submitted)"
+                journal: "Earth and Space Science (revision submitted)",
+                url: "",
+                abstract: "This validation study compares SWOT-derived geostrophic velocities with in-situ measurements in the California Current, assessing the satellite's capability to measure ocean currents at fine scales."
             }
         ];
 
         let publications = [];
+        
+        // Toggle abstract visibility
+        function toggleAbstract(key) {
+            const abstractDiv = document.getElementById(`abstract-${key}`);
+            const toggleLink = document.getElementById(`toggle-${key}`);
+            
+            if (abstractDiv.classList.contains('show')) {
+                abstractDiv.classList.remove('show');
+                toggleLink.textContent = '▸ Read more';
+            } else {
+                abstractDiv.classList.add('show');
+                toggleLink.textContent = '▾ Hide abstract';
+            }
+        }
         
         // Load BibTeX file
         async function loadPublications() {
@@ -121,7 +189,6 @@
                 
                 const bibtexText = await response.text();
                 console.log('BibTeX file loaded successfully');
-                console.log('First 100 characters:', bibtexText.substring(0, 100));
                 
                 // Check if BibtexParser is defined
                 if (typeof BibtexParser === 'undefined') {
@@ -155,7 +222,7 @@
                 errorDiv.innerHTML = `
                     <strong>Error loading publications:</strong> ${error.message}<br>
                     <small>Please check the browser console for more details.</small><br>
-                    <small>Make sure publications.bib is in the same folder as publications.html</small>
+                    <small>Make sure publications.bib is in the same folder as publications.html and you're running a local web server.</small>
                 `;
             }
         }
@@ -164,7 +231,6 @@
         function populateTagDropdown() {
             const tagSelect = document.getElementById('filter-by-tag');
             if (tagSelect) {
-                // Get unique tags from publications
                 const allTags = new Set();
                 publications.forEach(pub => {
                     if (pub.tags) {
@@ -172,10 +238,8 @@
                     }
                 });
                 
-                // Sort tags alphabetically
                 const sortedTags = Array.from(allTags).sort();
                 
-                // Add tag options
                 sortedTags.forEach(tag => {
                     const option = document.createElement('option');
                     option.value = tag;
@@ -189,10 +253,8 @@
         function populateYearDropdown() {
             const yearSelect = document.getElementById('filter-by-year');
             if (yearSelect) {
-                // Get unique years from publications and sort in descending order
                 const years = [...new Set(publications.map(pub => pub.year))].sort((a, b) => b - a);
                 
-                // Add year options
                 years.forEach(year => {
                     const option = document.createElement('option');
                     option.value = year;
@@ -206,9 +268,22 @@
             const list = document.getElementById('submitted-papers-list');
             if (list) {
                 list.innerHTML = '';
-                pubList.forEach(pub => {
+                pubList.forEach((pub, index) => {
                     const li = document.createElement('li');
-                    li.innerHTML = `${pub.authors} - <strong>${pub.title}</strong> (${pub.year}), ${pub.journal}`;
+                    li.className = 'publication-item';
+                    
+                    const key = `submitted-${index}`;
+                    const titleHTML = pub.url 
+                        ? `<a href="${pub.url}" target="_blank" rel="noopener noreferrer" class="publication-title">${pub.title}<span class="external-link-icon">🔗</span></a>`
+                        : `<strong>${pub.title}</strong>`;
+                    
+                    li.innerHTML = `
+                        ${pub.authors} - ${titleHTML} (${pub.year}), ${pub.journal}
+                        <a class="abstract-toggle" id="toggle-${key}" onclick="toggleAbstract('${key}')">▸ Read more</a>
+                        <div class="abstract-content" id="abstract-${key}">
+                            <strong>Abstract:</strong> ${pub.abstract}
+                        </div>
+                    `;
                     list.appendChild(li);
                 });
             }
@@ -222,9 +297,22 @@
                     list.innerHTML = '<li>No publications match the selected filters.</li>';
                     return;
                 }
-                pubList.forEach(pub => {
+                pubList.forEach((pub) => {
                     const li = document.createElement('li');
-                    li.innerHTML = `${pub.authors} - <strong>${pub.title}</strong> (${pub.year}), ${pub.journal}`;
+                    li.className = 'publication-item';
+                    
+                    const key = pub.key || `pub-${Math.random().toString(36).substr(2, 9)}`;
+                    const titleHTML = pub.url 
+                        ? `<a href="${pub.url}" target="_blank" rel="noopener noreferrer" class="publication-title">${pub.title}<span class="external-link-icon">🔗</span></a>`
+                        : `<strong>${pub.title}</strong>`;
+                    
+                    li.innerHTML = `
+                        ${pub.authors} - ${titleHTML} (${pub.year}), ${pub.journal}
+                        <a class="abstract-toggle" id="toggle-${key}" onclick="toggleAbstract('${key}')">▸ Read more</a>
+                        <div class="abstract-content" id="abstract-${key}">
+                            <strong>Abstract:</strong> ${pub.abstract}
+                        </div>
+                    `;
                     list.appendChild(li);
                 });
             }
@@ -233,12 +321,10 @@
         function filterPublications(tag, year) {
             let filtered = [...publications];
             
-            // Filter by tag
             if (tag && tag !== '') {
                 filtered = filtered.filter(pub => pub.tags && pub.tags.includes(tag));
             }
             
-            // Filter by year
             if (year && year !== '') {
                 filtered = filtered.filter(pub => pub.year === parseInt(year));
             }
@@ -251,10 +337,8 @@
             const filterTag = document.getElementById('filter-by-tag')?.value;
             const filterYear = document.getElementById('filter-by-year')?.value;
             
-            // Filter publications
             let filteredPubs = filterPublications(filterTag, filterYear);
             
-            // Sort publications
             if (sortBy === 'year-desc') {
                 filteredPubs.sort((a, b) => b.year - a.year || a.title.localeCompare(b.title));
             } else if (sortBy === 'year-asc') {
