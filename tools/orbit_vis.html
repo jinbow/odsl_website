@@ -1,0 +1,1671 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>LEO vs GEO Orbit Explorer (3D + Sun-Fixed + TLE)</title>
+
+  <script>
+    window.CESIUM_BASE_URL = "https://unpkg.com/cesium/Build/Cesium/";
+  </script>
+
+  <link rel="stylesheet" href="https://unpkg.com/cesium/Build/Cesium/Widgets/widgets.css" />
+
+  <style>
+    :root {
+      --panel-w: 400px;
+      --bg: #0b1020;
+      --panel-bg: #121a33;
+      --text: #e8eefc;
+      --muted: #b6c2e2;
+      --border: rgba(255,255,255,0.12);
+      --accent: #5dd6ff;
+      --ok: #7cff9e;
+      --warn: #ffd36a;
+      --shadow: 0 8px 28px rgba(0,0,0,0.35);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+    }
+    html, body {
+      height: 100%;
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      overflow: hidden;
+    }
+    #app { display: flex; height: 100%; width: 100%; }
+
+    #controlPanel {
+      width: var(--panel-w);
+      min-width: var(--panel-w);
+      max-width: var(--panel-w);
+      height: 100%;
+      overflow: auto;
+      background: var(--panel-bg);
+      border-right: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      padding: 14px 14px 24px;
+      box-sizing: border-box;
+    }
+
+    #controlPanel h1 {
+      margin: 6px 0 12px;
+      font-size: 16px;
+      letter-spacing: 0.3px;
+      line-height: 1.2;
+    }
+    .subtitle { margin: 0 0 14px; font-size: 12px; color: var(--muted); line-height: 1.35; }
+
+    section {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      margin: 10px 0;
+      background: rgba(0,0,0,0.12);
+    }
+    section h2 {
+      font-size: 13px;
+      margin: 0 0 10px;
+      color: var(--accent);
+      letter-spacing: 0.2px;
+    }
+    .row { display: flex; gap: 10px; align-items: center; margin: 8px 0; flex-wrap: wrap; }
+    label { font-size: 12px; color: var(--muted); }
+
+    input[type="number"], select, textarea {
+      width: 100%;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 8px;
+      padding: 8px 10px;
+      box-sizing: border-box;
+      outline: none;
+      font-family: var(--sans);
+    }
+    textarea {
+      font-family: var(--mono);
+      font-size: 11px;
+      line-height: 1.35;
+      min-height: 60px;
+      resize: vertical;
+    }
+    input[type="range"] { width: 100%; }
+
+    .twoCol { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .btnRow { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    button {
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      padding: 8px 10px;
+      border-radius: 10px;
+      font-size: 12px;
+      transition: transform 0.05s ease;
+    }
+    button:hover { border-color: rgba(255,255,255,0.22); }
+    button:active { transform: translateY(1px); }
+
+    button.primary {
+      border-color: rgba(93,214,255,0.55);
+      background: rgba(93,214,255,0.12);
+    }
+    button.toggleActive {
+      border-color: rgba(93,214,255,0.85);
+      background: rgba(93,214,255,0.18);
+    }
+
+    .hint { font-size: 11px; color: var(--muted); line-height: 1.35; margin-top: 6px; }
+    .badge {
+      display: inline-block;
+      font-size: 10px;
+      padding: 2px 8px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      color: var(--muted);
+      margin-left: 6px;
+    }
+    .inlineRadio { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+    .inlineRadio label { display: flex; gap: 6px; align-items: center; color: var(--text); }
+
+    .dangerNote {
+      font-size: 11px;
+      color: rgba(255,255,255,0.85);
+      background: rgba(255,211,106,0.12);
+      border: 1px solid rgba(255,211,106,0.25);
+      padding: 8px;
+      border-radius: 10px;
+      margin-top: 8px;
+      line-height: 1.35;
+    }
+
+    .statGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+    .stat { border: 1px solid var(--border); border-radius: 10px; padding: 8px; background: rgba(0,0,0,0.10); }
+    .stat .k { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+    .stat .v { font-size: 13px; font-family: var(--mono); letter-spacing: 0.2px; }
+
+    #viewerPane { position: relative; flex: 1; height: 100%; overflow: hidden; }
+    #cesiumContainer { position: absolute; inset: 0; height: 100%; width: 100%; }
+
+    #statusBar {
+      position: absolute;
+      left: 12px; right: 12px; bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(0,0,0,0.35);
+      backdrop-filter: blur(6px);
+      box-shadow: var(--shadow);
+      font-size: 12px;
+      pointer-events: none;
+    }
+    #statusBar .left, #statusBar .right {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .pill {
+      font-family: var(--mono);
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.06);
+    }
+    .ok { border-color: rgba(124,255,158,0.35); background: rgba(124,255,158,0.10); }
+    .warn { border-color: rgba(255,211,106,0.35); background: rgba(255,211,106,0.10); }
+    .muted { color: var(--muted); }
+    .hidden { display: none !important; }
+  </style>
+</head>
+
+<body>
+<div id="app">
+  <aside id="controlPanel">
+    <h1>LEO vs GEO Orbit Explorer</h1>
+    <p class="subtitle">
+      3D interactive tool to compare LEO revisits vs GEO stare, with optional <b>Sun‑fixed (inertial) frame</b> and <b>TLE/SGP4</b> propagation.
+    </p>
+
+    <section>
+      <h2>Reference Frame & Lighting</h2>
+      <div class="btnRow">
+        <button id="btnSunFixed" class="primary">Sun‑fixed frame: OFF</button>
+        <button id="btnResetCamera">Reset camera</button>
+      </div>
+      <div class="row">
+        <label><input type="checkbox" id="chkGrid" checked /> Lat/Lon grid overlay</label>
+      </div>
+      <div class="hint">
+        Sun‑fixed frame: a fixed Sun direction (“to the right”) is used; Earth rotates underneath (visual inertial frame),
+        and the orbit/satellite remain animated. A visible Sun marker is also fixed in that direction.
+      </div>
+    </section>
+
+    <section>
+      <h2>Orbit Propagation Mode</h2>
+      <div class="inlineRadio">
+        <label><input type="radio" name="propMode" value="PARAM" checked /> Parameterized (teaching model)</label>
+        <label><input type="radio" name="propMode" value="TLE" /> TLE / SGP4 (satellite.js)</label>
+      </div>
+    </section>
+
+    <section id="sectionTLE" class="hidden">
+      <h2>TLE Input</h2>
+      <div class="row">
+        <label for="tleSample">Sample</label>
+        <select id="tleSample">
+          <option value="custom" selected>Custom (paste your own)</option>
+          <option value="iss">ISS (ZARYA) – sample</option>
+        </select>
+      </div>
+
+      <div class="row">
+        <label for="tleLine1">TLE Line 1</label>
+        <textarea id="tleLine1" spellcheck="false" placeholder="Paste TLE line 1 (starts with 1 ...)"></textarea>
+      </div>
+      <div class="row">
+        <label for="tleLine2">TLE Line 2</label>
+        <textarea id="tleLine2" spellcheck="false" placeholder="Paste TLE line 2 (starts with 2 ...)"></textarea>
+      </div>
+
+      <div class="btnRow">
+        <button id="btnLoadTLE" class="primary">Load TLE</button>
+        <span class="badge" id="tleStatus">TLE: not loaded</span>
+      </div>
+
+      <div class="hint" id="tleInfo">
+        Tip: Simulation start time is set to the TLE epoch for stability.
+      </div>
+    </section>
+
+    <section id="sectionParam">
+      <h2>Orbit Type (Parameterized)</h2>
+      <div class="inlineRadio">
+        <label><input type="radio" name="orbitType" value="LEO" checked /> Low Earth Orbit (LEO)</label>
+        <label><input type="radio" name="orbitType" value="GEO" /> Geostationary (GEO)</label>
+      </div>
+      <div class="hint">GEO locks altitude and inclination (~35,786 km, 0°).</div>
+    </section>
+
+    <section id="sectionParam2">
+      <h2>Orbital Parameters (Parameterized)</h2>
+
+      <div class="row">
+        <label for="presetSelect">LEO presets / satellites</label>
+        <select id="presetSelect">
+          <optgroup label="Generic LEO Orbits">
+            <option value="sunSync" data-alt="705" data-inc="98.2" selected>Sun-Synchronous (typical) — 705 km, 98.2°</option>
+            <option value="polar" data-alt="800" data-inc="90.0">Polar — 800 km, 90°</option>
+            <option value="equatorial" data-alt="500" data-inc="0.0">Equatorial — 500 km, 0°</option>
+          </optgroup>
+          <optgroup label="Oceanography / Earth Obs (approx.)">
+            <option value="terra" data-alt="705" data-inc="98.2">Terra — 705 km, 98.2°</option>
+            <option value="aqua" data-alt="705" data-inc="98.2">Aqua — 705 km, 98.2°</option>
+            <option value="sentinel3" data-alt="815" data-inc="98.65">Sentinel-3 — 815 km, 98.65°</option>
+            <option value="sentinel6" data-alt="1336" data-inc="66.0">Sentinel-6 — 1336 km, 66°</option>
+            <option value="swot" data-alt="891" data-inc="77.6">SWOT — 891 km, 77.6°</option>
+          </optgroup>
+        </select>
+      </div>
+
+      <div class="twoCol">
+        <div>
+          <label for="incNum">Inclination (deg)</label>
+          <input id="incNum" type="number" min="0" max="180" step="0.1" value="98.2" />
+          <input id="incRange" type="range" min="0" max="180" step="0.1" value="98.2" />
+          <div class="hint" id="incHint"></div>
+        </div>
+
+        <div>
+          <label for="altNum">Altitude (km)</label>
+          <input id="altNum" type="number" min="200" max="2000" step="1" value="705" />
+          <input id="altRange" type="range" min="200" max="2000" step="1" value="705" />
+          <div class="hint">LEO typical: ~400–900 km</div>
+        </div>
+      </div>
+
+      <div class="dangerNote">
+        Parameterized mode uses a circular orbit model (for clarity). For mission‑grade motion, switch to TLE.
+      </div>
+    </section>
+
+    <section>
+      <h2>Sensor Swath</h2>
+      <div class="row">
+        <label for="swathNum">Swath Width (km)</label>
+        <input id="swathNum" type="number" min="10" max="500" step="1" value="50" />
+        <input id="swathRange" type="range" min="10" max="500" step="1" value="50" />
+        <div class="hint" id="swathHint">Nadir footprint approximation (drawn as a circle on the ground).</div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Observer on the Ground</h2>
+      <div class="twoCol">
+        <div>
+          <label for="obsLat">Latitude</label>
+          <input id="obsLat" type="number" min="-90" max="90" step="0.0001" value="51.5074" />
+        </div>
+        <div>
+          <label for="obsLon">Longitude</label>
+          <input id="obsLon" type="number" min="-180" max="180" step="0.0001" value="-0.1278" />
+        </div>
+      </div>
+      <div class="row">
+        <button id="btnSetObserver" class="primary">Set Observer</button>
+        <span class="badge" id="observerStatus">Observer: set</span>
+      </div>
+    </section>
+
+    <section>
+      <h2>Time & Animation</h2>
+
+      <div class="row">
+        <label for="timeSlider">Simulation time (72 hours)</label>
+        <input id="timeSlider" type="range" min="0" max="100" step="1" value="0" />
+        <div class="hint">
+          <span class="pill" id="timeLabel">—</span>
+          <span class="pill muted" id="tLabel">T+0h</span>
+        </div>
+      </div>
+
+      <div class="twoCol">
+        <div>
+          <label for="speedSelect">Playback speed</label>
+          <select id="speedSelect">
+            <option value="1000">1000×</option>
+            <option value="5000">5000×</option>
+            <option value="10000" selected>10000×</option>
+            <option value="50000">50000×</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Controls</label>
+          <div class="btnRow">
+            <button id="btnPlayPause" class="primary">Play</button>
+            <button id="btnReset">Reset</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Observer Sampling Stats (72h)</h2>
+      <div class="statGrid">
+        <div class="stat"><div class="k">Pass count</div><div class="v" id="statPasses">—</div></div>
+        <div class="stat"><div class="k">Time in swath</div><div class="v" id="statDwell">—</div></div>
+        <div class="stat"><div class="k">Mean revisit</div><div class="v" id="statRevisit">—</div></div>
+        <div class="stat"><div class="k">Orbit period</div><div class="v" id="statPeriod">—</div></div>
+      </div>
+      <div class="hint">
+        Pass count = outside→inside transitions of the observer relative to the swath circle.
+      </div>
+    </section>
+  </aside>
+
+  <main id="viewerPane">
+    <div id="cesiumContainer"></div>
+
+    <div id="statusBar">
+      <div class="left">
+        <span class="pill" id="pillMode">Mode: PARAM</span>
+        <span class="pill" id="pillOrbit">Orbit: LEO</span>
+        <span class="pill" id="pillParams">inc 98.2°, alt 705 km, swath 50 km</span>
+        <span class="pill muted" id="pillFrame">Frame: Earth-fixed</span>
+      </div>
+      <div class="right">
+        <span class="pill" id="pillInView">Observer: —</span>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="https://unpkg.com/cesium/Build/Cesium/Cesium.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/satellite.js@5.0.0/dist/satellite.min.js"></script>
+
+<script>
+(() => {
+  // ---------------------------------------
+  // Constants and helpers
+  // ---------------------------------------
+  const MU_EARTH = 3.986004418e14;     // [m^3/s^2]
+  const OMEGA_EARTH = 7.2921150e-5;    // [rad/s]
+  const WGS84 = Cesium.Ellipsoid.WGS84;
+  const EARTH_RADIUS_M = WGS84.maximumRadius;
+
+  const SIM_HOURS = 72;
+  const SIDEREAL_DAY_SEC = 86164;
+
+  // Sun marker distance (NOT astronomical; just far enough for visualization)
+  const SUN_MARKER_DISTANCE_M = 1.0e8; // 100,000 km
+
+  const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+  const degToRad = d => d * Math.PI / 180.0;
+  const radToDeg = r => r * 180.0 / Math.PI;
+
+  function formatDateTimeUTC(date) {
+    const pad = n => String(n).padStart(2, "0");
+    return `${date.getUTCFullYear()}-${pad(date.getUTCMonth()+1)}-${pad(date.getUTCDate())} ` +
+           `${pad(date.getUTCHours())}:${pad(date.getUTCMinutes())}:${pad(date.getUTCSeconds())}Z`;
+  }
+
+  function formatHours(h) {
+    if (!isFinite(h)) return "—";
+    if (h < 1) return `${Math.round(h*60)} min`;
+    return `${h.toFixed(2)} h`;
+  }
+
+  function haversineKm(lat1, lon1, lat2, lon2) {
+    const R = 6371.0;
+    const p1 = degToRad(lat1);
+    const p2 = degToRad(lat2);
+    const dphi = degToRad(lat2-lat1);
+    const dl = degToRad(lon2-lon1);
+    const a = Math.sin(dphi/2)**2 + Math.cos(p1)*Math.cos(p2)*Math.sin(dl/2)**2;
+    const c = 2*Math.asin(Math.sqrt(a));
+    return R*c;
+  }
+
+  function createSunBillboardDataUrl(size = 64) {
+    const c = document.createElement("canvas");
+    c.width = c.height = size;
+    const ctx = c.getContext("2d");
+
+    // radial glow
+    const g = ctx.createRadialGradient(size*0.5, size*0.5, size*0.08, size*0.5, size*0.5, size*0.5);
+    g.addColorStop(0.0, "rgba(255, 235, 140, 1.0)");
+    g.addColorStop(0.35, "rgba(255, 200, 60, 0.9)");
+    g.addColorStop(0.75, "rgba(255, 170, 0, 0.25)");
+    g.addColorStop(1.0, "rgba(255, 170, 0, 0.0)");
+
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(size*0.5, size*0.5, size*0.5, 0, Math.PI*2);
+    ctx.fill();
+
+    // core
+    ctx.fillStyle = "rgba(255, 255, 220, 0.9)";
+    ctx.beginPath();
+    ctx.arc(size*0.5, size*0.5, size*0.16, 0, Math.PI*2);
+    ctx.fill();
+
+    return c.toDataURL("image/png");
+  }
+
+  // ---------------------------------------
+  // State
+  // ---------------------------------------
+  const state = {
+    propagationMode: "PARAM",   // "PARAM" | "TLE"
+
+    orbitType: "LEO",           // PARAM only: "LEO" | "GEO"
+    inclinationDeg: 98.2,
+    altitudeKm: 705,
+
+    swathKm: 50,
+    geoLonDeg: 0,
+
+    observerLat: 51.5074,
+    observerLon: -0.1278,
+
+    simHours: SIM_HOURS,
+    dtSeconds: 60,
+
+    startDate: new Date(),      // PARAM uses "now"
+    tleSatrec: null,
+
+    sunFixedFrame: false,       // When true: fixed sun direction, inertial camera
+  };
+
+  // Computed
+  let samples = null;
+  let orbitPathEciPositions = null;
+
+  let derivedOrbitKind = "LEO";       // "LEO" | "GEO" | "OTHER"
+  let derivedIncDeg = null;
+  let derivedAltKm = null;
+
+  let currentIndex = 0;
+  let playing = false;
+  let lastInView = false;
+
+  // Cesium elements
+  let viewer = null;
+  let gridLayer = null;
+
+  // Entities/primitives
+  let satelliteEntity = null;         // sampled cube
+  let observerEntity = null;
+  let swathEntity = null;
+  let trailEntity = null;
+  let geoCoverageEntity = null;
+  let sunEntity = null;
+
+  // Orbit path primitive (stable, no flashing)
+  let orbitPolylineCollection = null;
+
+  // Sun direction (in inertial frame) — updated when toggling Sun‑fixed ON.
+  // This is the unit vector from Earth toward Sun (so Sun marker is placed along +sunDirInertial).
+  const sunDirInertial = new Cesium.Cartesian3(1, 0, 0);
+
+  // Directional light used in Sun‑fixed mode
+  const fixedSunLight = new Cesium.DirectionalLight({
+    direction: new Cesium.Cartesian3(-1, 0, 0), // will be overwritten each frame
+    color: Cesium.Color.WHITE
+  });
+
+  // Scratch
+  const scratchRotZ = new Cesium.Matrix3();
+  const scratchMat4 = new Cesium.Matrix4();
+  const scratchInv = new Cesium.Matrix4();
+  const scratchVecA = new Cesium.Cartesian3();
+  const scratchVecB = new Cesium.Cartesian3();
+  const scratchVecC = new Cesium.Cartesian3();
+  const scratchSunPosInertial = new Cesium.Cartesian3();
+  const scratchSunPosFixed = new Cesium.Cartesian3();
+
+  // ---------------------------------------
+  // DOM
+  // ---------------------------------------
+  const el = {
+    btnSunFixed: document.getElementById("btnSunFixed"),
+    btnResetCamera: document.getElementById("btnResetCamera"),
+    chkGrid: document.getElementById("chkGrid"),
+
+    sectionTLE: document.getElementById("sectionTLE"),
+    sectionParam: document.getElementById("sectionParam"),
+    sectionParam2: document.getElementById("sectionParam2"),
+
+    tleSample: document.getElementById("tleSample"),
+    tleLine1: document.getElementById("tleLine1"),
+    tleLine2: document.getElementById("tleLine2"),
+    btnLoadTLE: document.getElementById("btnLoadTLE"),
+    tleStatus: document.getElementById("tleStatus"),
+    tleInfo: document.getElementById("tleInfo"),
+
+    presetSelect: document.getElementById("presetSelect"),
+    incNum: document.getElementById("incNum"),
+    incRange: document.getElementById("incRange"),
+    incHint: document.getElementById("incHint"),
+    altNum: document.getElementById("altNum"),
+    altRange: document.getElementById("altRange"),
+
+    swathNum: document.getElementById("swathNum"),
+    swathRange: document.getElementById("swathRange"),
+    swathHint: document.getElementById("swathHint"),
+
+    obsLat: document.getElementById("obsLat"),
+    obsLon: document.getElementById("obsLon"),
+    btnSetObserver: document.getElementById("btnSetObserver"),
+    observerStatus: document.getElementById("observerStatus"),
+
+    timeSlider: document.getElementById("timeSlider"),
+    timeLabel: document.getElementById("timeLabel"),
+    tLabel: document.getElementById("tLabel"),
+
+    speedSelect: document.getElementById("speedSelect"),
+    btnPlayPause: document.getElementById("btnPlayPause"),
+    btnReset: document.getElementById("btnReset"),
+
+    statPasses: document.getElementById("statPasses"),
+    statDwell: document.getElementById("statDwell"),
+    statRevisit: document.getElementById("statRevisit"),
+    statPeriod: document.getElementById("statPeriod"),
+
+    pillMode: document.getElementById("pillMode"),
+    pillOrbit: document.getElementById("pillOrbit"),
+    pillParams: document.getElementById("pillParams"),
+    pillFrame: document.getElementById("pillFrame"),
+    pillInView: document.getElementById("pillInView"),
+  };
+
+  // ---------------------------------------
+  // Orbit math (Parameterized mode)
+  // ---------------------------------------
+  function meanMotionRadPerSec(altitudeKm) {
+    const r = EARTH_RADIUS_M + altitudeKm * 1000.0;
+    return Math.sqrt(MU_EARTH / (r*r*r));
+  }
+
+  function orbitPeriodSecFromAltitude(altitudeKm) {
+    const n = meanMotionRadPerSec(altitudeKm);
+    return 2*Math.PI / n;
+  }
+
+  function eciFromAngle(angleRad, altitudeKm, incRad, raanRad) {
+    const r = EARTH_RADIUS_M + altitudeKm * 1000.0;
+
+    const xu = r * Math.cos(angleRad);
+    const yu = r * Math.sin(angleRad);
+
+    // Inclination about x
+    const x1 = xu;
+    const y1 = yu * Math.cos(incRad);
+    const z1 = yu * Math.sin(incRad);
+
+    // RAAN about z
+    const cO = Math.cos(raanRad);
+    const sO = Math.sin(raanRad);
+
+    const x2 = x1 * cO - y1 * sO;
+    const y2 = x1 * sO + y1 * cO;
+
+    return new Cesium.Cartesian3(x2, y2, z1);
+  }
+
+  function ecefFromEciSimple(eci, thetaRad) {
+    // Matches satellite.js sign convention: Rz(-theta) * ECI
+    const c = Math.cos(thetaRad);
+    const s = Math.sin(thetaRad);
+    const x =  eci.x * c + eci.y * s;
+    const y = -eci.x * s + eci.y * c;
+    return new Cesium.Cartesian3(x, y, eci.z);
+  }
+
+  // ---------------------------------------
+  // Earth rotation angle
+  // ---------------------------------------
+  function earthRotationAngleRad(julianTime) {
+    if (state.propagationMode === "TLE" && state.tleSatrec && typeof satellite !== "undefined") {
+      const d = Cesium.JulianDate.toDate(julianTime);
+      return satellite.gstime(d); // radians
+    }
+    const tSec = Cesium.JulianDate.secondsDifference(julianTime, samples.startJD);
+    return OMEGA_EARTH * tSec;
+  }
+
+  function inertialToFixedMatrix4(julianTime) {
+    // Consistent with ecefFromEciSimple / satellite.js: Rz(-theta)
+    const theta = earthRotationAngleRad(julianTime);
+    Cesium.Matrix3.fromRotationZ(-theta, scratchRotZ);
+    return Cesium.Matrix4.fromRotationTranslation(scratchRotZ, Cesium.Cartesian3.ZERO, scratchMat4);
+  }
+
+  // ---------------------------------------
+  // TLE helpers
+  // ---------------------------------------
+  function tleEpochToDateUTC(satrec) {
+    const yr = satrec.epochyr;
+    const year = (yr < 57) ? (2000 + yr) : (1900 + yr);
+    const dayOfYear = satrec.epochdays;
+    const ms = (dayOfYear - 1) * 86400 * 1000;
+    const d0 = new Date(Date.UTC(year, 0, 1, 0, 0, 0));
+    return new Date(d0.getTime() + ms);
+  }
+
+  function extractTleLinesFromInputs() {
+    const combined = `${el.tleLine1.value}\n${el.tleLine2.value}`;
+    const lines = combined.split(/\r?\n/).map(s => s.trim()).filter(s => s.length > 0);
+
+    let l1 = lines.find(s => s.startsWith("1 "));
+    let l2 = lines.find(s => s.startsWith("2 "));
+
+    if (!l1) l1 = lines.find(s => s.startsWith("1"));
+    if (!l2) l2 = lines.find(s => s.startsWith("2"));
+
+    if (!l1 || !l2) {
+      if (lines.length >= 2) {
+        l1 = lines[lines.length - 2];
+        l2 = lines[lines.length - 1];
+      }
+    }
+
+    if (!l1 || !l2) return { ok: false, error: "Could not detect TLE lines. Ensure you pasted line 1 and line 2." };
+    return { ok: true, line1: l1, line2: l2 };
+  }
+
+  // ---------------------------------------
+  // Sampling (PARAM or TLE)
+  // ---------------------------------------
+  function buildEciOrbitRing({ altitudeKm, inclinationDeg }) {
+    const incRad = degToRad(inclinationDeg);
+    const raanRad = 0.0;
+    const pts = [];
+    const num = 240;
+    for (let k = 0; k <= num; k++) {
+      const a = (2*Math.PI) * (k / num);
+      pts.push(eciFromAngle(a, altitudeKm, incRad, raanRad));
+    }
+    return pts;
+  }
+
+  function buildTleOrbitPathEci(satrec, startDate, periodSec) {
+    const pts = [];
+    const num = 260;
+    const per = (isFinite(periodSec) && periodSec > 0) ? periodSec : (100 * 60);
+
+    for (let k = 0; k <= num; k++) {
+      const t = (per * k) / num;
+      const d = new Date(startDate.getTime() + t * 1000);
+      const pv = satellite.propagate(satrec, d);
+      if (!pv.position) continue;
+      pts.push(new Cesium.Cartesian3(pv.position.x * 1000.0, pv.position.y * 1000.0, pv.position.z * 1000.0));
+    }
+
+    if (pts.length < 2) {
+      pts.push(new Cesium.Cartesian3(0,0,0), new Cesium.Cartesian3(1,0,0));
+    }
+    return pts;
+  }
+
+  function computeSamplesAndOrbitPath() {
+    const simSeconds = state.simHours * 3600;
+    const dt = state.dtSeconds;
+    const N = Math.floor(simSeconds / dt) + 1;
+
+    const startJD = Cesium.JulianDate.fromDate(state.startDate);
+    const times = new Array(N);
+    const satEcef = new Array(N);
+    const groundEcef = new Array(N);
+    const groundLatLon = new Array(N);
+
+    let periodSec = NaN;
+    let orbitKind = "OTHER";
+    let incDeg = NaN;
+    let altKm = NaN;
+
+    if (state.propagationMode === "PARAM") {
+      if (state.orbitType === "GEO") {
+        const satPos = Cesium.Cartesian3.fromDegrees(state.geoLonDeg, 0, state.altitudeKm * 1000.0);
+
+        for (let i = 0; i < N; i++) {
+          times[i] = Cesium.JulianDate.addSeconds(startJD, i * dt, new Cesium.JulianDate());
+          satEcef[i] = satPos;
+
+          const g = WGS84.scaleToGeodeticSurface(satPos);
+          groundEcef[i] = g;
+          const carto = Cesium.Cartographic.fromCartesian(g);
+          groundLatLon[i] = {lat: radToDeg(carto.latitude), lon: radToDeg(carto.longitude)};
+        }
+
+        periodSec = SIDEREAL_DAY_SEC;
+        orbitKind = "GEO";
+        incDeg = 0.0;
+        altKm = state.altitudeKm;
+
+        orbitPathEciPositions = buildEciOrbitRing({ altitudeKm: state.altitudeKm, inclinationDeg: 0.0 });
+        return { startJD, dt, times, satEcef, groundEcef, groundLatLon, periodSec, orbitKind, incDeg, altKm };
+      }
+
+      const incRad = degToRad(state.inclinationDeg);
+      const raanRad = 0.0;
+      const n = meanMotionRadPerSec(state.altitudeKm);
+      periodSec = 2*Math.PI / n;
+
+      for (let i = 0; i < N; i++) {
+        const tSec = i * dt;
+        times[i] = Cesium.JulianDate.addSeconds(startJD, tSec, new Cesium.JulianDate());
+
+        const u = n * tSec;
+        const eci = eciFromAngle(u, state.altitudeKm, incRad, raanRad);
+
+        const theta = OMEGA_EARTH * tSec;
+        const ecef = ecefFromEciSimple(eci, theta);
+        satEcef[i] = ecef;
+
+        const g = WGS84.scaleToGeodeticSurface(ecef);
+        groundEcef[i] = g;
+
+        const carto = Cesium.Cartographic.fromCartesian(g);
+        groundLatLon[i] = {lat: radToDeg(carto.latitude), lon: radToDeg(carto.longitude)};
+      }
+
+      orbitKind = "LEO";
+      incDeg = state.inclinationDeg;
+      altKm = state.altitudeKm;
+
+      orbitPathEciPositions = buildEciOrbitRing({ altitudeKm: state.altitudeKm, inclinationDeg: state.inclinationDeg });
+      return { startJD, dt, times, satEcef, groundEcef, groundLatLon, periodSec, orbitKind, incDeg, altKm };
+    }
+
+    // ---- TLE / SGP4 ----
+    if (!state.tleSatrec || typeof satellite === "undefined") {
+      throw new Error("TLE mode requires a loaded TLE and satellite.js.");
+    }
+
+    const satrec = state.tleSatrec;
+
+    if (satrec.no && isFinite(satrec.no) && satrec.no > 0) {
+      periodSec = (2*Math.PI / satrec.no) * 60.0;
+    }
+    if (satrec.inclo && isFinite(satrec.inclo)) {
+      incDeg = radToDeg(satrec.inclo);
+    }
+
+    let firstValid = null;
+
+    for (let i = 0; i < N; i++) {
+      const tSec = i * dt;
+      const jd = Cesium.JulianDate.addSeconds(startJD, tSec, new Cesium.JulianDate());
+      times[i] = jd;
+
+      const date = Cesium.JulianDate.toDate(jd);
+      const pv = satellite.propagate(satrec, date);
+
+      if (!pv.position) {
+        if (firstValid) {
+          satEcef[i] = satEcef[i-1];
+          groundEcef[i] = groundEcef[i-1];
+          groundLatLon[i] = groundLatLon[i-1];
+          continue;
+        }
+        throw new Error("SGP4 propagation returned no position near the start time. Check TLE validity.");
+      }
+
+      const gmst = satellite.gstime(date);
+      const ecfKm = satellite.eciToEcf(pv.position, gmst);
+
+      const ecef = new Cesium.Cartesian3(ecfKm.x * 1000.0, ecfKm.y * 1000.0, ecfKm.z * 1000.0);
+      satEcef[i] = ecef;
+
+      const g = WGS84.scaleToGeodeticSurface(ecef);
+      groundEcef[i] = g;
+
+      const carto = Cesium.Cartographic.fromCartesian(g);
+      groundLatLon[i] = {lat: radToDeg(carto.latitude), lon: radToDeg(carto.longitude)};
+
+      if (!firstValid) firstValid = ecef;
+    }
+
+    if (firstValid) {
+      const r = Cesium.Cartesian3.magnitude(firstValid);
+      altKm = (r - EARTH_RADIUS_M) / 1000.0;
+    }
+
+    const geoLike = (isFinite(periodSec) && Math.abs(periodSec - SIDEREAL_DAY_SEC) < 2*3600 && incDeg < 10 && altKm > 20000);
+    orbitKind = geoLike ? "GEO" : "LEO";
+
+    orbitPathEciPositions = buildTleOrbitPathEci(satrec, state.startDate, periodSec);
+    return { startJD, dt, times, satEcef, groundEcef, groundLatLon, periodSec, orbitKind, incDeg, altKm };
+  }
+
+  // ---------------------------------------
+  // Cesium initialization
+  // ---------------------------------------
+  function initCesium() {
+    const osm = new Cesium.UrlTemplateImageryProvider({
+      url: "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png",
+      credit: new Cesium.Credit("© OpenStreetMap contributors")
+    });
+
+    viewer = new Cesium.Viewer("cesiumContainer", {
+      imageryProvider: osm,
+      baseLayerPicker: false,
+      geocoder: false,
+      homeButton: false,
+      sceneModePicker: false,
+      navigationHelpButton: false,
+      animation: false,
+      timeline: false,
+      infoBox: false,
+      selectionIndicator: false,
+      shouldAnimate: false,
+    });
+
+    viewer.scene.globe.enableLighting = true;
+    viewer.scene.light = new Cesium.SunLight();
+
+    viewer.scene.skyAtmosphere.show = true;
+    viewer.scene.fog.enabled = true;
+
+    gridLayer = viewer.imageryLayers.addImageryProvider(new Cesium.GridImageryProvider({
+      cells: 8,
+      color: Cesium.Color.WHITE.withAlpha(0.12),
+      glowColor: Cesium.Color.WHITE.withAlpha(0.06),
+      backgroundColor: Cesium.Color.TRANSPARENT
+    }));
+
+    // Smooth orbit path rotation via modelMatrix, and update fixed Sun direction if in Sun-fixed frame
+    viewer.scene.preRender.addEventListener((scene, time) => {
+      if (!samples) return;
+
+      const mat = inertialToFixedMatrix4(time);
+
+      if (orbitPolylineCollection) {
+        orbitPolylineCollection.modelMatrix = mat;
+      }
+
+      if (state.sunFixedFrame) {
+        // Convert Sun direction from inertial to fixed: sunDirFixed = R * sunDirInertial
+        const rot = Cesium.Matrix4.getMatrix3(mat, scratchRotZ);
+        Cesium.Matrix3.multiplyByVector(rot, sunDirInertial, scratchVecA);
+        Cesium.Cartesian3.normalize(scratchVecA, scratchVecA);
+
+        // Light direction should point FROM sun TO Earth => -sunDirFixed
+        Cesium.Cartesian3.negate(scratchVecA, scratchVecA);
+        fixedSunLight.direction = scratchVecA;
+      }
+    });
+
+    // Inertial camera: keep camera in inertial-like frame so Earth rotates underneath
+    viewer.scene.postUpdate.addEventListener((scene, time) => {
+      if (!samples) return;
+      if (!state.sunFixedFrame) return;
+
+      const transform = inertialToFixedMatrix4(time);
+
+      // Standard Cesium inertial camera pattern
+      const offset = Cesium.Cartesian3.clone(viewer.camera.position, scratchVecB);
+      viewer.camera.lookAtTransform(transform, offset);
+    });
+
+    // Tick handler for slider sync
+    viewer.clock.onTick.addEventListener((clock) => {
+      if (!samples) return;
+      const idx = indexFromJulian(clock.currentTime);
+      if (idx !== currentIndex) {
+        setCurrentIndex(idx, /*userDriven=*/false);
+      }
+    });
+  }
+
+  // ---------------------------------------
+  // Scene build helpers
+  // ---------------------------------------
+  function clearScene() {
+    if (!viewer) return;
+
+    viewer.entities.removeAll();
+
+    if (orbitPolylineCollection) {
+      viewer.scene.primitives.remove(orbitPolylineCollection);
+      orbitPolylineCollection = null;
+    }
+
+    satelliteEntity = null;
+    observerEntity = null;
+    swathEntity = null;
+    trailEntity = null;
+    geoCoverageEntity = null;
+    sunEntity = null;
+  }
+
+  function ensureSunEntity() {
+    if (!viewer || sunEntity) return;
+
+    const sunImg = createSunBillboardDataUrl(96);
+
+    sunEntity = viewer.entities.add({
+      name: "Sun (Fixed)",
+      position: new Cesium.CallbackProperty((time) => {
+        if (!time) time = viewer.clock.currentTime;
+
+        // Sun position in inertial coordinates
+        Cesium.Cartesian3.multiplyByScalar(sunDirInertial, SUN_MARKER_DISTANCE_M, scratchSunPosInertial);
+
+        // Transform into fixed/world coordinates
+        const mat = inertialToFixedMatrix4(time);
+        return Cesium.Matrix4.multiplyByPoint(mat, scratchSunPosInertial, scratchSunPosFixed);
+      }, false),
+      billboard: {
+        image: sunImg,
+        scale: 0.6,
+        alignedAxis: Cesium.Cartesian3.UNIT_Z,
+        disableDepthTestDistance: Number.POSITIVE_INFINITY
+      },
+      label: {
+        text: "Sun",
+        font: "12px sans-serif",
+        fillColor: Cesium.Color.WHITE,
+        outlineColor: Cesium.Color.BLACK.withAlpha(0.7),
+        outlineWidth: 2,
+        verticalOrigin: Cesium.VerticalOrigin.TOP,
+        pixelOffset: new Cesium.Cartesian2(0, 12),
+        showBackground: true,
+        backgroundColor: Cesium.Color.BLACK.withAlpha(0.35),
+        backgroundPadding: new Cesium.Cartesian2(6, 4)
+      }
+    });
+  }
+
+  function updateSunVisuals() {
+    if (!viewer) return;
+
+    if (state.sunFixedFrame) {
+      // Hide Cesium's moving Sun/Moon objects, show our fixed Sun marker
+      if (viewer.scene.sun) viewer.scene.sun.show = false;
+      if (viewer.scene.moon) viewer.scene.moon.show = false;
+      ensureSunEntity();
+    } else {
+      // Restore Cesium sun/moon, remove our fixed Sun marker (if any)
+      if (viewer.scene.sun) viewer.scene.sun.show = true;
+      if (viewer.scene.moon) viewer.scene.moon.show = true;
+      if (sunEntity) {
+        viewer.entities.remove(sunEntity);
+        sunEntity = null;
+      }
+    }
+  }
+
+  function buildScene() {
+    if (!viewer || !samples) return;
+
+    clearScene();
+
+    // Orbit path primitive (stable, no flashing)
+    const orbitColor = (derivedOrbitKind === "GEO") ? Cesium.Color.RED : Cesium.Color.DEEPSKYBLUE;
+
+    orbitPolylineCollection = new Cesium.PolylineCollection();
+    orbitPolylineCollection.add({
+      positions: orbitPathEciPositions,
+      width: 2.5,
+      material: Cesium.Material.fromType(Cesium.Material.PolylineGlowType, {
+        glowPower: 0.15,
+        color: orbitColor
+      })
+    });
+    viewer.scene.primitives.add(orbitPolylineCollection);
+
+    // Observer marker
+    observerEntity = viewer.entities.add({
+      name: "Observer",
+      position: Cesium.Cartesian3.fromDegrees(state.observerLon, state.observerLat, 0),
+      point: {
+        pixelSize: 10,
+        color: Cesium.Color.CYAN,
+        outlineColor: Cesium.Color.BLACK.withAlpha(0.6),
+        outlineWidth: 2,
+        heightReference: Cesium.HeightReference.CLAMP_TO_GROUND
+      },
+      label: {
+        text: "Observer",
+        font: "12px sans-serif",
+        fillColor: Cesium.Color.WHITE,
+        outlineColor: Cesium.Color.BLACK.withAlpha(0.7),
+        outlineWidth: 2,
+        verticalOrigin: Cesium.VerticalOrigin.TOP,
+        pixelOffset: new Cesium.Cartesian2(0, 14),
+        showBackground: true,
+        backgroundColor: Cesium.Color.BLACK.withAlpha(0.35),
+        backgroundPadding: new Cesium.Cartesian2(6, 4),
+        heightReference: Cesium.HeightReference.CLAMP_TO_GROUND
+      }
+    });
+
+    // Sampled satellite (simple cube)
+    const spp = new Cesium.SampledPositionProperty();
+    for (let i = 0; i < samples.times.length; i++) {
+      spp.addSample(samples.times[i], samples.satEcef[i]);
+    }
+    spp.setInterpolationOptions({
+      interpolationDegree: 5,
+      interpolationAlgorithm: Cesium.LagrangePolynomialApproximation
+    });
+
+    satelliteEntity = viewer.entities.add({
+      name: "Satellite (Sampled Cube)",
+      position: spp,
+      // Intentionally no orientation: a simple, stable cube in the scene
+      box: {
+        // Simple square box (cube), exaggerated for visibility
+        dimensions: new Cesium.Cartesian3(90000, 90000, 90000),
+        material: Cesium.Color.WHITE.withAlpha(0.9),
+        outline: true,
+        outlineColor: Cesium.Color.BLACK.withAlpha(0.5)
+      },
+      label: {
+        text: "Sat",
+        font: "12px sans-serif",
+        fillColor: Cesium.Color.WHITE,
+        outlineColor: Cesium.Color.BLACK.withAlpha(0.7),
+        outlineWidth: 2,
+        verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+        pixelOffset: new Cesium.Cartesian2(0, -10),
+        showBackground: true,
+        backgroundColor: Cesium.Color.BLACK.withAlpha(0.35),
+        backgroundPadding: new Cesium.Cartesian2(6, 4)
+      }
+    });
+
+    // Current swath (circle on ground beneath satellite)
+    swathEntity = viewer.entities.add({
+      name: "Current Swath",
+      position: new Cesium.CallbackProperty((time) => {
+        const sat = spp.getValue(time);
+        if (!sat) return Cesium.Cartesian3.fromDegrees(0, 0, 0);
+        return WGS84.scaleToGeodeticSurface(sat);
+      }, false),
+      ellipse: {
+        semiMajorAxis: (state.swathKm * 1000.0) / 2.0,
+        semiMinorAxis: (state.swathKm * 1000.0) / 2.0,
+        material: Cesium.Color.YELLOW.withAlpha(0.18),
+        outline: true,
+        outlineColor: Cesium.Color.YELLOW.withAlpha(0.55),
+        height: 0,
+        heightReference: Cesium.HeightReference.CLAMP_TO_GROUND
+      }
+    });
+
+    // Persistent swath trail
+    if (derivedOrbitKind === "GEO") {
+      geoCoverageEntity = viewer.entities.add({
+        name: "GEO Coverage",
+        position: Cesium.Cartesian3.fromDegrees(samples.groundLatLon[0].lon, samples.groundLatLon[0].lat, 0),
+        ellipse: {
+          semiMajorAxis: (state.swathKm * 1000.0) / 2.0,
+          semiMinorAxis: (state.swathKm * 1000.0) / 2.0,
+          material: Cesium.Color.ORANGE.withAlpha(0.12),
+          outline: true,
+          outlineColor: Cesium.Color.ORANGE.withAlpha(0.45),
+          height: 0,
+          heightReference: Cesium.HeightReference.CLAMP_TO_GROUND
+        }
+      });
+    } else {
+      trailEntity = viewer.entities.add({
+        name: "Coverage Trail",
+        corridor: {
+          positions: samples.groundEcef.slice(0, Math.max(2, currentIndex + 1)),
+          width: state.swathKm * 1000.0,
+          heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+          material: Cesium.Color.ORANGE.withAlpha(0.18),
+          outline: false
+        }
+      });
+    }
+
+    // Apply sun visuals for current frame mode
+    updateSunVisuals();
+
+    flyToReasonableView();
+  }
+
+  function updateSwathSize() {
+    const r = (state.swathKm * 1000.0) / 2.0;
+
+    if (swathEntity && swathEntity.ellipse) {
+      swathEntity.ellipse.semiMajorAxis = r;
+      swathEntity.ellipse.semiMinorAxis = r;
+    }
+    if (trailEntity && trailEntity.corridor) {
+      trailEntity.corridor.width = state.swathKm * 1000.0;
+    }
+    if (geoCoverageEntity && geoCoverageEntity.ellipse) {
+      geoCoverageEntity.ellipse.semiMajorAxis = r;
+      geoCoverageEntity.ellipse.semiMinorAxis = r;
+    }
+  }
+
+  function updateTrailAtIndex(idx) {
+    if (!samples) return;
+    if (trailEntity && trailEntity.corridor) {
+      const n = Math.max(2, idx + 1);
+      trailEntity.corridor.positions = samples.groundEcef.slice(0, n);
+    }
+  }
+
+  function flyToReasonableView() {
+    if (!viewer) return;
+    const distance = (derivedOrbitKind === "GEO") ? 6.5e7 : 2.5e7;
+    viewer.camera.flyTo({
+      destination: Cesium.Cartesian3.fromDegrees(state.observerLon, state.observerLat, distance),
+      duration: 0.8
+    });
+  }
+
+  // ---------------------------------------
+  // Time mapping & UI
+  // ---------------------------------------
+  function indexFromJulian(jd) {
+    const sec = Cesium.JulianDate.secondsDifference(jd, samples.startJD);
+    const idx = Math.floor(sec / samples.dt);
+    return clamp(idx, 0, samples.times.length - 1);
+  }
+
+  function julianFromIndex(idx) {
+    return samples.times[idx];
+  }
+
+  function updateTimeLabels(idx) {
+    const t = samples.times[idx];
+    const d = Cesium.JulianDate.toDate(t);
+    el.timeLabel.textContent = formatDateTimeUTC(d);
+
+    const elapsedHours = (idx * samples.dt) / 3600.0;
+    el.tLabel.textContent = `T+${elapsedHours.toFixed(2)}h`;
+  }
+
+  function flashObserverCue() {
+    if (observerEntity && observerEntity.point) {
+      const orig = observerEntity.point.color.getValue();
+      observerEntity.point.color = Cesium.Color.YELLOW;
+      observerEntity.point.pixelSize = 14;
+      setTimeout(() => {
+        observerEntity.point.color = orig;
+        observerEntity.point.pixelSize = 10;
+      }, 550);
+    }
+  }
+
+  function updateInViewStatusAtIndex(idx) {
+    const swathRadiusKm = state.swathKm / 2.0;
+    const p = samples.groundLatLon[idx];
+    const d = haversineKm(p.lat, p.lon, state.observerLat, state.observerLon);
+    const inView = (d <= swathRadiusKm);
+
+    el.pillInView.textContent = inView ? "Observer: IN SWATH" : "Observer: out of swath";
+    el.pillInView.classList.toggle("ok", inView);
+    el.pillInView.classList.toggle("warn", !inView);
+
+    if (inView && !lastInView) flashObserverCue();
+    lastInView = inView;
+  }
+
+  function setCurrentIndex(idx, userDriven) {
+    currentIndex = clamp(idx, 0, samples.times.length - 1);
+
+    el.timeSlider.value = String(currentIndex);
+    updateTimeLabels(currentIndex);
+
+    if (userDriven && viewer) {
+      viewer.clock.currentTime = julianFromIndex(currentIndex);
+    }
+
+    updateTrailAtIndex(currentIndex);
+    updateInViewStatusAtIndex(currentIndex);
+  }
+
+  // ---------------------------------------
+  // Observer stats
+  // ---------------------------------------
+  function computeObserverStats() {
+    const swathRadiusKm = state.swathKm / 2.0;
+    const dt = samples.dt;
+
+    let passes = 0;
+    let insideCount = 0;
+    let prevInside = false;
+
+    const passStartTimes = [];
+
+    for (let i = 0; i < samples.groundLatLon.length; i++) {
+      const p = samples.groundLatLon[i];
+      const d = haversineKm(p.lat, p.lon, state.observerLat, state.observerLon);
+      const inside = d <= swathRadiusKm;
+
+      if (inside) insideCount++;
+      if (inside && !prevInside) {
+        passes++;
+        passStartTimes.push(samples.times[i]);
+      }
+      prevInside = inside;
+    }
+
+    const dwellHours = (insideCount * dt) / 3600.0;
+
+    let revisitHours = NaN;
+    if (passStartTimes.length >= 2) {
+      let sum = 0;
+      for (let i = 1; i < passStartTimes.length; i++) {
+        sum += Cesium.JulianDate.secondsDifference(passStartTimes[i], passStartTimes[i-1]) / 3600.0;
+      }
+      revisitHours = sum / (passStartTimes.length - 1);
+    }
+
+    el.statPasses.textContent = String(passes);
+    el.statDwell.textContent = formatHours(dwellHours);
+    el.statRevisit.textContent = isFinite(revisitHours) ? formatHours(revisitHours) : "—";
+    el.statPeriod.textContent = formatHours(samples.periodSec / 3600.0);
+  }
+
+  // ---------------------------------------
+  // UI rules
+  // ---------------------------------------
+  function syncInclinationUI(val) {
+    const v = clamp(val, 0, 180);
+    el.incNum.value = v;
+    el.incRange.value = v;
+    el.incHint.textContent = (v > 90)
+      ? "> 90° = Retrograde (often used for Sun-Synchronous orbits)"
+      : "0–90° = Prograde; 90° = Polar";
+  }
+
+  function syncAltitudeUI(val) {
+    el.altNum.value = val;
+    el.altRange.value = val;
+  }
+
+  function setSwathUISpec(min, max, val) {
+    el.swathNum.min = String(min);
+    el.swathNum.max = String(max);
+    el.swathRange.min = String(min);
+    el.swathRange.max = String(max);
+
+    const v = clamp(val, min, max);
+    el.swathNum.value = String(v);
+    el.swathRange.value = String(v);
+  }
+
+  function applyPropagationModeUI() {
+    const isTLE = (state.propagationMode === "TLE");
+
+    el.sectionTLE.classList.toggle("hidden", !isTLE);
+    el.sectionParam.classList.toggle("hidden", isTLE);
+    el.sectionParam2.classList.toggle("hidden", isTLE);
+
+    el.presetSelect.disabled = isTLE;
+    el.incNum.disabled = isTLE;
+    el.incRange.disabled = isTLE;
+    el.altNum.disabled = isTLE;
+    el.altRange.disabled = isTLE;
+
+    document.querySelectorAll('input[name="orbitType"]').forEach(r => r.disabled = isTLE);
+
+    el.pillMode.textContent = `Mode: ${state.propagationMode}`;
+  }
+
+  function applyOrbitTypeUIRules() {
+    if (state.propagationMode !== "PARAM") return;
+
+    const isGEO = (state.orbitType === "GEO");
+
+    if (isGEO) {
+      state.altitudeKm = 35786;
+      state.inclinationDeg = 0.0;
+
+      syncInclinationUI(state.inclinationDeg);
+      syncAltitudeUI(state.altitudeKm);
+
+      el.incNum.disabled = true;
+      el.incRange.disabled = true;
+      el.altNum.disabled = true;
+      el.altRange.disabled = true;
+      el.presetSelect.disabled = true;
+
+      setSwathUISpec(1000, 20000, Math.max(state.swathKm, 10000));
+      state.swathKm = Number(el.swathNum.value);
+
+      state.dtSeconds = 300;
+    } else {
+      el.incNum.disabled = false;
+      el.incRange.disabled = false;
+      el.altNum.disabled = false;
+      el.altRange.disabled = false;
+      el.presetSelect.disabled = false;
+
+      setSwathUISpec(10, 500, clamp(state.swathKm, 10, 500));
+      state.swathKm = Number(el.swathNum.value);
+
+      state.dtSeconds = 60;
+    }
+  }
+
+  function updateStatusPills() {
+    const inc = isFinite(derivedIncDeg) ? `${derivedIncDeg.toFixed(1)}°` : `${state.inclinationDeg.toFixed(1)}°`;
+    const alt = isFinite(derivedAltKm) ? `${derivedAltKm.toFixed(0)} km` : `${state.altitudeKm.toFixed(0)} km`;
+    el.pillOrbit.textContent = `Orbit: ${derivedOrbitKind}`;
+    el.pillParams.textContent = `inc ${inc}, alt ${alt}, swath ${state.swathKm.toFixed(0)} km`;
+    el.pillFrame.textContent = `Frame: ${state.sunFixedFrame ? "Sun-fixed" : "Earth-fixed"}`;
+  }
+
+  // ---------------------------------------
+  // Rebuild simulation
+  // ---------------------------------------
+  function rebuildSimulation({ preserveTimeFraction = false } = {}) {
+    const prevFrac = samples ? (currentIndex / (samples.times.length - 1)) : 0;
+
+    samples = computeSamplesAndOrbitPath();
+    derivedOrbitKind = samples.orbitKind;
+    derivedIncDeg = samples.incDeg;
+    derivedAltKm = samples.altKm;
+
+    // Auto swath bounds for TLE mode based on orbit kind
+    if (state.propagationMode === "TLE") {
+      if (derivedOrbitKind === "GEO") setSwathUISpec(1000, 20000, Math.max(state.swathKm, 10000));
+      else setSwathUISpec(10, 500, clamp(state.swathKm, 10, 500));
+      state.swathKm = Number(el.swathNum.value);
+    }
+
+    viewer.clock.startTime = samples.startJD.clone();
+    viewer.clock.stopTime  = samples.times[samples.times.length - 1].clone();
+    viewer.clock.clockRange = Cesium.ClockRange.CLAMPED;
+    viewer.clock.multiplier = Number(el.speedSelect.value);
+    viewer.clock.shouldAnimate = playing;
+
+    el.timeSlider.min = "0";
+    el.timeSlider.max = String(samples.times.length - 1);
+    el.timeSlider.step = "1";
+
+    buildScene();
+
+    let idx = 0;
+    if (preserveTimeFraction) idx = Math.round(prevFrac * (samples.times.length - 1));
+    lastInView = false;
+    setCurrentIndex(idx, true);
+
+    updateSwathSize();
+    computeObserverStats();
+    updateStatusPills();
+  }
+
+  // ---------------------------------------
+  // Observer
+  // ---------------------------------------
+  function setObserverFromUI() {
+    state.observerLat = clamp(Number(el.obsLat.value), -90, 90);
+    state.observerLon = clamp(Number(el.obsLon.value), -180, 180);
+    el.obsLat.value = state.observerLat;
+    el.obsLon.value = state.observerLon;
+
+    if (observerEntity) {
+      observerEntity.position = Cesium.Cartesian3.fromDegrees(state.observerLon, state.observerLat, 0);
+    }
+
+    el.observerStatus.textContent = `Observer: ${state.observerLat.toFixed(4)}, ${state.observerLon.toFixed(4)}`;
+
+    flyToReasonableView();
+    computeObserverStats();
+    lastInView = false;
+    updateInViewStatusAtIndex(currentIndex);
+  }
+
+  // ---------------------------------------
+  // Sun-fixed frame toggle
+  // ---------------------------------------
+  function setSunFixedFrame(enabled) {
+    state.sunFixedFrame = enabled;
+
+    if (state.sunFixedFrame) {
+      // Compute sunDirInertial so that Sun is "to the right" of the current view at toggle time.
+      const time = viewer.clock.currentTime;
+      const mat = inertialToFixedMatrix4(time);
+      Cesium.Matrix4.inverse(mat, scratchInv);
+
+      // Camera right vector in world/fixed coordinates -> inertial coordinates
+      const camRightFixed = Cesium.Cartesian3.clone(viewer.camera.rightWC, scratchVecA);
+      const camRightInertial = Cesium.Matrix4.multiplyByPointAsVector(scratchInv, camRightFixed, scratchVecB);
+      Cesium.Cartesian3.normalize(camRightInertial, sunDirInertial);
+
+      // Switch to our fixed directional light (direction updated each frame in preRender)
+      viewer.scene.light = fixedSunLight;
+      viewer.scene.globe.enableLighting = true;
+
+      // Show fixed sun marker and hide Cesium moving sun/moon
+      updateSunVisuals();
+
+      // Convert current camera world position into inertial coordinates to avoid a jump
+      const posWC = Cesium.Cartesian3.clone(viewer.camera.positionWC, scratchVecC);
+      const posInertial = Cesium.Matrix4.multiplyByPoint(scratchInv, posWC, scratchVecB);
+
+      viewer.camera.lookAtTransform(mat, posInertial);
+
+      el.btnSunFixed.textContent = "Sun‑fixed frame: ON";
+      el.btnSunFixed.classList.add("toggleActive");
+    } else {
+      // Restore standard Cesium sun lighting
+      const posWC = Cesium.Cartesian3.clone(viewer.camera.positionWC, scratchVecA);
+      const dirWC = Cesium.Cartesian3.clone(viewer.camera.directionWC, new Cesium.Cartesian3());
+      const upWC  = Cesium.Cartesian3.clone(viewer.camera.upWC, new Cesium.Cartesian3());
+
+      viewer.camera.lookAtTransform(Cesium.Matrix4.IDENTITY);
+      viewer.camera.setView({ destination: posWC, orientation: { direction: dirWC, up: upWC } });
+
+      viewer.scene.light = new Cesium.SunLight();
+      viewer.scene.globe.enableLighting = true;
+
+      updateSunVisuals();
+
+      el.btnSunFixed.textContent = "Sun‑fixed frame: OFF";
+      el.btnSunFixed.classList.remove("toggleActive");
+    }
+
+    updateStatusPills();
+  }
+
+  // ---------------------------------------
+  // TLE loading
+  // ---------------------------------------
+  function loadTleFromInputs() {
+    try {
+      const { ok, error, line1, line2 } = extractTleLinesFromInputs();
+      if (!ok) throw new Error(error);
+
+      const satrec = satellite.twoline2satrec(line1, line2);
+      state.tleSatrec = satrec;
+
+      const epoch = tleEpochToDateUTC(satrec);
+      state.startDate = epoch;
+
+      state.dtSeconds = 60;
+
+      el.tleStatus.textContent = "TLE: loaded";
+      el.tleInfo.textContent = `TLE epoch (UTC): ${formatDateTimeUTC(epoch)} — simulation starts at epoch.`;
+
+      rebuildSimulation({ preserveTimeFraction: false });
+
+    } catch (e) {
+      console.error(e);
+      el.tleStatus.textContent = "TLE: error";
+      el.tleInfo.textContent = `Error: ${e.message}`;
+    }
+  }
+
+  // ---------------------------------------
+  // Wire UI
+  // ---------------------------------------
+  function wireUI() {
+    el.btnSunFixed.addEventListener("click", () => setSunFixedFrame(!state.sunFixedFrame));
+
+    el.btnResetCamera.addEventListener("click", () => flyToReasonableView());
+
+    el.chkGrid.addEventListener("change", () => {
+      if (gridLayer) gridLayer.show = el.chkGrid.checked;
+    });
+
+    document.querySelectorAll('input[name="propMode"]').forEach(r => {
+      r.addEventListener("change", (e) => {
+        state.propagationMode = e.target.value;
+        applyPropagationModeUI();
+
+        if (state.propagationMode === "PARAM") {
+          state.startDate = new Date();
+          state.tleSatrec = null;
+          derivedOrbitKind = state.orbitType;
+          applyOrbitTypeUIRules();
+          rebuildSimulation({ preserveTimeFraction: false });
+        } else {
+          el.tleStatus.textContent = "TLE: not loaded";
+          el.tleInfo.textContent = "Paste TLE lines then click Load TLE.";
+          updateStatusPills();
+        }
+      });
+    });
+
+    document.querySelectorAll('input[name="orbitType"]').forEach(r => {
+      r.addEventListener("change", (e) => {
+        state.orbitType = e.target.value;
+        applyOrbitTypeUIRules();
+        rebuildSimulation({ preserveTimeFraction: true });
+      });
+    });
+
+    el.presetSelect.addEventListener("change", () => {
+      const opt = el.presetSelect.selectedOptions[0];
+      if (!opt) return;
+
+      const alt = Number(opt.dataset.alt);
+      const inc = Number(opt.dataset.inc);
+
+      if (isFinite(alt)) state.altitudeKm = alt;
+      if (isFinite(inc)) state.inclinationDeg = inc;
+
+      syncAltitudeUI(state.altitudeKm);
+      syncInclinationUI(state.inclinationDeg);
+
+      rebuildSimulation({ preserveTimeFraction: true });
+    });
+
+    el.incNum.addEventListener("input", () => {
+      state.inclinationDeg = clamp(Number(el.incNum.value), 0, 180);
+      syncInclinationUI(state.inclinationDeg);
+      rebuildSimulation({ preserveTimeFraction: true });
+    });
+    el.incRange.addEventListener("input", () => {
+      state.inclinationDeg = clamp(Number(el.incRange.value), 0, 180);
+      syncInclinationUI(state.inclinationDeg);
+      rebuildSimulation({ preserveTimeFraction: true });
+    });
+
+    el.altNum.addEventListener("input", () => {
+      state.altitudeKm = clamp(Number(el.altNum.value), 200, 2000);
+      syncAltitudeUI(state.altitudeKm);
+      rebuildSimulation({ preserveTimeFraction: true });
+    });
+    el.altRange.addEventListener("input", () => {
+      state.altitudeKm = clamp(Number(el.altRange.value), 200, 2000);
+      syncAltitudeUI(state.altitudeKm);
+      rebuildSimulation({ preserveTimeFraction: true });
+    });
+
+    el.swathNum.addEventListener("input", () => {
+      state.swathKm = clamp(Number(el.swathNum.value), Number(el.swathNum.min), Number(el.swathNum.max));
+      el.swathRange.value = String(state.swathKm);
+      updateSwathSize();
+      computeObserverStats();
+      updateInViewStatusAtIndex(currentIndex);
+      updateStatusPills();
+      if (trailEntity) updateTrailAtIndex(currentIndex);
+    });
+    el.swathRange.addEventListener("input", () => {
+      state.swathKm = clamp(Number(el.swathRange.value), Number(el.swathRange.min), Number(el.swathRange.max));
+      el.swathNum.value = String(state.swathKm);
+      updateSwathSize();
+      computeObserverStats();
+      updateInViewStatusAtIndex(currentIndex);
+      updateStatusPills();
+      if (trailEntity) updateTrailAtIndex(currentIndex);
+    });
+
+    el.btnSetObserver.addEventListener("click", setObserverFromUI);
+
+    el.timeSlider.addEventListener("input", () => {
+      const idx = Number(el.timeSlider.value);
+      setCurrentIndex(idx, true);
+    });
+
+    el.speedSelect.addEventListener("change", () => {
+      viewer.clock.multiplier = Number(el.speedSelect.value);
+    });
+
+    el.btnPlayPause.addEventListener("click", () => {
+      playing = !playing;
+      el.btnPlayPause.textContent = playing ? "Pause" : "Play";
+      viewer.clock.shouldAnimate = playing;
+    });
+
+    el.btnReset.addEventListener("click", () => {
+      playing = false;
+      el.btnPlayPause.textContent = "Play";
+      viewer.clock.shouldAnimate = false;
+      setCurrentIndex(0, true);
+    });
+
+    el.tleSample.addEventListener("change", () => {
+      const v = el.tleSample.value;
+      if (v === "iss") {
+        // Sample only (works best near its epoch)
+        el.tleLine1.value = "1 25544U 98067A   26011.40284706  .00010825  00000+0  20259-3 0  9997";
+        el.tleLine2.value = "2 25544  51.6334 355.6191 0007697   6.1669 353.9413 15.49235693547451";
+      } else {
+        el.tleLine1.value = "";
+        el.tleLine2.value = "";
+      }
+    });
+
+    el.btnLoadTLE.addEventListener("click", loadTleFromInputs);
+  }
+
+  // ---------------------------------------
+  // Bootstrap
+  // ---------------------------------------
+  function init() {
+    initCesium();
+    wireUI();
+
+    syncInclinationUI(state.inclinationDeg);
+    syncAltitudeUI(state.altitudeKm);
+    setSwathUISpec(10, 500, state.swathKm);
+
+    applyPropagationModeUI();
+    applyOrbitTypeUIRules();
+
+    derivedOrbitKind = state.orbitType;
+    rebuildSimulation({ preserveTimeFraction: false });
+
+    updateStatusPills();
+  }
+
+  init();
+
+})();
+</script>
+</body>
+</html>
