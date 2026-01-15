@@ -1,0 +1,1489 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chapter 1 — The History and Development of Satellite Oceanography</title>
+
+  <!-- Single-file version: styles.css is embedded below (verbatim), plus a small formatting add-on.
+       Source stylesheet: :contentReference[oaicite:0]{index=0} -->
+
+  <style>
+:root{
+  --bg: #0b1220;
+  --card: rgba(255,255,255,.05);
+  --card2: rgba(15,26,46,.55);
+  --text: #e5e7eb;
+  --muted: #94a3b8;
+  --line: rgba(148,163,184,.22);
+  --accent: #60a5fa;
+  --accent2: #34d399;
+  --warn: #fbbf24;
+  --shadow: 0 10px 30px rgba(0,0,0,.35);
+  --radius: 14px;
+  --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+*{ box-sizing: border-box; }
+
+html, body{ height: 100%; }
+body{
+  margin: 0;
+  font-family: var(--sans);
+  color: var(--text);
+  background:
+    radial-gradient(1200px 600px at 12% -10%, rgba(96,165,250,.22), transparent 55%),
+    radial-gradient(900px 500px at 92% 0%, rgba(52,211,153,.14), transparent 55%),
+    var(--bg);
+  line-height: 1.45;
+}
+
+a{ color: inherit; }
+a.link{
+  color: rgba(229,231,235,.96);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(96,165,250,.35);
+}
+a.link:hover{ border-bottom-color: rgba(96,165,250,.9); }
+
+/* Accessibility */
+.skip{
+  position: absolute;
+  left: -999px;
+  top: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(96,165,250,.18);
+  border: 1px solid rgba(96,165,250,.35);
+  color: var(--text);
+  z-index: 50;
+}
+.skip:focus{ left: 12px; }
+
+/* Layout */
+.container{
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 18px 18px 48px;
+}
+
+/* Topbar */
+.topbar{
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  backdrop-filter: blur(10px);
+  background: rgba(11,18,32,.70);
+  border-bottom: 1px solid var(--line);
+}
+.topbar-inner{
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+.brand{
+  display: grid;
+  gap: 2px;
+}
+.brand a{
+  text-decoration: none;
+  font-weight: 900;
+  letter-spacing: .2px;
+  font-size: 1.02rem;
+}
+.brand small{
+  color: var(--muted);
+  font-size: .86rem;
+}
+
+/* Nav */
+.nav{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.nav a{
+  text-decoration: none;
+  color: rgba(229,231,235,.92);
+  font-size: .92rem;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  transition: background .15s ease, border-color .15s ease;
+  white-space: nowrap;
+}
+.nav a:hover{
+  background: rgba(148,163,184,.08);
+  border-color: rgba(148,163,184,.18);
+}
+.nav a.active{
+  background: rgba(96,165,250,.16);
+  border-color: rgba(96,165,250,.35);
+  font-weight: 750;
+}
+.nav a.active:hover{
+  background: rgba(96,165,250,.22);
+  border-color: rgba(96,165,250,.48);
+}
+
+.menu-btn{
+  display: none;
+  border: 1px solid var(--line);
+  background: rgba(96,165,250,.14);
+  color: rgba(229,231,235,.96);
+  padding: 9px 11px;
+  border-radius: 10px;
+  cursor: pointer;
+  font: inherit;
+}
+
+/* Panels/cards/buttons */
+.panel{
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+  box-shadow: var(--shadow);
+  padding: 14px;
+}
+
+.btn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  text-decoration: none;
+  color: rgba(229,231,235,.96);
+  background: rgba(148,163,184,.06);
+  transition: transform .06s ease, background .15s ease, border-color .15s ease;
+  font-weight: 650;
+  font-size: .92rem;
+}
+.btn:hover{
+  background: rgba(148,163,184,.10);
+  border-color: rgba(148,163,184,.26);
+}
+.btn:active{ transform: translateY(1px); }
+
+.btn.primary{
+  background: rgba(96,165,250,.18);
+  border-color: rgba(96,165,250,.35);
+}
+.btn.primary:hover{
+  background: rgba(96,165,250,.24);
+  border-color: rgba(96,165,250,.48);
+}
+.btn.good{
+  background: rgba(52,211,153,.14);
+  border-color: rgba(52,211,153,.28);
+}
+.btn.good:hover{
+  background: rgba(52,211,153,.20);
+  border-color: rgba(52,211,153,.42);
+}
+
+/* Home hero */
+.hero{
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: 1.2fr .8fr;
+  gap: 14px;
+  align-items: stretch;
+}
+.hero h1{
+  margin: 0 0 6px;
+  font-size: clamp(1.25rem, 2.8vw, 2.0rem);
+  letter-spacing: .2px;
+}
+.hero p{
+  margin: 0 0 12px;
+  color: var(--muted);
+  max-width: 80ch;
+}
+.cta-row{
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+/* Mini info box (right-side) */
+.mini{
+  background: rgba(15,26,46,.55);
+  border: 1px solid rgba(148,163,184,.18);
+  border-radius: 12px;
+  padding: 12px;
+}
+.mini h2{
+  margin: 0 0 8px;
+  font-size: 1.0rem;
+  letter-spacing: .2px;
+}
+.kv{
+  display: grid;
+  gap: 8px;
+  color: rgba(229,231,235,.92);
+  font-size: .92rem;
+}
+.kv div{
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 10px;
+  align-items: start;
+}
+.kv dt{ color: var(--muted); font-weight: 750; }
+.kv dd{ margin: 0; }
+
+/* Titles and grids */
+.section-title{
+  margin: 18px 0 10px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.section-title h2{
+  margin: 0;
+  font-size: 1.05rem;
+  letter-spacing: .2px;
+}
+.section-title span{
+  color: var(--muted);
+  font-size: .92rem;
+}
+
+.grid{
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+.card{
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(15,26,46,.45);
+  padding: 12px;
+  transition: transform .08s ease, border-color .15s ease, background .15s ease;
+  min-height: 120px;
+  display: grid;
+  gap: 6px;
+}
+.card:hover{
+  transform: translateY(-1px);
+  background: rgba(15,26,46,.58);
+  border-color: rgba(96,165,250,.35);
+}
+.card h3{
+  margin: 0;
+  font-size: 1.0rem;
+  letter-spacing: .2px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.tag{
+  font-family: var(--mono);
+  font-size: .78rem;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(148,163,184,.22);
+  background: rgba(148,163,184,.08);
+  color: rgba(229,231,235,.92);
+  white-space: nowrap;
+}
+.card p{
+  margin: 0;
+  color: var(--muted);
+  font-size: .92rem;
+}
+.card a{ margin-top: 6px; width: fit-content; }
+
+/* List items (announcements, lecture items, etc.) */
+.list{ display: grid; gap: 10px; }
+.item{
+  border: 1px solid rgba(148,163,184,.16);
+  border-radius: 12px;
+  background: rgba(148,163,184,.06);
+  padding: 10px 12px;
+}
+.item .top{
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.item strong{ letter-spacing: .2px; }
+.item time{
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: .82rem;
+}
+.item p{
+  margin: 6px 0 0;
+  color: rgba(229,231,235,.88);
+  font-size: .92rem;
+}
+
+/* Page header (non-home pages) */
+.page-head{
+  margin-top: 18px;
+  display: grid;
+  gap: 6px;
+}
+.page-head h1{
+  margin: 0;
+  font-size: clamp(1.25rem, 2.5vw, 1.85rem);
+  letter-spacing: .2px;
+}
+.page-head p{
+  margin: 0;
+  color: var(--muted);
+  max-width: 90ch;
+}
+.breadcrumbs{
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  font-size: .9rem;
+  color: var(--muted);
+}
+.breadcrumbs a{
+  text-decoration: none;
+  border-bottom: 1px solid rgba(148,163,184,.22);
+}
+.breadcrumbs a:hover{
+  border-bottom-color: rgba(96,165,250,.7);
+}
+
+/* Tables */
+.table-wrap{
+  margin-top: 10px;
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: rgba(15,26,46,.45);
+}
+table.course{
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 980px;
+}
+table.course caption{
+  caption-side: top;
+  text-align: left;
+  padding: 12px 12px 10px;
+  font-weight: 800;
+  letter-spacing: .2px;
+  color: rgba(229,231,235,.98);
+}
+table.course thead th{
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: rgba(15,26,46,.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+  padding: 12px;
+  text-align: left;
+  font-size: .92rem;
+  font-weight: 900;
+}
+table.course tbody td{
+  padding: 12px;
+  border-top: 1px solid rgba(148,163,184,.16);
+  vertical-align: top;
+  font-size: .93rem;
+  color: rgba(229,231,235,.92);
+}
+table.course tbody tr:nth-child(odd){ background: rgba(148,163,184,.06); }
+table.course tbody tr:nth-child(even){ background: rgba(148,163,184,.02); }
+table.course tbody tr:hover{ background: rgba(96,165,250,.10); }
+
+/* Notes / callouts */
+.callout{
+  margin-top: 12px;
+  border-left: 3px solid rgba(96,165,250,.55);
+  padding-left: 12px;
+  color: var(--muted);
+  font-size: .92rem;
+}
+.callout strong{ color: rgba(229,231,235,.92); }
+
+/* Footer */
+footer{
+  margin-top: 18px;
+  color: var(--muted);
+  font-size: .9rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.foot-badge{
+  font-family: var(--mono);
+  font-size: .82rem;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(148,163,184,.08);
+  color: rgba(229,231,235,.86);
+}
+
+/* Responsive */
+@media (max-width: 980px){
+  .hero{ grid-template-columns: 1fr; }
+  .grid{ grid-template-columns: 1fr; }
+  .kv div{ grid-template-columns: 110px 1fr; }
+  table.course{ min-width: 0; }
+}
+
+@media (max-width: 840px){
+  .menu-btn{ display: inline-flex; }
+  .nav{
+    display: none;
+    width: 100%;
+    padding-top: 10px;
+  }
+  .nav.open{ display: flex; }
+  .topbar-inner{
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+}
+
+/* Optional: card-style tables on phones */
+@media (max-width: 720px){
+  .table-wrap{ overflow-x: visible; }
+  table.course, table.course thead, table.course tbody, table.course th, table.course td, table.course tr { display: block; }
+  table.course thead { display: none; }
+  table.course{ min-width: 0; }
+  table.course tbody tr{
+    border-top: 1px solid var(--line);
+    padding: 10px 10px 4px;
+  }
+  table.course tbody td{
+    border: none;
+    padding: 8px 6px;
+  }
+  table.course tbody td::before{
+    content: attr(data-label);
+    display: block;
+    font-size: .78rem;
+    color: rgba(148,163,184,.95);
+    letter-spacing: .2px;
+    margin-bottom: 2px;
+  }
+}
+  </style>
+
+  <!-- Small, purely presentational add-on to improve formatting without altering content -->
+  <style>
+    /* Improve default typography for long-form reading */
+    h1, h2, h3 { line-height: 1.2; }
+    h3 { margin-top: 14px; }
+    p { max-width: 95ch; }
+    ul, ol { max-width: 95ch; }
+    li { margin: 6px 0; }
+
+    /* Media helpers (kept from prior version) */
+    figure.media{
+      margin: 0;
+      display: grid;
+      gap: 8px;
+    }
+    figure.media img{
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: rgba(15,26,46,.35);
+    }
+    figure.media figcaption{
+      color: var(--muted);
+      font-size: .92rem;
+      line-height: 1.35;
+    }
+
+    /* Table of contents */
+    .toc{
+      margin: 0;
+      padding-left: 18px;
+      color: rgba(229,231,235,.92);
+    }
+    .toc li{ margin: 6px 0; }
+    .toc a{
+      text-decoration: none;
+      border-bottom: 1px solid rgba(96,165,250,.35);
+    }
+    .toc a:hover{ border-bottom-color: rgba(96,165,250,.9); }
+
+    /* Media grid */
+    .media-grid{
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 10px;
+    }
+    @media (max-width: 980px){
+      .media-grid{ grid-template-columns: 1fr; }
+    }
+
+    /* Utility bits */
+    .kicker{
+      font-family: var(--mono);
+      font-size: .82rem;
+      color: rgba(229,231,235,.88);
+      opacity: .95;
+      letter-spacing: .2px;
+    }
+    .hr{
+      height: 1px;
+      background: var(--line);
+      margin: 14px 0;
+    }
+    .note{
+      color: var(--muted);
+      font-size: .92rem;
+    }
+    .ref-list{
+      margin: 0;
+      padding-left: 18px;
+      color: rgba(229,231,235,.92);
+    }
+    .ref-list li{ margin: 10px 0; }
+    .ref-list em{ color: rgba(229,231,235,.96); }
+  </style>
+</head>
+
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <a href="#" aria-label="Course home">OCNG 489/689 • Studying the Oceans from Space</a>
+        <small>Chapter 1 — History and development</small>
+      </div>
+
+      <button class="menu-btn" type="button" aria-label="Toggle navigation" aria-controls="site-nav" aria-expanded="false">
+        Menu
+      </button>
+
+      <nav id="site-nav" class="nav" aria-label="Chapter navigation">
+        <a href="#s1-1">1.1</a>
+        <a href="#s1-2">1.2</a>
+        <a href="#s1-3">1.3</a>
+        <a href="#s1-4">1.4</a>
+        <a href="#s1-5">1.5</a>
+        <a href="#s1-6">1.6</a>
+        <a href="#s1-7">1.7</a>
+        <a href="#refs">References</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="container">
+    <div class="page-head">
+      <div class="breadcrumbs">
+        <a class="link" href="#">Course</a>
+        <span>›</span>
+        <span>Chapter 1</span>
+      </div>
+      <h1>Chapter 1: The History and Development of Satellite Oceanography</h1>
+      <p>
+        Satellite oceanography emerged from mid-20th-century advances in rocketry, radiometry, radar, and geodesy,
+        and it now provides essential, routinely available observations of the ocean surface and near-surface
+        environment. This chapter traces the intellectual and technological lineage from pre-satellite observation
+        strategies to modern multi-mission, multi-sensor Earth observing systems.
+      </p>
+      <p class="callout">
+        <strong>Scope note.</strong> “Satellite oceanography” is used here in the broad sense that is common in ocean
+        remote sensing: measurement of ocean variables from orbit (directly or via retrieval algorithms), coupled
+        with the calibration, validation, and interpretation frameworks that make those measurements scientifically
+        usable.
+      </p>
+    </div>
+
+    <section class="hero" aria-label="Chapter overview">
+      <div class="panel">
+        <div class="kicker">In this chapter</div>
+        <h1 style="margin-top:6px;">From the Space Age to an ocean observing infrastructure</h1>
+        <p>
+          The distinctive contribution of satellites is <em>synoptic, repeated</em> sampling of the global ocean surface
+          with standardized instrumentation. Progress in satellite oceanography has therefore been tightly linked to
+          (i) sensor physics, (ii) platform and orbit design, and (iii) the development of geophysical retrieval
+          algorithms and uncertainty characterization.
+        </p>
+
+      </div>
+
+      <aside class="mini" aria-label="Key milestones">
+        <h2>Milestones at a glance</h2>
+        <dl class="kv">
+          <div>
+            <dt>1957–1958</dt>
+            <dd>Sputnik-1 and Explorer-1 inaugurate orbital science and demonstrate the value of space-based measurement.</dd>
+          </div>
+          <div>
+            <dt>1960</dt>
+            <dd>TIROS-1 establishes routine Earth imaging from orbit for weather and Earth system observation.</dd>
+          </div>
+          <div>
+            <dt>1978</dt>
+            <dd>Seasat demonstrates radar-based ocean remote sensing; Nimbus-7/CZCS initiates ocean color from space.</dd>
+          </div>
+          <div>
+            <dt>1992</dt>
+            <dd>TOPEX/Poseidon launches the precision altimetry era for global circulation and sea level variability.</dd>
+          </div>
+          <div>
+            <dt>2009–2011</dt>
+            <dd>Dedicated satellite salinity observations mature (e.g., SMOS; later Aquarius/SAC-D).</dd>
+          </div>
+          <div>
+            <dt>2022</dt>
+            <dd>SWOT introduces wide-swath interferometric altimetry for fine-scale sea surface height structure.</dd>
+          </div>
+        </dl>
+      </aside>
+    </section>
+
+    <section class="panel" aria-label="Table of contents" style="margin-top:14px;">
+      <div class="section-title">
+        <h2>Contents</h2>
+        <span>Internal navigation</span>
+      </div>
+      <ol class="toc">
+        <li><a href="#s1-1">1.1 Introduction and definition</a></li>
+        <li><a href="#s1-2">1.2 The pre-satellite era: foundations of ocean observation</a></li>
+        <li><a href="#s1-3">1.3 The Space Age begins</a></li>
+        <li><a href="#s1-4">1.4 Decade-by-decade development</a></li>
+        <li><a href="#s1-5">1.5 Modern context: satellites and in-situ systems</a></li>
+        <li><a href="#s1-6">1.6 Sensor showcase: observing ocean variables from space</a></li>
+        <li><a href="#s1-7">1.7 Summary</a></li>
+        <li><a href="#refs">References and figure sources</a></li>
+      </ol>
+    </section>
+
+    <!-- ===================================================== -->
+    <section id="s1-1" class="panel" style="margin-top:14px;">
+      <div class="section-title">
+        <h2>1.1 Introduction and Definition</h2>
+        <span>What satellite oceanography measures, and why it matters</span>
+      </div>
+
+      <p>
+        <strong>Satellite oceanography</strong> is the observation of the ocean (and its interaction with the atmosphere
+        and cryosphere) using sensors carried by Earth-orbiting platforms. In practice, satellites measure radiance,
+        backscatter, or propagation time at the top of the atmosphere, and ocean variables are obtained by combining
+        those measurements with geophysical models, calibration information, and retrieval algorithms.
+      </p>
+
+      <h3>1.1.1 What is remote sensing in oceanography?</h3>
+      <p>
+        Remote sensing is the acquisition of information about a target without physical contact. For oceanography,
+        most satellite measurements are inherently surface-weighted because seawater strongly attenuates electromagnetic
+        radiation. Important exceptions include <em>ocean color</em> (which is sensitive to optical properties within the
+        upper ocean) and <em>active microwave methods</em> (which respond to surface roughness and enable all-weather
+        sampling in many conditions).
+      </p>
+
+      <p class="callout">
+        <strong>Measurement principle.</strong> Different ocean properties imprint distinct signatures on electromagnetic
+        observations. For example, sea surface height is inferred from radar range measurements combined with precise
+        orbit determination; surface winds are retrieved from the dependence of microwave backscatter on wind-generated
+        surface roughness; and chlorophyll-a is estimated from the spectral dependence of water-leaving radiance after
+        atmospheric correction.
+      </p>
+
+      <h3>1.1.2 Why observe the oceans from space?</h3>
+      <p>
+        The global ocean’s extent and dynamical variability impose practical limits on ship-based sampling. Satellites
+        complement in-situ observing systems by providing repeated, standardized, spatially extensive measurements that
+        enable the study of phenomena ranging from basin-scale circulation patterns to mesoscale eddies and coastal
+        fronts. In addition, satellite missions support operational needs in weather, climate monitoring, and marine
+        services by delivering consistent data streams with defined revisit schedules.
+      </p>
+    </section>
+
+    <!-- ===================================================== -->
+    <section id="s1-2" class="panel" style="margin-top:14px;">
+      <div class="section-title">
+        <h2>1.2 The Pre-Satellite Era: Foundations of Ocean Observation</h2>
+        <span>From expeditions to systematic, but sparse, sampling</span>
+      </div>
+
+      <p>
+        Before the Space Age, oceanography relied almost entirely on <em>in-situ</em> measurements from ships, moorings,
+        and later autonomous platforms. This era established many of the conceptual and methodological foundations of
+        modern ocean science: standardized hydrographic sampling, the recognition of coherent water masses, the role of
+        wind forcing, and the dynamical significance of fronts, eddies, and boundary currents.
+      </p>
+
+      <h3>1.2.1 Observational strengths and limitations</h3>
+      <p>
+        Classical ship-based programs deliver high-accuracy profiles and water samples, but their sampling is often
+        temporally and spatially sparse relative to the characteristic scales of ocean variability. As a consequence,
+        early oceanography faced persistent challenges:
+      </p>
+
+      <ul>
+        <li><strong>Aliasing and temporal compositing:</strong> synoptic “snapshots” were difficult to obtain when a survey required weeks to months.</li>
+        <li><strong>Limited access:</strong> persistent coverage of remote and high-latitude regions was constrained by logistics and weather.</li>
+        <li><strong>Surface emphasis in practice:</strong> although deep observations were possible, their cost limited repeat sampling and large-area mapping.</li>
+      </ul>
+
+      <p class="callout">
+        <strong>Motivating idea.</strong> The emerging need for global coverage and repeat sampling—especially for
+        mesoscale and climate-scale variability—created an explicit demand for a fundamentally different observing
+        strategy, which the Space Age would provide.
+      </p>
+    </section>
+
+    <!-- ===================================================== -->
+    <section id="s1-3" class="panel" style="margin-top:14px;">
+      <div class="section-title">
+        <h2>1.3 The Space Age Begins</h2>
+        <span>Early satellites and the transition to Earth observation</span>
+      </div>
+
+      <h3>1.3.1 Sputnik-1 and Explorer-1: proof of orbit, proof of discovery</h3>
+      <p>
+        The launch of <strong>Sputnik-1</strong> by the Soviet Union on <strong>4 October 1957</strong> is widely treated
+        as the start of the Space Age. Although Sputnik-1 carried only a radio transmitter, it established the
+        feasibility of routine orbital operations and catalyzed rapid investment in space-based science and
+        technology. 
+      </p>
+
+      <p>
+        The United States responded with <strong>Explorer-1</strong>, launched on <strong>31 January 1958</strong>. Data
+        from Explorer-1’s Geiger counter experiment led to the identification of intense radiation regions now known
+        as the <strong>Van Allen radiation belts</strong>, illustrating a recurring theme in satellite history:
+        space-based platforms not only operationalize measurement, but can reveal previously unknown components of the
+        Earth system. 
+      </p>
+
+      <div class="media-grid">
+        <div class="panel">
+          <figure class="media">
+            <img
+              src="https://www.nasa.gov/wp-content/uploads/static/history/sputnik/sputnik1.jpg"
+              alt="Sputnik 1 satellite on display, spherical body with antennae"
+              loading="lazy"
+            />
+            <figcaption>
+              <strong>Sputnik-1</strong> (1957). Often cited as the start of the Space Age.
+              Credit: NASA. Source: NASA History archive.
+              
+            </figcaption>
+          </figure>
+        </div>
+
+        <div class="panel">
+          <figure class="media">
+            <img
+              src="https://www.nasa.gov/wp-content/uploads/2018/01/0401524orig.jpg"
+              alt="Infographic illustrating Explorer 1 satellite and key facts"
+              loading="lazy"
+            />
+            <figcaption>
+              <strong>Explorer-1</strong> (1958). Early U.S. science satellite; associated with discovery of the Van Allen belts. The image showed Explorer-1 on top of a Jupiter-C rocket.
+              Credit: NASA.
+              
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <h3>1.3.2 TIROS-1 and the operational value of Earth imaging</h3>
+      <p>
+        The transition from “space exploration” to systematic <em>Earth observation</em> accelerated with
+        <strong>TIROS-1</strong>, launched on <strong>1 April 1960</strong> as the first successful weather satellite.
+        While TIROS was designed for meteorology, its imaging capability established a template for observing the
+        coupled ocean–atmosphere system: storms, frontal cloud bands, and marine stratocumulus patterns provide
+        indirect—but often oceanographically informative—evidence of underlying ocean states and air–sea interaction.
+        
+      </p>
+
+      <div class="panel" style="margin-top:10px;">
+        <figure class="media">
+          <img
+            src="https://www.nesdis.noaa.gov/s3/styles/webp/s3/migrated/DYK-TIROS.jpg.webp?itok=HS6LBKSI"
+            alt="TIROS-1 satellite in orbit, cylindrical body with solar panels"
+            loading="lazy"
+          />
+          <figcaption>
+            <strong>TIROS-1</strong> (1960). First successful weather satellite; established routine Earth imaging from orbit.
+            Credit: NASA. 
+          </figcaption>
+        </figure>
+      </div>
+
+       <a href="https://svs.gsfc.nasa.gov/10552/#media_group_353331">Here is a video on the TIROS program's 50th anniversary from NASA </a>
+      
+      <h3>1.3.3 Technology pathfinders: ATS and Nimbus</h3>
+      <p>
+        Early programs such as NASA’s <strong>Applications Technology Satellites (ATS)</strong> demonstrated the value
+        of near-continuous viewing geometries (geosynchronous or near-geosynchronous) for weather systems, while the
+        <strong>Nimbus</strong> research satellites provided a platform for testing sensors that later became central to
+        operational Earth system monitoring. 
+      </p>
+
+      <p>
+        Of particular relevance to oceanography, <strong>Nimbus-5</strong> carried the <strong>Electrically Scanning
+        Microwave Radiometer (ESMR)</strong>, enabling early spaceborne microwave observations of the cryosphere and
+        demonstrating that microwave methods could provide critical information in cloudy or polar-night conditions.
+        
+      </p>
+    </section>
+
+    <!-- ===================================================== -->
+    <section id="s1-4" class="panel" style="margin-top:14px;">
+      <div class="section-title">
+        <h2>1.4 Decade-by-Decade Development</h2>
+        <span>From experimental sensors to integrated observing systems</span>
+      </div>
+
+      <div class="callout">
+        <strong>Interpretive lens.</strong> The history of satellite oceanography can be read as a sequence of
+        measurement “expansions”: from visible imaging (clouds and the surface), to infrared SST, to microwave
+        all-weather observations, to precision altimetry and ocean color, and finally to multi-sensor constellations
+        and wide-swath mapping.
+      </div>
+
+      <div class="section-title">
+        <h2>Timeline highlights</h2>
+        <span>Selected missions and contributions</span>
+      </div>
+
+      <div class="grid" aria-label="Decade timeline cards">
+        <article class="card">
+          <h3><span class="tag">1960s</span> Operational imaging emerges</h3>
+          <p>
+            TIROS establishes weather imaging; ATS and Nimbus programs mature sensors and orbital concepts that later
+            support ocean applications.
+          </p>
+        </article>
+
+        <article class="card">
+          <h3><span class="tag">1970s</span> Dedicated ocean sensing begins</h3>
+          <p>
+            Nimbus-7 carries <strong>CZCS</strong> for ocean color; <strong>Seasat</strong> demonstrates radar altimetry,
+            SAR, and scatterometry for ocean remote sensing (despite a short mission life).
+          </p>
+        </article>
+
+        <article class="card">
+          <h3><span class="tag">1980s</span> Operational SST and mesoscale variability</h3>
+          <p>
+            NOAA polar orbiters with <strong>AVHRR</strong> support routine SST; <strong>GEOSAT</strong> extends the
+            altimetry record and reveals mesoscale variability at basin scale.
+          </p>
+        </article>
+
+        <article class="card">
+          <h3><span class="tag">1990s</span> Precision altimetry era</h3>
+          <p>
+            <strong>TOPEX/Poseidon</strong> provides a high-accuracy global sea surface height record; ocean color is
+            restored and improved with sensors such as <strong>SeaWiFS</strong>.
+          </p>
+        </article>
+
+        <article class="card">
+          <h3><span class="tag">2000s</span> Multi-parameter Earth observing systems</h3>
+          <p>
+            Mature integration of SST, color, winds, and altimetry in widely used data systems; dedicated salinity
+            observation becomes feasible with L-band radiometry (e.g., <strong>SMOS</strong>).
+          </p>
+        </article>
+
+        <article class="card">
+          <h3><span class="tag">2010s–2020s</span> Constellations and wide-swath mapping</h3>
+          <p>
+            Copernicus Sentinel missions operationalize multi-sensor coverage; reference altimetry is extended
+            (e.g., Sentinel-6); <strong>SWOT</strong> introduces wide-swath interferometric altimetry.
+          </p>
+        </article>
+      </div>
+
+      <div class="hr"></div>
+
+      <h3>1.4.1 The 1970s: “True” satellite oceanography (Seasat and CZCS)</h3>
+      <p>
+        Two 1978 missions are commonly treated as foundational for modern satellite oceanography. First,
+        <strong>Seasat</strong> (launched <strong>27 June 1978</strong>) carried a radar altimeter, synthetic aperture
+        radar (SAR), a scatterometer, and microwave radiometry, demonstrating that microwave techniques could retrieve
+        ocean information in many cloudy conditions. Seasat operated for roughly <strong>105 days</strong>, yet produced
+        a dataset that shaped radar oceanography for decades. 
+      </p>
+
+      <div class="media-grid">
+        <div class="panel">
+          <figure class="media">
+            <img
+              src="images/seasat.jpeg"
+              alt="Illustration of the Seasat satellite"
+              loading="lazy"
+            />
+            <figcaption>
+              <strong>Seasat</strong> (1978). First satellite designed specifically for comprehensive ocean remote sensing.
+              Credit: NASA/JPL-Caltech.
+              
+            </figcaption>
+          </figure>
+        </div>
+
+        <div class="panel">
+          <figure class="media">
+            <img
+              src="https://assets.science.nasa.gov/content/dam/science/esd/eo/images/imagerecords/3000/3589/gulfmex_seasat_1978_lrg.jpg"
+              alt="Seasat SAR image showing internal wave patterns in the Gulf of Mexico"
+              loading="lazy"
+            />
+            <figcaption>
+              <strong>Seasat SAR example (1978):</strong> internal wave signatures visible as alternating roughness bands.
+              Credit: NASA Earth Observatory / Seasat SAR archive.
+              
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <p>
+        Second, <strong>Nimbus-7</strong> carried the <strong>Coastal Zone Color Scanner (CZCS)</strong>, the first
+        satellite sensor designed specifically to observe ocean color for chlorophyll and related bio-optical
+        properties. Although intended as a proof-of-concept, CZCS established the scientific and algorithmic
+        foundations for global biological oceanography from space. 
+      </p>
+
+      <div class="panel" style="margin-top:10px;">
+        <figure class="media">
+          <img
+            src="https://earthdata.nasa.gov/s3fs-public/styles/hero_background/public/2025-10/czcs-instrument-hero.jpg?VersionId=G27arEEjdcgULOx.b0vl4hnuLXOcEpMi&itok=C9P75epA"
+            alt="Composite of historical CZCS ocean color scenes"
+            loading="lazy"
+          />
+          <figcaption>
+            <strong>CZCS ocean color examples:</strong> early demonstrations of large-scale, satellite-derived bio-optical structure.
+            Credit: NASA Earthdata / CZCS instrument archive.
+            
+          </figcaption>
+        </figure>
+      </div>
+
+      <h3>1.4.2 The 1980s: operational SST and continuing altimetry</h3>
+      <p>
+        In the 1980s, operational polar-orbiting satellite programs enabled routine sea surface temperature products
+        using instruments such as the <strong>Advanced Very High Resolution Radiometer (AVHRR)</strong>, including
+        data streams beginning with missions such as <strong>NOAA-7</strong> (launched 1981). 
+      </p>
+
+      <p>
+        This decade also extended the radar altimetry lineage after Seasat. The U.S. Navy’s <strong>GEOSAT</strong>
+        (launched 1985) provided an important continuation of altimetric observations, with substantial scientific
+        impact following later data release to the research community. 
+      </p>
+
+      <h3>1.4.3 The 1990s: TOPEX/Poseidon and global sea level variability</h3>
+      <p>
+        The launch of <strong>TOPEX/Poseidon</strong> on <strong>10 August 1992</strong> marked a major step change in
+        the accuracy and stability of satellite altimetry for oceanography. Its measurements enabled high-fidelity
+        mapping of sea level variability associated with large-scale circulation and climate modes such as El Niño,
+        and it established the basis for a long-term reference record later continued by successor missions. 
+      </p>
+
+      <div class="panel" style="margin-top:10px;">
+        <figure class="media">
+          <img
+            src="https://d2pn8kiwq2w21t.cloudfront.net/original_images/jpegPIA00735.jpg"
+            alt="TOPEX/Poseidon sea surface height map highlighting the 1997 El Nino"
+            loading="lazy"
+          />
+          <figcaption>
+            <strong>Altimetry example:</strong> TOPEX/Poseidon sea surface height patterns during the 1997 El Niño event
+            (“El Niño Watch”). Credit: NASA/JPL-Caltech.
+            
+          </figcaption>
+        </figure>
+      </div>
+
+      <p>
+        Biological satellite oceanography was revived and extended with <strong>SeaWiFS</strong> (Sea-viewing Wide Field-of-view Sensor),
+        which produced global chlorophyll products and improved calibration approaches relative to CZCS-era techniques. 
+      </p>
+
+      <div class="panel" style="margin-top:10px;">
+        <figure class="media">
+          <img
+            src="https://assets.science.nasa.gov/content/dam/science/esd/eo/images/imagerecords/4000/4097/S19972442003273_lrg.jpg"
+            alt="Global ocean color map showing spatial patterns consistent with phytoplankton distribution"
+            loading="lazy"
+          />
+          <figcaption>
+            <strong>Ocean color example (SeaWiFS):</strong> global-scale structure in ocean color consistent with phytoplankton distribution.
+            Credit: NASA Earth Observatory / SeaWiFS.
+            
+          </figcaption>
+        </figure>
+      </div>
+
+      <h3>1.4.4 The 2000s–2020s: salinity, Copernicus, and wide-swath altimetry</h3>
+      <p>
+        Ocean salinity became a practical satellite target with L-band radiometry. ESA’s <strong>Soil Moisture and
+        Ocean Salinity (SMOS)</strong> mission, launched <strong>2 November 2009</strong>, is a key milestone in
+        operationalizing spaceborne sea surface salinity observations. 
+      </p>
+
+      <p>
+        In parallel, the Copernicus program strengthened operational continuity through multi-instrument platforms.
+        For example, <strong>Sentinel-3</strong> provides ocean color, sea surface temperature, and radar altimetry, with
+        Sentinel-3A launched in 2016 and Sentinel-3B in 2018. 
+      </p>
+
+      <div class="panel" style="margin-top:10px;">
+        <figure class="media">
+          <img
+            src="https://www.esa.int/var/esa/storage/images/esa_multimedia/images/2018/03/sentinel-3_scans_earth_s_colour/17400626-1-eng-GB/Sentinel-3_scans_Earth_s_colour.jpg"
+            alt="Illustration of Sentinel-3 ocean and land colour instrument scanning with multiple spectral bands"
+            loading="lazy"
+          />
+          <figcaption>
+            <strong>Modern multi-spectral scanning concept (Sentinel-3 / OLCI):</strong> visualization of push-broom
+            scanning and multi-band acquisition used for ocean color retrievals.
+            Credit: ESA/ATG medialab (ESA multimedia).
+            
+          </figcaption>
+        </figure>
+      </div>
+
+      <p>
+        Reference altimetry is presently extended by missions such as <strong>Sentinel-6</strong>, which is designed to
+        continue the decades-long record of sea surface height measurements. 
+      </p>
+
+      <p>
+        Most recently, <strong>Surface Water and Ocean Topography (SWOT)</strong> (launched <strong>16 December 2022</strong>)
+        introduces a new measurement geometry: wide-swath interferometric altimetry. SWOT’s <strong>Ka-band Radar Interferometer (KaRIn)</strong>
+        collects two ~50 km swaths on either side of the ground track with a ~20 km nadir gap (overall ~120 km), enabling
+        observation of ocean variability at substantially finer spatial scales than traditional nadir altimeters. 
+      </p>
+    </section>
+
+    <!-- ===================================================== -->
+    <section id="s1-5" class="panel" style="margin-top:14px;">
+      <div class="section-title">
+        <h2>1.5 Modern Context: Satellites and In-Situ Systems</h2>
+        <span>Complementarity, calibration/validation, and integration</span>
+      </div>
+
+      <h3>1.5.1 The Argo observing system</h3>
+      <p>
+        Satellite oceanography evolved alongside transformative advances in autonomous in-situ observation. The
+        <strong>Argo</strong> program is a global network of profiling floats that repeatedly sample temperature and
+        salinity (and, for subsets of floats, biogeochemical variables). Argo emphasizes open data access and
+        standardized quality control, and it is explicitly synergistic with satellite altimetry (the “Jason” naming
+        reference is reflected in Argo program outreach materials). 
+      </p>
+
+      <p>
+        As of program documentation describing the current observing system, Argo is collecting on the order of
+        <strong>13,000 profiles per month</strong> (roughly 400+ per day). 
+      </p>
+
+      <div class="panel" style="margin-top:10px;">
+        <figure class="media">
+          <img
+            src="https://argo.ucsd.edu/wp-content/uploads/sites/361/2020/06/float_cycle_1-1024x566.png"
+            alt="Diagram of an Argo float cycle showing descent, parking depth, profiling ascent, and satellite data transmission"
+            loading="lazy"
+          />
+          <figcaption>
+            <strong>Argo float sampling cycle:</strong> repeated profiling and satellite telemetry enable global subsurface coverage
+            that complements surface-focused satellite remote sensing.
+            Source: Argo Program (UC San Diego).
+            
+          </figcaption>
+        </figure>
+      </div>
+
+      <h3>1.5.2 Complementary roles and data fusion</h3>
+      <p>
+        Satellites and in-situ systems address different observational needs. Satellites provide broad, repeated,
+        surface-weighted views; in-situ systems provide vertical structure, direct sampling, and essential ground truth
+        for algorithm development and uncertainty estimation.
+      </p>
+
+      <div class="table-wrap" role="region" aria-label="Satellite vs in-situ comparison">
+        <table class="course">
+          <caption>Complementary capabilities of satellite and in-situ ocean observing systems</caption>
+          <thead>
+            <tr>
+              <th>Capability</th>
+              <th>Satellites</th>
+              <th>In-situ (e.g., Argo, moorings, ships)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td data-label="Capability">Spatial coverage</td>
+              <td data-label="Satellites">Global or near-global; synoptic mapping</td>
+              <td data-label="In-situ">Sparse, distributed; concentrated along lines/arrays</td>
+            </tr>
+            <tr>
+              <td data-label="Capability">Vertical structure</td>
+              <td data-label="Satellites">Primarily surface / near-surface sensitivity</td>
+              <td data-label="In-situ">Profiles and direct sampling through the water column</td>
+            </tr>
+            <tr>
+              <td data-label="Capability">Temporal sampling</td>
+              <td data-label="Satellites">Orbit-determined revisit; from hours (geo) to days/weeks (LEO)</td>
+              <td data-label="In-situ">Continuous at fixed sites; repeat cycles for profilers</td>
+            </tr>
+            <tr>
+              <td data-label="Capability">All-weather observations</td>
+              <td data-label="Satellites">Microwave: strong; optical/IR: limited by clouds and aerosols</td>
+              <td data-label="In-situ">Typically robust (subject to platform survivability)</td>
+            </tr>
+            <tr>
+              <td data-label="Capability">Calibration/validation</td>
+              <td data-label="Satellites">Requires in-situ reference datasets and matchup analyses</td>
+              <td data-label="In-situ">Self-contained measurements but still require QC and standards</td>
+            </tr>
+            <tr>
+              <td data-label="Capability">Best used for</td>
+              <td data-label="Satellites">Surface patterns, variability mapping, climate records</td>
+              <td data-label="In-situ">Process studies, vertical transport, water mass properties</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="callout">
+        <strong>Integration principle.</strong> Modern “ocean state” estimation typically relies on data fusion:
+        satellite observations constrain surface structure and variability, while in-situ observations constrain
+        vertical structure and provide calibration/validation. Data assimilation frameworks formalize this fusion by
+        merging observations with dynamical models.
+      </p>
+    </section>
+
+    <!-- ===================================================== -->
+    <section id="s1-6" class="panel" style="margin-top:14px;">
+      <div class="section-title">
+        <h2>1.6 Sensor Showcase: Observing Ocean Variables from Space</h2>
+        <span>Illustrative examples from mission archives</span>
+      </div>
+
+      <p>
+        Satellite oceanography is often organized by the measured (or retrieved) geophysical variables and their
+        associated sensor classes. The examples below emphasize historically important sensors and mission concepts,
+        using imagery from mission and agency archives.
+      </p>
+
+      <h3>1.6.1 Synthetic Aperture Radar (SAR): surface roughness structure</h3>
+      <p>
+        SAR is an <em>active microwave</em> technique: the instrument transmits pulses and measures the amplitude and
+        phase of the backscattered signal. Over the ocean, SAR primarily responds to surface roughness at centimeter
+        scales, which is modulated by wind stress, waves, currents, internal waves, and surface films. Seasat SAR data
+        are historically important because they demonstrated high-resolution ocean imaging from orbit. 
+      </p>
+
+
+      <h3>1.6.2 Ocean color: chlorophyll and bio-optical structure</h3>
+      <p>
+        Ocean color sensors estimate the spectral signature of water-leaving radiance after accounting for atmospheric
+        contributions. Early sensors such as CZCS established feasibility, and later missions such as SeaWiFS provided
+        improved global coverage and calibration stability. 
+
+        <div class="panel" style="margin-top:10px;">
+          <figure class="media">
+            <img
+              src="images/seawifs_bering_sea.png"
+              alt="Bering Sea ocean color image from SeaWiFS showing chlorophyll distribution"
+              loading="lazy"
+            />
+            <figcaption>
+              <strong>SeaWiFS ocean color examples:</strong> Bering Sea ocean color image showing phytoplankton (coccolithophores) distribution.
+              
+            </figcaption>
+          </figure>
+
+      </p>
+
+      <h3>1.6.3 Scatterometry: vector winds over the ocean</h3>
+      <p>
+        Radar scatterometers infer near-surface wind vectors from the directional dependence of microwave backscatter,
+        which is controlled by wind-generated short-wave roughness. The SeaWinds scatterometer on QuikSCAT provided
+        widely used global winds products and supported tropical cyclone and storm analyses. 
+      </p>
+
+      <div class="panel" style="margin-top:10px;">
+        <figure class="media">
+          <img
+            src="https://assets.science.nasa.gov/content/dam/science/psd/photojournal/pia/pia02/pia02404/PIA02404.jpg"
+            alt="QuikSCAT-derived wind speed and vectors around Hurricane Dora"
+            loading="lazy"
+          />
+          <figcaption>
+            <strong>Scatterometer wind example:</strong> QuikSCAT/SeaWinds depiction of wind speed and vectors around Hurricane Dora.
+            Credit: NASA/JPL-Caltech (Photojournal).
+            
+          </figcaption>
+        </figure>
+      </div>
+
+      <h3>1.6.4 Radar altimetry: sea surface height (SSH) and its variability</h3>
+      <p>
+        Nadir radar altimeters measure the two-way travel time of a pulse to the sea surface; with precise orbit
+        knowledge, this yields sea surface height along the satellite ground track. SSH variability is a primary
+        observable for ocean dynamics because it reflects pressure gradients and geostrophic flow (after appropriate
+        dynamical interpretation). 
+      </p>
+
+      <h3>1.6.5 Wide-swath altimetry: SWOT and the fine-scale frontier</h3>
+      <p>
+        SWOT’s KaRIn instrument extends altimetry from a one-dimensional along-track measurement to a two-dimensional
+        swath, enabling mapping of sea surface height structure across a wide corridor. The mission collects two
+        swaths (~50 km each) on either side of the nadir track, with a central gap sampled by the nadir altimeter,
+        for an overall width of ~120 km. 
+      </p>
+
+      <div class="media-grid">
+        <div class="panel">
+          <figure class="media">
+            <img
+              src="https://swot.jpl.nasa.gov/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBbzBDIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--a79e999fab7ff5358f2ad386ccae5e056df2830f/gal_02.jpg?disposition=inline"
+              alt="Diagram showing SWOT interferometer swaths and nadir altimeter track"
+              loading="lazy"
+            />
+            <figcaption>
+              <strong>SWOT swath geometry:</strong> two interferometric swaths plus a nadir track.
+              Source: NASA SWOT mission resources.
+              
+            </figcaption>
+          </figure>
+        </div>
+
+        <div class="panel">
+          <figure class="media">
+            <img
+              src="https://earthdata.nasa.gov/s3fs-public/2024-04/swot_ssh_art.png?VersionId=qMvNW8qM8n.XEW_pbSHDYzH.uVt_D_Rq"
+              alt="Global map of SWOT sea surface height RMS showing spatial variability patterns"
+              loading="lazy"
+            />
+            <figcaption>
+              <strong>SWOT data example:</strong> global map of sea surface height RMS from KaRIn measurements (illustrative product).
+              Credit: NASA/JPL-Caltech via NASA Earthdata feature article.
+              
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:10px;">
+        <figure class="media">
+          <img
+            src="https://swot.jpl.nasa.gov/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBb0FDIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--5b182130f37adf2c03cbea7d898d1b34dfa939d0/swot_payload.jpg?disposition=inline"
+            alt="Labeled diagram of the SWOT payload including KaRIn and nadir altimeter components"
+            loading="lazy"
+          />
+          <figcaption>
+            <strong>SWOT payload overview:</strong> KaRIn, nadir altimeter, microwave radiometer, and orbit/positioning subsystems.
+            Source: NASA SWOT mission resources.
+            
+          </figcaption>
+        </figure>
+      </div>
+
+      <p class="note">
+        Note: The examples above are illustrative and emphasize heritage and measurement principles; operational data
+        products typically include additional corrections, uncertainty estimates, and standardized metadata.
+      </p>
+    </section>
+
+    <!-- ===================================================== -->
+    <section id="s1-7" class="panel" style="margin-top:14px;">
+      <div class="section-title">
+        <h2>1.7 Summary</h2>
+        <span>Key takeaways</span>
+      </div>
+
+      <p>
+        Satellite oceanography progressed from the political and technological milestones of early spaceflight to an
+        essential component of the modern Earth observing system. The field’s growth reflects a sequence of enabling
+        advances: Earth imaging (TIROS), sensor technology maturation (Nimbus), the transition to all-weather microwave
+        methods (Seasat and successors), global biological mapping (CZCS → SeaWiFS and beyond), and precision sea
+        surface height monitoring (TOPEX/Poseidon → reference missions such as Sentinel-6). 
+      </p>
+
+      <p>
+        Contemporary oceanography increasingly depends on <em>integration</em>: satellites provide broad, surface-based
+        constraints on variability and climate signals, while in-situ systems such as Argo provide vertical structure
+        and calibration/validation. The newest generation of missions—exemplified by SWOT’s wide-swath interferometric
+        altimetry—expands the range of resolvable ocean processes and improves the observational basis for dynamics,
+        prediction, and climate attribution. 
+      </p>
+
+      <div class="callout">
+        <strong>Practical implication for the course.</strong> Understanding this history clarifies why modern datasets
+        are structured the way they are (e.g., retrieval algorithms, corrections, validation strategy, and mission
+        continuity planning) and why multi-sensor thinking is central to interpreting the ocean from space.
+      </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <section id="refs" class="panel" style="margin-top:14px;">
+      <div class="section-title">
+        <h2>References and Figure Sources</h2>
+        <span>Texts, mission resources, and image credits</span>
+      </div>
+
+      <h3>Core textbooks and monographs</h3>
+      <ol class="ref-list">
+        <li>
+          Robinson, I. S. (2004). <em>Measuring the Oceans from Space: The Principles and Methods of Satellite Oceanography</em>.
+          Springer.
+        </li>
+        <li>
+          Fu, L.-L., &amp; Cazenave, A. (Eds.). (2001). <em>Satellite Altimetry and Earth Sciences</em>. Academic Press.
+        </li>
+        <li>
+          Martin, S. (2014). <em>An Introduction to Ocean Remote Sensing</em> (2nd ed.). Cambridge University Press.
+        </li>
+      </ol>
+
+      <div class="hr"></div>
+
+      <h3>Mission and data portals (used for fact checking and figure sourcing)</h3>
+      <ol class="ref-list">
+        <li>
+          NASA History — Sputnik and the dawn of the Space Age:
+          <a class="link" href="https://www.nasa.gov/history/sputnik-and-the-dawn-of-the-space-age/">NASA page</a>.
+          
+        </li>
+        <li>
+          NASA/JPL — Explorer-1 resources and mission context:
+          <a class="link" href="https://www.jpl.nasa.gov/images/pia24810-explorer-1-infographic/">JPL image page</a>.
+          
+        </li>
+        <li>
+          NASA History — TIROS-1 overview:
+          <a class="link" href="https://www.nasa.gov/history/tiros-1/">NASA page</a>.
+          
+        </li>
+        <li>
+          NASA/JPL — Seasat mission overview and media:
+          <a class="link" href="https://www.jpl.nasa.gov/missions/seasat/">JPL mission page</a>.
+          
+        </li>
+        <li>
+          NASA Earthdata — CZCS instrument overview and classic scenes:
+          <a class="link" href="https://www.earthdata.nasa.gov/data/instruments/czcs">Earthdata CZCS page</a>.
+          
+        </li>
+        <li>
+          NASA Ocean Biology / SeaWiFS mission archive:
+          <a class="link" href="https://www.earthdata.nasa.gov/data/instruments/seawifs">Earthdata SeaWiFS page</a>.
+          
+        </li>
+        <li>
+          PO.DAAC — TOPEX/Poseidon mission information:
+          <a class="link" href="https://podaac.jpl.nasa.gov/TOPEX-POSEIDON">PO.DAAC TOPEX/Poseidon page</a>.
+          
+        </li>
+        <li>
+          ESA — SMOS mission overview (sea surface salinity):
+          <a class="link" href="https://earth.esa.int/eogateway/missions/smos">ESA Earth Online SMOS</a>.
+          
+        </li>
+        <li>
+          NASA Earthdata — SWOT mission data release and KaRIn measurement description:
+          <a class="link" href="https://www.earthdata.nasa.gov/news/feature-articles/nasas-surface-water-ocean-topography-swot-mission-data-release">Earthdata feature article</a>.
+          
+        </li>
+        <li>
+          NASA SWOT mission resources (swath and payload diagrams):
+          <a class="link" href="https://swot.jpl.nasa.gov/resources/">SWOT resources</a>.
+          
+        </li>
+        <li>
+          Argo Program (UC San Diego) — program overview and profile rates:
+          <a class="link" href="https://argo.ucsd.edu/about/">Argo “About” page</a>.
+          
+        </li>
+        <li>
+          ESA Multimedia — Sentinel-3 OLCI scanning illustration:
+          <a class="link" href="https://www.esa.int/ESA_Multimedia/Images/2018/03/Sentinel-3_scans_Earth_s_colour">ESA image page</a>.
+          
+        </li>
+        <li>
+          NOAA CoastWatch — Sentinel-3 overview and launch dates:
+          <a class="link" href="https://coastwatch.noaa.gov/cwn/products/ocean-color-near-real-time-olci-sentinel-3a-and-3b-global-coverage.html">CoastWatch product page</a>.
+          
+        </li>
+        <li>
+          ESA — Sentinel-6 mission facts and launch information:
+          <a class="link" href="https://www.esa.int/Applications/Observing_the_Earth/Copernicus/Sentinel-6">ESA Sentinel-6 page</a>.
+          
+        </li>
+      </ol>
+
+      <div class="hr"></div>
+
+      <p class="note">
+        Image use note: Figures are embedded via direct links to agency and mission archives. Users should respect the
+        source site’s stated image policy and credit requirements when reusing figures in course materials or
+        publications.
+      </p>
+    </section>
+
+    <footer>
+      <div class="foot-badge">OCNG 489/689 • Studying the Oceans from Space, Chapter 1</div>
+    </footer>
+  </main>
+
+  <script>
+    (function(){
+      const btn = document.querySelector('.menu-btn');
+      const nav = document.querySelector('#site-nav');
+      if(!btn || !nav) return;
+
+      btn.addEventListener('click', function(){
+        const isOpen = nav.classList.toggle('open');
+        btn.setAttribute('aria-expanded', String(isOpen));
+      });
+
+      // Simple active-link highlighting
+      const links = Array.from(nav.querySelectorAll('a[href^="#"]'));
+      const targets = links
+        .map(a => document.querySelector(a.getAttribute('href')))
+        .filter(Boolean);
+
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          const id = e.target.getAttribute('id');
+          const link = nav.querySelector('a[href="#' + id + '"]');
+          if(link && e.isIntersecting){
+            links.forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
+          }
+        });
+      }, { rootMargin: "-35% 0px -55% 0px", threshold: 0.01 });
+
+      targets.forEach(t => obs.observe(t));
+    })();
+  </script>
+</body>
+</html>
