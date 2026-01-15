@@ -3,14 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>LEO vs GEO Orbit Explorer (3D + Sun-Fixed Frame + TLE)</title>
+  <title>Satellite Orbit visualization (Low Earth Orbit and Geostationary)</title>
 
-  <!-- Cesium requires base URL for its assets when loaded via CDN -->
   <script>
     window.CESIUM_BASE_URL = "https://unpkg.com/cesium/Build/Cesium/";
   </script>
 
-  <!-- Cesium -->
   <link rel="stylesheet" href="https://unpkg.com/cesium/Build/Cesium/Widgets/widgets.css" />
 
   <style>
@@ -26,9 +24,8 @@
       --warn: #ffd36a;
       --shadow: 0 8px 28px rgba(0,0,0,0.35);
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
     }
-
     html, body {
       height: 100%;
       margin: 0;
@@ -37,12 +34,7 @@
       font-family: var(--sans);
       overflow: hidden;
     }
-
-    #app {
-      display: flex;
-      height: 100%;
-      width: 100%;
-    }
+    #app { display: flex; height: 100%; width: 100%; }
 
     #controlPanel {
       width: var(--panel-w);
@@ -63,13 +55,7 @@
       letter-spacing: 0.3px;
       line-height: 1.2;
     }
-
-    .subtitle {
-      margin: 0 0 14px;
-      font-size: 12px;
-      color: var(--muted);
-      line-height: 1.35;
-    }
+    .subtitle { margin: 0 0 14px; font-size: 12px; color: var(--muted); line-height: 1.35; }
 
     section {
       border: 1px solid var(--border);
@@ -78,26 +64,14 @@
       margin: 10px 0;
       background: rgba(0,0,0,0.12);
     }
-
     section h2 {
       font-size: 13px;
       margin: 0 0 10px;
       color: var(--accent);
       letter-spacing: 0.2px;
     }
-
-    .row {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      margin: 8px 0;
-      flex-wrap: wrap;
-    }
-
-    label {
-      font-size: 12px;
-      color: var(--muted);
-    }
+    .row { display: flex; gap: 10px; align-items: center; margin: 8px 0; flex-wrap: wrap; }
+    label { font-size: 12px; color: var(--muted); }
 
     input[type="number"], select, textarea {
       width: 100%;
@@ -110,7 +84,6 @@
       outline: none;
       font-family: var(--sans);
     }
-
     textarea {
       font-family: var(--mono);
       font-size: 11px;
@@ -118,20 +91,10 @@
       min-height: 60px;
       resize: vertical;
     }
-
     input[type="range"] { width: 100%; }
 
-    .twoCol {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .btnRow {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
+    .twoCol { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .btnRow { display: flex; gap: 10px; flex-wrap: wrap; }
 
     button {
       cursor: pointer;
@@ -150,19 +113,12 @@
       border-color: rgba(93,214,255,0.55);
       background: rgba(93,214,255,0.12);
     }
-
     button.toggleActive {
       border-color: rgba(93,214,255,0.85);
       background: rgba(93,214,255,0.18);
     }
 
-    .hint {
-      font-size: 11px;
-      color: var(--muted);
-      line-height: 1.35;
-      margin-top: 6px;
-    }
-
+    .hint { font-size: 11px; color: var(--muted); line-height: 1.35; margin-top: 6px; }
     .badge {
       display: inline-block;
       font-size: 10px;
@@ -172,20 +128,8 @@
       color: var(--muted);
       margin-left: 6px;
     }
-
-    .inlineRadio {
-      display: flex;
-      gap: 14px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .inlineRadio label {
-      display: flex;
-      gap: 6px;
-      align-items: center;
-      color: var(--text);
-    }
+    .inlineRadio { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+    .inlineRadio label { display: flex; gap: 6px; align-items: center; color: var(--text); }
 
     .dangerNote {
       font-size: 11px;
@@ -198,42 +142,17 @@
       line-height: 1.35;
     }
 
-    .statGrid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-top: 8px;
-    }
-
-    .stat {
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 8px;
-      background: rgba(0,0,0,0.10);
-    }
-
+    .statGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+    .stat { border: 1px solid var(--border); border-radius: 10px; padding: 8px; background: rgba(0,0,0,0.10); }
     .stat .k { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
     .stat .v { font-size: 13px; font-family: var(--mono); letter-spacing: 0.2px; }
 
-    #viewerPane {
-      position: relative;
-      flex: 1;
-      height: 100%;
-      overflow: hidden;
-    }
-
-    #cesiumContainer {
-      position: absolute;
-      inset: 0;
-      height: 100%;
-      width: 100%;
-    }
+    #viewerPane { position: relative; flex: 1; height: 100%; overflow: hidden; }
+    #cesiumContainer { position: absolute; inset: 0; height: 100%; width: 100%; }
 
     #statusBar {
       position: absolute;
-      left: 12px;
-      right: 12px;
-      bottom: 12px;
+      left: 12px; right: 12px; bottom: 12px;
       display: flex;
       justify-content: space-between;
       gap: 10px;
@@ -246,14 +165,12 @@
       font-size: 12px;
       pointer-events: none;
     }
-
     #statusBar .left, #statusBar .right {
       display: flex;
       gap: 12px;
       flex-wrap: wrap;
       align-items: center;
     }
-
     .pill {
       font-family: var(--mono);
       padding: 3px 8px;
@@ -261,11 +178,9 @@
       border: 1px solid var(--border);
       background: rgba(255,255,255,0.06);
     }
-
     .ok { border-color: rgba(124,255,158,0.35); background: rgba(124,255,158,0.10); }
     .warn { border-color: rgba(255,211,106,0.35); background: rgba(255,211,106,0.10); }
     .muted { color: var(--muted); }
-
     .hidden { display: none !important; }
   </style>
 </head>
@@ -273,9 +188,9 @@
 <body>
 <div id="app">
   <aside id="controlPanel">
-    <h1>LEO vs GEO Orbit Explorer</h1>
+    <h1>Satellite Orbit visualization (Low Earth Orbit and Geostationary)</h1>
     <p class="subtitle">
-      3D interactive tool to compare LEO revisits vs GEO stare, with optional <b>Sun‑fixed (inertial) frame</b> and <b>TLE/SGP4</b> propagation.
+      3D interactive tool to visualize LEO revisits vs GEO stare, with optional <b>Sun‑fixed (inertial) frame</b> and <b>TLE/SGP4</b> propagation. Created by Jinbo Wang using chatgpt. Designed for the Satellite Oceanography class (OCNG489/689) taught at Texas A&M University.
     </p>
 
     <section>
@@ -288,7 +203,8 @@
         <label><input type="checkbox" id="chkGrid" checked /> Lat/Lon grid overlay</label>
       </div>
       <div class="hint">
-        Sun‑fixed frame: Sun direction is held constant in an inertial frame (to the “right”), while Earth + orbit rotate under it.
+        Sun‑fixed frame: a fixed Sun direction (“to the right”) is used; Earth rotates underneath (visual inertial frame),
+        and the orbit/satellite remain animated. A visible Sun marker is also fixed in that direction.
       </div>
     </section>
 
@@ -298,9 +214,6 @@
         <label><input type="radio" name="propMode" value="PARAM" checked /> Parameterized (teaching model)</label>
         <label><input type="radio" name="propMode" value="TLE" /> TLE / SGP4 (satellite.js)</label>
       </div>
-      <div class="hint">
-        TLE mode uses SGP4/SDP4 propagation via satellite.js. 
-      </div>
     </section>
 
     <section id="sectionTLE" class="hidden">
@@ -309,7 +222,7 @@
         <label for="tleSample">Sample</label>
         <select id="tleSample">
           <option value="custom" selected>Custom (paste your own)</option>
-          <option value="iss">ISS (ZARYA) – sample from CelesTrak</option>
+          <option value="iss">ISS (ZARYA) – sample</option>
         </select>
       </div>
 
@@ -327,7 +240,9 @@
         <span class="badge" id="tleStatus">TLE: not loaded</span>
       </div>
 
-      <div class="hint" id="tleInfo">Tip: You can copy two lines from CelesTrak / Space‑Track. The simulation start time is set to the TLE epoch for stability.</div>
+      <div class="hint" id="tleInfo">
+        Tip: Simulation start time is set to the TLE epoch for stability.
+      </div>
     </section>
 
     <section id="sectionParam">
@@ -336,9 +251,7 @@
         <label><input type="radio" name="orbitType" value="LEO" checked /> Low Earth Orbit (LEO)</label>
         <label><input type="radio" name="orbitType" value="GEO" /> Geostationary (GEO)</label>
       </div>
-      <div class="hint">
-        GEO locks altitude and inclination (~35,786 km, 0°).
-      </div>
+      <div class="hint">GEO locks altitude and inclination (~35,786 km, 0°).</div>
     </section>
 
     <section id="sectionParam2">
@@ -447,22 +360,10 @@
     <section>
       <h2>Observer Sampling Stats (72h)</h2>
       <div class="statGrid">
-        <div class="stat">
-          <div class="k">Pass count</div>
-          <div class="v" id="statPasses">—</div>
-        </div>
-        <div class="stat">
-          <div class="k">Time in swath</div>
-          <div class="v" id="statDwell">—</div>
-        </div>
-        <div class="stat">
-          <div class="k">Mean revisit</div>
-          <div class="v" id="statRevisit">—</div>
-        </div>
-        <div class="stat">
-          <div class="k">Orbit period</div>
-          <div class="v" id="statPeriod">—</div>
-        </div>
+        <div class="stat"><div class="k">Pass count</div><div class="v" id="statPasses">—</div></div>
+        <div class="stat"><div class="k">Time in swath</div><div class="v" id="statDwell">—</div></div>
+        <div class="stat"><div class="k">Mean revisit</div><div class="v" id="statRevisit">—</div></div>
+        <div class="stat"><div class="k">Orbit period</div><div class="v" id="statPeriod">—</div></div>
       </div>
       <div class="hint">
         Pass count = outside→inside transitions of the observer relative to the swath circle.
@@ -487,13 +388,8 @@
   </main>
 </div>
 
-<!-- Libraries -->
 <script src="https://unpkg.com/cesium/Build/Cesium/Cesium.js"></script>
-
-<!-- satellite.js for TLE propagation (SGP4) -->
 <script src="https://cdn.jsdelivr.net/npm/satellite.js@5.0.0/dist/satellite.min.js"></script>
-<!-- jsDelivr example use of satellite.js on the web (proof of CDN path). -->
-<!--  -->
 
 <script>
 (() => {
@@ -507,6 +403,9 @@
 
   const SIM_HOURS = 72;
   const SIDEREAL_DAY_SEC = 86164;
+
+  // Sun marker distance (NOT astronomical; just far enough for visualization)
+  const SUN_MARKER_DISTANCE_M = 1.0e8; // 100,000 km
 
   const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
   const degToRad = d => d * Math.PI / 180.0;
@@ -535,18 +434,44 @@
     return R*c;
   }
 
+  function createSunBillboardDataUrl(size = 64) {
+    const c = document.createElement("canvas");
+    c.width = c.height = size;
+    const ctx = c.getContext("2d");
+
+    // radial glow
+    const g = ctx.createRadialGradient(size*0.5, size*0.5, size*0.08, size*0.5, size*0.5, size*0.5);
+    g.addColorStop(0.0, "rgba(255, 235, 140, 1.0)");
+    g.addColorStop(0.35, "rgba(255, 200, 60, 0.9)");
+    g.addColorStop(0.75, "rgba(255, 170, 0, 0.25)");
+    g.addColorStop(1.0, "rgba(255, 170, 0, 0.0)");
+
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(size*0.5, size*0.5, size*0.5, 0, Math.PI*2);
+    ctx.fill();
+
+    // core
+    ctx.fillStyle = "rgba(255, 255, 220, 0.9)";
+    ctx.beginPath();
+    ctx.arc(size*0.5, size*0.5, size*0.16, 0, Math.PI*2);
+    ctx.fill();
+
+    return c.toDataURL("image/png");
+  }
+
   // ---------------------------------------
   // State
   // ---------------------------------------
   const state = {
     propagationMode: "PARAM",   // "PARAM" | "TLE"
 
-    orbitType: "LEO",           // Only used in PARAM mode: "LEO" | "GEO"
+    orbitType: "LEO",           // PARAM only: "LEO" | "GEO"
     inclinationDeg: 98.2,
     altitudeKm: 705,
 
     swathKm: 50,
-    geoLonDeg: 0,               // For PARAM GEO only (kept simple)
+    geoLonDeg: 0,
 
     observerLat: 51.5074,
     observerLon: -0.1278,
@@ -556,13 +481,14 @@
 
     startDate: new Date(),      // PARAM uses "now"
     tleSatrec: null,
-    tleName: "",
-    sunFixedFrame: false,       // When true: inertial (Sun-fixed) camera + inertial-fixed sun direction
+
+    sunFixedFrame: false,       // When true: fixed sun direction, inertial camera
   };
 
   // Computed
-  let samples = null;                 // orbit samples for the 72h window
-  let orbitPathEciPositions = null;   // static ECI polyline positions for orbit path (one orbit)
+  let samples = null;
+  let orbitPathEciPositions = null;
+
   let derivedOrbitKind = "LEO";       // "LEO" | "GEO" | "OTHER"
   let derivedIncDeg = null;
   let derivedAltKm = null;
@@ -575,31 +501,36 @@
   let viewer = null;
   let gridLayer = null;
 
-  // Entities
-  let satelliteEntity = null;
+  // Entities/primitives
+  let satelliteEntity = null;         // sampled cube
   let observerEntity = null;
   let swathEntity = null;
   let trailEntity = null;
   let geoCoverageEntity = null;
+  let sunEntity = null;
 
-  // Orbit path primitive (NO flashing)
+  // Orbit path primitive (stable, no flashing)
   let orbitPolylineCollection = null;
-  let orbitPolyline = null;
 
-  // Lighting
-  const sunEciDirection = Cesium.Cartesian3.normalize(new Cesium.Cartesian3(-1, 0, 0), new Cesium.Cartesian3()); // Sun "to the right" in ECI
+  // Sun direction (in inertial frame) — updated when toggling Sun‑fixed ON.
+  // This is the unit vector from Earth toward Sun (so Sun marker is placed along +sunDirInertial).
+  const sunDirInertial = new Cesium.Cartesian3(1, 0, 0);
+
+  // Directional light used in Sun‑fixed mode
   const fixedSunLight = new Cesium.DirectionalLight({
-    direction: new Cesium.Cartesian3(-1, 0, 0),
+    direction: new Cesium.Cartesian3(-1, 0, 0), // will be overwritten each frame
     color: Cesium.Color.WHITE
   });
 
-  // Scratch objects to reduce allocations
+  // Scratch
   const scratchRotZ = new Cesium.Matrix3();
   const scratchMat4 = new Cesium.Matrix4();
-  const scratchDir = new Cesium.Cartesian3();
   const scratchInv = new Cesium.Matrix4();
-  const scratchPos = new Cesium.Cartesian3();
-  const scratchPos2 = new Cesium.Cartesian3();
+  const scratchVecA = new Cesium.Cartesian3();
+  const scratchVecB = new Cesium.Cartesian3();
+  const scratchVecC = new Cesium.Cartesian3();
+  const scratchSunPosInertial = new Cesium.Cartesian3();
+  const scratchSunPosFixed = new Cesium.Cartesian3();
 
   // ---------------------------------------
   // DOM
@@ -670,8 +601,8 @@
   }
 
   function eciFromAngle(angleRad, altitudeKm, incRad, raanRad) {
-    // Circular orbit in ECI
     const r = EARTH_RADIUS_M + altitudeKm * 1000.0;
+
     const xu = r * Math.cos(angleRad);
     const yu = r * Math.sin(angleRad);
 
@@ -686,13 +617,12 @@
 
     const x2 = x1 * cO - y1 * sO;
     const y2 = x1 * sO + y1 * cO;
-    const z2 = z1;
 
-    return new Cesium.Cartesian3(x2, y2, z2);
+    return new Cesium.Cartesian3(x2, y2, z1);
   }
 
   function ecefFromEciSimple(eci, thetaRad) {
-    // ECEF = Rz(-theta) * ECI
+    // Matches satellite.js sign convention: Rz(-theta) * ECI
     const c = Math.cos(thetaRad);
     const s = Math.sin(thetaRad);
     const x =  eci.x * c + eci.y * s;
@@ -701,11 +631,9 @@
   }
 
   // ---------------------------------------
-  // Earth rotation angle for transforms
+  // Earth rotation angle
   // ---------------------------------------
   function earthRotationAngleRad(julianTime) {
-    // For PARAM: theta = omega * (t - t0)
-    // For TLE: use GMST (satellite.js), matching eciToEcf
     if (state.propagationMode === "TLE" && state.tleSatrec && typeof satellite !== "undefined") {
       const d = Cesium.JulianDate.toDate(julianTime);
       return satellite.gstime(d); // radians
@@ -714,9 +642,9 @@
     return OMEGA_EARTH * tSec;
   }
 
-  function eciToFixedMatrix4(julianTime) {
+  function inertialToFixedMatrix4(julianTime) {
+    // Consistent with ecefFromEciSimple / satellite.js: Rz(-theta)
     const theta = earthRotationAngleRad(julianTime);
-    // Want Rz(-theta)
     Cesium.Matrix3.fromRotationZ(-theta, scratchRotZ);
     return Cesium.Matrix4.fromRotationTranslation(scratchRotZ, Cesium.Cartesian3.ZERO, scratchMat4);
   }
@@ -725,10 +653,9 @@
   // TLE helpers
   // ---------------------------------------
   function tleEpochToDateUTC(satrec) {
-    // satrec.epochyr = 2-digit year; satrec.epochdays = day of year (with fraction)
     const yr = satrec.epochyr;
     const year = (yr < 57) ? (2000 + yr) : (1900 + yr);
-    const dayOfYear = satrec.epochdays; // 1..366 with fraction
+    const dayOfYear = satrec.epochdays;
     const ms = (dayOfYear - 1) * 86400 * 1000;
     const d0 = new Date(Date.UTC(year, 0, 1, 0, 0, 0));
     return new Date(d0.getTime() + ms);
@@ -736,19 +663,14 @@
 
   function extractTleLinesFromInputs() {
     const combined = `${el.tleLine1.value}\n${el.tleLine2.value}`;
-    const lines = combined
-      .split(/\r?\n/)
-      .map(s => s.trim())
-      .filter(s => s.length > 0);
+    const lines = combined.split(/\r?\n/).map(s => s.trim()).filter(s => s.length > 0);
 
     let l1 = lines.find(s => s.startsWith("1 "));
     let l2 = lines.find(s => s.startsWith("2 "));
 
-    // Some sources indent
     if (!l1) l1 = lines.find(s => s.startsWith("1"));
     if (!l2) l2 = lines.find(s => s.startsWith("2"));
 
-    // If not found, try “last two non-empty lines”
     if (!l1 || !l2) {
       if (lines.length >= 2) {
         l1 = lines[lines.length - 2];
@@ -756,21 +678,49 @@
       }
     }
 
-    if (!l1 || !l2) {
-      return { ok: false, error: "Could not detect TLE lines. Ensure you pasted line 1 and line 2." };
-    }
+    if (!l1 || !l2) return { ok: false, error: "Could not detect TLE lines. Ensure you pasted line 1 and line 2." };
     return { ok: true, line1: l1, line2: l2 };
   }
 
   // ---------------------------------------
   // Sampling (PARAM or TLE)
   // ---------------------------------------
+  function buildEciOrbitRing({ altitudeKm, inclinationDeg }) {
+    const incRad = degToRad(inclinationDeg);
+    const raanRad = 0.0;
+    const pts = [];
+    const num = 240;
+    for (let k = 0; k <= num; k++) {
+      const a = (2*Math.PI) * (k / num);
+      pts.push(eciFromAngle(a, altitudeKm, incRad, raanRad));
+    }
+    return pts;
+  }
+
+  function buildTleOrbitPathEci(satrec, startDate, periodSec) {
+    const pts = [];
+    const num = 260;
+    const per = (isFinite(periodSec) && periodSec > 0) ? periodSec : (100 * 60);
+
+    for (let k = 0; k <= num; k++) {
+      const t = (per * k) / num;
+      const d = new Date(startDate.getTime() + t * 1000);
+      const pv = satellite.propagate(satrec, d);
+      if (!pv.position) continue;
+      pts.push(new Cesium.Cartesian3(pv.position.x * 1000.0, pv.position.y * 1000.0, pv.position.z * 1000.0));
+    }
+
+    if (pts.length < 2) {
+      pts.push(new Cesium.Cartesian3(0,0,0), new Cesium.Cartesian3(1,0,0));
+    }
+    return pts;
+  }
+
   function computeSamplesAndOrbitPath() {
     const simSeconds = state.simHours * 3600;
     const dt = state.dtSeconds;
     const N = Math.floor(simSeconds / dt) + 1;
 
-    // Determine start time
     const startJD = Cesium.JulianDate.fromDate(state.startDate);
     const times = new Array(N);
     const satEcef = new Array(N);
@@ -784,11 +734,12 @@
 
     if (state.propagationMode === "PARAM") {
       if (state.orbitType === "GEO") {
-        // Fixed in ECEF at longitude geoLonDeg
         const satPos = Cesium.Cartesian3.fromDegrees(state.geoLonDeg, 0, state.altitudeKm * 1000.0);
+
         for (let i = 0; i < N; i++) {
           times[i] = Cesium.JulianDate.addSeconds(startJD, i * dt, new Cesium.JulianDate());
           satEcef[i] = satPos;
+
           const g = WGS84.scaleToGeodeticSurface(satPos);
           groundEcef[i] = g;
           const carto = Cesium.Cartographic.fromCartesian(g);
@@ -800,16 +751,10 @@
         incDeg = 0.0;
         altKm = state.altitudeKm;
 
-        // Orbit path in ECI: equatorial ring (invariant under z-rotation)
-        orbitPathEciPositions = buildEciOrbitRing({
-          altitudeKm: state.altitudeKm,
-          inclinationDeg: 0.0
-        });
-
+        orbitPathEciPositions = buildEciOrbitRing({ altitudeKm: state.altitudeKm, inclinationDeg: 0.0 });
         return { startJD, dt, times, satEcef, groundEcef, groundLatLon, periodSec, orbitKind, incDeg, altKm };
       }
 
-      // LEO circular ECI orbit, converted to ECEF by theta=omega*t
       const incRad = degToRad(state.inclinationDeg);
       const raanRad = 0.0;
       const n = meanMotionRadPerSec(state.altitudeKm);
@@ -837,12 +782,7 @@
       incDeg = state.inclinationDeg;
       altKm = state.altitudeKm;
 
-      // Orbit path in ECI: one full ring
-      orbitPathEciPositions = buildEciOrbitRing({
-        altitudeKm: state.altitudeKm,
-        inclinationDeg: state.inclinationDeg
-      });
-
+      orbitPathEciPositions = buildEciOrbitRing({ altitudeKm: state.altitudeKm, inclinationDeg: state.inclinationDeg });
       return { startJD, dt, times, satEcef, groundEcef, groundLatLon, periodSec, orbitKind, incDeg, altKm };
     }
 
@@ -853,17 +793,13 @@
 
     const satrec = state.tleSatrec;
 
-    // Derive orbit period from TLE mean motion (rad/min)
     if (satrec.no && isFinite(satrec.no) && satrec.no > 0) {
       periodSec = (2*Math.PI / satrec.no) * 60.0;
     }
-
-    // Inclination from TLE (rad)
     if (satrec.inclo && isFinite(satrec.inclo)) {
       incDeg = radToDeg(satrec.inclo);
     }
 
-    // Sample forward from startDate (set to TLE epoch when loading)
     let firstValid = null;
 
     for (let i = 0; i < N; i++) {
@@ -875,7 +811,6 @@
       const pv = satellite.propagate(satrec, date);
 
       if (!pv.position) {
-        // If propagation fails at a step, hold last valid to keep arrays consistent
         if (firstValid) {
           satEcef[i] = satEcef[i-1];
           groundEcef[i] = groundEcef[i-1];
@@ -893,62 +828,23 @@
 
       const g = WGS84.scaleToGeodeticSurface(ecef);
       groundEcef[i] = g;
+
       const carto = Cesium.Cartographic.fromCartesian(g);
       groundLatLon[i] = {lat: radToDeg(carto.latitude), lon: radToDeg(carto.longitude)};
 
       if (!firstValid) firstValid = ecef;
     }
 
-    // Estimate altitude from first valid radius
     if (firstValid) {
       const r = Cesium.Cartesian3.magnitude(firstValid);
       altKm = (r - EARTH_RADIUS_M) / 1000.0;
     }
 
-    // Classify GEO-like vs LEO-like for visualization defaults
     const geoLike = (isFinite(periodSec) && Math.abs(periodSec - SIDEREAL_DAY_SEC) < 2*3600 && incDeg < 10 && altKm > 20000);
     orbitKind = geoLike ? "GEO" : "LEO";
 
-    // Build orbit path polyline in ECI (TEME) for ONE orbit period
     orbitPathEciPositions = buildTleOrbitPathEci(satrec, state.startDate, periodSec);
-
     return { startJD, dt, times, satEcef, groundEcef, groundLatLon, periodSec, orbitKind, incDeg, altKm };
-  }
-
-  function buildEciOrbitRing({ altitudeKm, inclinationDeg }) {
-    const incRad = degToRad(inclinationDeg);
-    const raanRad = 0.0;
-    const pts = [];
-    const num = 240;
-    for (let k = 0; k <= num; k++) {
-      const a = (2*Math.PI) * (k / num);
-      pts.push(eciFromAngle(a, altitudeKm, incRad, raanRad));
-    }
-    return pts;
-  }
-
-  function buildTleOrbitPathEci(satrec, startDate, periodSec) {
-    const pts = [];
-    const num = 260;
-
-    // Fallback if period is undefined
-    const per = (isFinite(periodSec) && periodSec > 0) ? periodSec : (100 * 60);
-
-    for (let k = 0; k <= num; k++) {
-      const t = (per * k) / num;
-      const d = new Date(startDate.getTime() + t * 1000);
-      const pv = satellite.propagate(satrec, d);
-      if (!pv.position) continue;
-      // ECI (TEME) position in km -> meters
-      pts.push(new Cesium.Cartesian3(pv.position.x * 1000.0, pv.position.y * 1000.0, pv.position.z * 1000.0));
-    }
-
-    // Ensure at least a line
-    if (pts.length < 2) {
-      // degrade gracefully: tiny dummy segment
-      pts.push(new Cesium.Cartesian3(0,0,0), new Cesium.Cartesian3(1,0,0));
-    }
-    return pts;
   }
 
   // ---------------------------------------
@@ -974,11 +870,12 @@
       shouldAnimate: false,
     });
 
-    // Default: realistic day/night (SunLight)
     viewer.scene.globe.enableLighting = true;
     viewer.scene.light = new Cesium.SunLight();
 
-    // Optional grid overlay
+    viewer.scene.skyAtmosphere.show = true;
+    viewer.scene.fog.enabled = true;
+
     gridLayer = viewer.imageryLayers.addImageryProvider(new Cesium.GridImageryProvider({
       cells: 8,
       color: Cesium.Color.WHITE.withAlpha(0.12),
@@ -986,37 +883,41 @@
       backgroundColor: Cesium.Color.TRANSPARENT
     }));
 
-    // Smooth orbit path rotation + optional fixed sun direction
+    // Smooth orbit path rotation via modelMatrix, and update fixed Sun direction if in Sun-fixed frame
     viewer.scene.preRender.addEventListener((scene, time) => {
       if (!samples) return;
 
-      // Smoothly rotate the orbit path primitive by updating ONLY its modelMatrix (no geometry rebuild => no flashing)
+      const mat = inertialToFixedMatrix4(time);
+
       if (orbitPolylineCollection) {
-        orbitPolylineCollection.modelMatrix = eciToFixedMatrix4(time);
+        orbitPolylineCollection.modelMatrix = mat;
       }
 
-      // If sun-fixed mode is enabled: update a constant-ECI sun direction, transformed into ECEF
       if (state.sunFixedFrame) {
-        const mat = eciToFixedMatrix4(time);
-        // Apply rotation (upper-left 3x3) to ECI sun direction
+        // Convert Sun direction from inertial to fixed: sunDirFixed = R * sunDirInertial
         const rot = Cesium.Matrix4.getMatrix3(mat, scratchRotZ);
-        Cesium.Matrix3.multiplyByVector(rot, sunEciDirection, scratchDir);
-        Cesium.Cartesian3.normalize(scratchDir, scratchDir);
-        fixedSunLight.direction = scratchDir;
+        Cesium.Matrix3.multiplyByVector(rot, sunDirInertial, scratchVecA);
+        Cesium.Cartesian3.normalize(scratchVecA, scratchVecA);
+
+        // Light direction should point FROM sun TO Earth => -sunDirFixed
+        Cesium.Cartesian3.negate(scratchVecA, scratchVecA);
+        fixedSunLight.direction = scratchVecA;
       }
     });
 
-    // Inertial camera: keep camera in ECI-like frame so Earth rotates underneath
+    // Inertial camera: keep camera in inertial-like frame so Earth rotates underneath
     viewer.scene.postUpdate.addEventListener((scene, time) => {
       if (!samples) return;
       if (!state.sunFixedFrame) return;
 
-      // Camera transform = inertial->fixed
-      const transform = eciToFixedMatrix4(time);
-      viewer.camera.lookAtTransform(transform, viewer.camera.position);
+      const transform = inertialToFixedMatrix4(time);
+
+      // Standard Cesium inertial camera pattern
+      const offset = Cesium.Cartesian3.clone(viewer.camera.position, scratchVecB);
+      viewer.camera.lookAtTransform(transform, offset);
     });
 
-    // Tick handler for time slider synchronization
+    // Tick handler for slider sync
     viewer.clock.onTick.addEventListener((clock) => {
       if (!samples) return;
       const idx = indexFromJulian(clock.currentTime);
@@ -1027,7 +928,7 @@
   }
 
   // ---------------------------------------
-  // Scene building (entities + orbit path primitive)
+  // Scene build helpers
   // ---------------------------------------
   function clearScene() {
     if (!viewer) return;
@@ -1037,7 +938,6 @@
     if (orbitPolylineCollection) {
       viewer.scene.primitives.remove(orbitPolylineCollection);
       orbitPolylineCollection = null;
-      orbitPolyline = null;
     }
 
     satelliteEntity = null;
@@ -1045,6 +945,64 @@
     swathEntity = null;
     trailEntity = null;
     geoCoverageEntity = null;
+    sunEntity = null;
+  }
+
+  function ensureSunEntity() {
+    if (!viewer || sunEntity) return;
+
+    const sunImg = createSunBillboardDataUrl(96);
+
+    sunEntity = viewer.entities.add({
+      name: "Sun (Fixed)",
+      position: new Cesium.CallbackProperty((time) => {
+        if (!time) time = viewer.clock.currentTime;
+
+        // Sun position in inertial coordinates
+        Cesium.Cartesian3.multiplyByScalar(sunDirInertial, SUN_MARKER_DISTANCE_M, scratchSunPosInertial);
+
+        // Transform into fixed/world coordinates
+        const mat = inertialToFixedMatrix4(time);
+        return Cesium.Matrix4.multiplyByPoint(mat, scratchSunPosInertial, scratchSunPosFixed);
+      }, false),
+      billboard: {
+        image: sunImg,
+        scale: 0.6,
+        alignedAxis: Cesium.Cartesian3.UNIT_Z,
+        disableDepthTestDistance: Number.POSITIVE_INFINITY
+      },
+      label: {
+        text: "Sun",
+        font: "12px sans-serif",
+        fillColor: Cesium.Color.WHITE,
+        outlineColor: Cesium.Color.BLACK.withAlpha(0.7),
+        outlineWidth: 2,
+        verticalOrigin: Cesium.VerticalOrigin.TOP,
+        pixelOffset: new Cesium.Cartesian2(0, 12),
+        showBackground: true,
+        backgroundColor: Cesium.Color.BLACK.withAlpha(0.35),
+        backgroundPadding: new Cesium.Cartesian2(6, 4)
+      }
+    });
+  }
+
+  function updateSunVisuals() {
+    if (!viewer) return;
+
+    if (state.sunFixedFrame) {
+      // Hide Cesium's moving Sun/Moon objects, show our fixed Sun marker
+      if (viewer.scene.sun) viewer.scene.sun.show = false;
+      if (viewer.scene.moon) viewer.scene.moon.show = false;
+      ensureSunEntity();
+    } else {
+      // Restore Cesium sun/moon, remove our fixed Sun marker (if any)
+      if (viewer.scene.sun) viewer.scene.sun.show = true;
+      if (viewer.scene.moon) viewer.scene.moon.show = true;
+      if (sunEntity) {
+        viewer.entities.remove(sunEntity);
+        sunEntity = null;
+      }
+    }
   }
 
   function buildScene() {
@@ -1052,11 +1010,11 @@
 
     clearScene();
 
-    // Orbit path primitive (ECI positions + smooth modelMatrix rotation) -> NO flashing
+    // Orbit path primitive (stable, no flashing)
     const orbitColor = (derivedOrbitKind === "GEO") ? Cesium.Color.RED : Cesium.Color.DEEPSKYBLUE;
 
     orbitPolylineCollection = new Cesium.PolylineCollection();
-    orbitPolyline = orbitPolylineCollection.add({
+    orbitPolylineCollection.add({
       positions: orbitPathEciPositions,
       width: 2.5,
       material: Cesium.Material.fromType(Cesium.Material.PolylineGlowType, {
@@ -1092,7 +1050,7 @@
       }
     });
 
-    // Satellite position property (ECEF sampled)
+    // Sampled satellite (simple cube)
     const spp = new Cesium.SampledPositionProperty();
     for (let i = 0; i < samples.times.length; i++) {
       spp.addSample(samples.times[i], samples.satEcef[i]);
@@ -1102,20 +1060,32 @@
       interpolationAlgorithm: Cesium.LagrangePolynomialApproximation
     });
 
-    // Satellite proxy model
     satelliteEntity = viewer.entities.add({
-      name: "Satellite",
+      name: "Satellite (Sampled Cube)",
       position: spp,
-      orientation: new Cesium.VelocityOrientationProperty(spp),
+      // Intentionally no orientation: a simple, stable cube in the scene
       box: {
-        dimensions: new Cesium.Cartesian3(120000, 50000, 50000),
-        material: Cesium.Color.WHITE.withAlpha(0.85),
+        // Simple square box (cube), exaggerated for visibility
+        dimensions: new Cesium.Cartesian3(90000, 90000, 90000),
+        material: Cesium.Color.WHITE.withAlpha(0.9),
         outline: true,
-        outlineColor: Cesium.Color.BLACK.withAlpha(0.5),
+        outlineColor: Cesium.Color.BLACK.withAlpha(0.5)
+      },
+      label: {
+        text: "Sat",
+        font: "12px sans-serif",
+        fillColor: Cesium.Color.WHITE,
+        outlineColor: Cesium.Color.BLACK.withAlpha(0.7),
+        outlineWidth: 2,
+        verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+        pixelOffset: new Cesium.Cartesian2(0, -10),
+        showBackground: true,
+        backgroundColor: Cesium.Color.BLACK.withAlpha(0.35),
+        backgroundPadding: new Cesium.Cartesian2(6, 4)
       }
     });
 
-    // Current swath: ellipse at nadir/ground point
+    // Current swath (circle on ground beneath satellite)
     swathEntity = viewer.entities.add({
       name: "Current Swath",
       position: new Cesium.CallbackProperty((time) => {
@@ -1136,7 +1106,6 @@
 
     // Persistent swath trail
     if (derivedOrbitKind === "GEO") {
-      // GEO-like: constant coverage (teaching proxy)
       geoCoverageEntity = viewer.entities.add({
         name: "GEO Coverage",
         position: Cesium.Cartesian3.fromDegrees(samples.groundLatLon[0].lon, samples.groundLatLon[0].lat, 0),
@@ -1162,6 +1131,9 @@
         }
       });
     }
+
+    // Apply sun visuals for current frame mode
+    updateSunVisuals();
 
     flyToReasonableView();
   }
@@ -1192,7 +1164,6 @@
 
   function flyToReasonableView() {
     if (!viewer) return;
-
     const distance = (derivedOrbitKind === "GEO") ? 6.5e7 : 2.5e7;
     viewer.camera.flyTo({
       destination: Cesium.Cartesian3.fromDegrees(state.observerLon, state.observerLat, distance),
@@ -1201,7 +1172,7 @@
   }
 
   // ---------------------------------------
-  // Time mapping and UI updates
+  // Time mapping & UI
   // ---------------------------------------
   function indexFromJulian(jd) {
     const sec = Cesium.JulianDate.secondsDifference(jd, samples.startJD);
@@ -1369,7 +1340,6 @@
       el.altRange.disabled = true;
       el.presetSelect.disabled = true;
 
-      // larger swath range for GEO teaching proxy
       setSwathUISpec(1000, 20000, Math.max(state.swathKm, 10000));
       state.swathKm = Number(el.swathNum.value);
 
@@ -1409,34 +1379,25 @@
 
     // Auto swath bounds for TLE mode based on orbit kind
     if (state.propagationMode === "TLE") {
-      if (derivedOrbitKind === "GEO") {
-        setSwathUISpec(1000, 20000, Math.max(state.swathKm, 10000));
-      } else {
-        setSwathUISpec(10, 500, clamp(state.swathKm, 10, 500));
-      }
+      if (derivedOrbitKind === "GEO") setSwathUISpec(1000, 20000, Math.max(state.swathKm, 10000));
+      else setSwathUISpec(10, 500, clamp(state.swathKm, 10, 500));
       state.swathKm = Number(el.swathNum.value);
     }
 
-    // Clock bounds
     viewer.clock.startTime = samples.startJD.clone();
     viewer.clock.stopTime  = samples.times[samples.times.length - 1].clone();
     viewer.clock.clockRange = Cesium.ClockRange.CLAMPED;
     viewer.clock.multiplier = Number(el.speedSelect.value);
     viewer.clock.shouldAnimate = playing;
 
-    // Slider bounds
     el.timeSlider.min = "0";
     el.timeSlider.max = String(samples.times.length - 1);
     el.timeSlider.step = "1";
 
-    // Build scene
     buildScene();
 
-    // Restore index
     let idx = 0;
-    if (preserveTimeFraction) {
-      idx = Math.round(prevFrac * (samples.times.length - 1));
-    }
+    if (preserveTimeFraction) idx = Math.round(prevFrac * (samples.times.length - 1));
     lastInView = false;
     setCurrentIndex(idx, true);
 
@@ -1473,24 +1434,34 @@
     state.sunFixedFrame = enabled;
 
     if (state.sunFixedFrame) {
-      // Switch to inertial-fixed sun direction (updated each preRender) and inertial camera (postUpdate)
+      // Compute sunDirInertial so that Sun is "to the right" of the current view at toggle time.
+      const time = viewer.clock.currentTime;
+      const mat = inertialToFixedMatrix4(time);
+      Cesium.Matrix4.inverse(mat, scratchInv);
+
+      // Camera right vector in world/fixed coordinates -> inertial coordinates
+      const camRightFixed = Cesium.Cartesian3.clone(viewer.camera.rightWC, scratchVecA);
+      const camRightInertial = Cesium.Matrix4.multiplyByPointAsVector(scratchInv, camRightFixed, scratchVecB);
+      Cesium.Cartesian3.normalize(camRightInertial, sunDirInertial);
+
+      // Switch to our fixed directional light (direction updated each frame in preRender)
       viewer.scene.light = fixedSunLight;
       viewer.scene.globe.enableLighting = true;
 
-      // Prevent first-frame camera jump: convert current camera world position into inertial coordinates
-      const time = viewer.clock.currentTime;
-      const transform = eciToFixedMatrix4(time);
-      Cesium.Matrix4.inverse(transform, scratchInv);
+      // Show fixed sun marker and hide Cesium moving sun/moon
+      updateSunVisuals();
 
-      const posWC = Cesium.Cartesian3.clone(viewer.camera.positionWC, scratchPos);
-      const posInertial = Cesium.Matrix4.multiplyByPoint(scratchInv, posWC, scratchPos2);
-      viewer.camera.lookAtTransform(transform, posInertial);
+      // Convert current camera world position into inertial coordinates to avoid a jump
+      const posWC = Cesium.Cartesian3.clone(viewer.camera.positionWC, scratchVecC);
+      const posInertial = Cesium.Matrix4.multiplyByPoint(scratchInv, posWC, scratchVecB);
+
+      viewer.camera.lookAtTransform(mat, posInertial);
 
       el.btnSunFixed.textContent = "Sun‑fixed frame: ON";
       el.btnSunFixed.classList.add("toggleActive");
     } else {
-      // Back to physical SunLight and Earth-fixed camera
-      const posWC = Cesium.Cartesian3.clone(viewer.camera.positionWC, scratchPos);
+      // Restore standard Cesium sun lighting
+      const posWC = Cesium.Cartesian3.clone(viewer.camera.positionWC, scratchVecA);
       const dirWC = Cesium.Cartesian3.clone(viewer.camera.directionWC, new Cesium.Cartesian3());
       const upWC  = Cesium.Cartesian3.clone(viewer.camera.upWC, new Cesium.Cartesian3());
 
@@ -1499,6 +1470,8 @@
 
       viewer.scene.light = new Cesium.SunLight();
       viewer.scene.globe.enableLighting = true;
+
+      updateSunVisuals();
 
       el.btnSunFixed.textContent = "Sun‑fixed frame: OFF";
       el.btnSunFixed.classList.remove("toggleActive");
@@ -1518,12 +1491,9 @@
       const satrec = satellite.twoline2satrec(line1, line2);
       state.tleSatrec = satrec;
 
-      // Use TLE epoch as simulation start (most stable for teaching)
       const epoch = tleEpochToDateUTC(satrec);
       state.startDate = epoch;
 
-      // Choose dt based on likely orbit regime
-      // (LEO -> 60s; GEO -> 300s after classification during rebuild)
       state.dtSeconds = 60;
 
       el.tleStatus.textContent = "TLE: loaded";
@@ -1535,7 +1505,6 @@
       console.error(e);
       el.tleStatus.textContent = "TLE: error";
       el.tleInfo.textContent = `Error: ${e.message}`;
-      // do not rebuild
     }
   }
 
@@ -1543,36 +1512,26 @@
   // Wire UI
   // ---------------------------------------
   function wireUI() {
-    // Reference frame toggle
-    el.btnSunFixed.addEventListener("click", () => {
-      setSunFixedFrame(!state.sunFixedFrame);
-    });
+    el.btnSunFixed.addEventListener("click", () => setSunFixedFrame(!state.sunFixedFrame));
 
-    el.btnResetCamera.addEventListener("click", () => {
-      flyToReasonableView();
-    });
+    el.btnResetCamera.addEventListener("click", () => flyToReasonableView());
 
-    // Grid overlay
     el.chkGrid.addEventListener("change", () => {
       if (gridLayer) gridLayer.show = el.chkGrid.checked;
     });
 
-    // Prop mode
     document.querySelectorAll('input[name="propMode"]').forEach(r => {
       r.addEventListener("change", (e) => {
         state.propagationMode = e.target.value;
         applyPropagationModeUI();
 
         if (state.propagationMode === "PARAM") {
-          // PARAM uses "now" as start time
           state.startDate = new Date();
           state.tleSatrec = null;
           derivedOrbitKind = state.orbitType;
           applyOrbitTypeUIRules();
           rebuildSimulation({ preserveTimeFraction: false });
         } else {
-          // TLE mode: do not rebuild until TLE loaded
-          // keep existing scene until user loads a TLE
           el.tleStatus.textContent = "TLE: not loaded";
           el.tleInfo.textContent = "Paste TLE lines then click Load TLE.";
           updateStatusPills();
@@ -1580,7 +1539,6 @@
       });
     });
 
-    // Orbit type (PARAM only)
     document.querySelectorAll('input[name="orbitType"]').forEach(r => {
       r.addEventListener("change", (e) => {
         state.orbitType = e.target.value;
@@ -1589,7 +1547,6 @@
       });
     });
 
-    // Presets (PARAM only)
     el.presetSelect.addEventListener("change", () => {
       const opt = el.presetSelect.selectedOptions[0];
       if (!opt) return;
@@ -1606,7 +1563,6 @@
       rebuildSimulation({ preserveTimeFraction: true });
     });
 
-    // Inclination (PARAM only)
     el.incNum.addEventListener("input", () => {
       state.inclinationDeg = clamp(Number(el.incNum.value), 0, 180);
       syncInclinationUI(state.inclinationDeg);
@@ -1618,7 +1574,6 @@
       rebuildSimulation({ preserveTimeFraction: true });
     });
 
-    // Altitude (PARAM only)
     el.altNum.addEventListener("input", () => {
       state.altitudeKm = clamp(Number(el.altNum.value), 200, 2000);
       syncAltitudeUI(state.altitudeKm);
@@ -1630,7 +1585,6 @@
       rebuildSimulation({ preserveTimeFraction: true });
     });
 
-    // Swath
     el.swathNum.addEventListener("input", () => {
       state.swathKm = clamp(Number(el.swathNum.value), Number(el.swathNum.min), Number(el.swathNum.max));
       el.swathRange.value = String(state.swathKm);
@@ -1650,28 +1604,23 @@
       if (trailEntity) updateTrailAtIndex(currentIndex);
     });
 
-    // Observer
     el.btnSetObserver.addEventListener("click", setObserverFromUI);
 
-    // Time slider
     el.timeSlider.addEventListener("input", () => {
       const idx = Number(el.timeSlider.value);
       setCurrentIndex(idx, true);
     });
 
-    // Speed
     el.speedSelect.addEventListener("change", () => {
       viewer.clock.multiplier = Number(el.speedSelect.value);
     });
 
-    // Play/pause
     el.btnPlayPause.addEventListener("click", () => {
       playing = !playing;
       el.btnPlayPause.textContent = playing ? "Pause" : "Play";
       viewer.clock.shouldAnimate = playing;
     });
 
-    // Reset
     el.btnReset.addEventListener("click", () => {
       playing = false;
       el.btnPlayPause.textContent = "Play";
@@ -1679,11 +1628,10 @@
       setCurrentIndex(0, true);
     });
 
-    // TLE sample dropdown
     el.tleSample.addEventListener("change", () => {
       const v = el.tleSample.value;
       if (v === "iss") {
-        // Sample lines from CelesTrak ISS endpoint. :contentReference[oaicite:3]{index=3}
+        // Sample only (works best near its epoch)
         el.tleLine1.value = "1 25544U 98067A   26011.40284706  .00010825  00000+0  20259-3 0  9997";
         el.tleLine2.value = "2 25544  51.6334 355.6191 0007697   6.1669 353.9413 15.49235693547451";
       } else {
@@ -1692,10 +1640,7 @@
       }
     });
 
-    // Load TLE
-    el.btnLoadTLE.addEventListener("click", () => {
-      loadTleFromInputs();
-    });
+    el.btnLoadTLE.addEventListener("click", loadTleFromInputs);
   }
 
   // ---------------------------------------
@@ -1705,7 +1650,6 @@
     initCesium();
     wireUI();
 
-    // Init UI state
     syncInclinationUI(state.inclinationDeg);
     syncAltitudeUI(state.altitudeKm);
     setSwathUISpec(10, 500, state.swathKm);
@@ -1713,7 +1657,6 @@
     applyPropagationModeUI();
     applyOrbitTypeUIRules();
 
-    // Initial build in PARAM mode
     derivedOrbitKind = state.orbitType;
     rebuildSimulation({ preserveTimeFraction: false });
 
