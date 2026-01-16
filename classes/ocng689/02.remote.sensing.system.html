@@ -1,0 +1,743 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chapter 2 — Remote Sensing Systems in Satellite Oceanography</title>
+
+  <!--
+    Theme stylesheet:
+    - If your file is named "styles.css" (as the stylesheet header suggests), keep this as-is.
+    - If your file is named "chapter_styles.css", change href to "chapter_styles.css".
+  -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Optional: MathJax for LaTeX-style equations in \( \) and \[ \] -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <!-- Top navigation -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <a href="#" class="link">OCNG 489/689 • Studying the Oceans from Space</a>
+        <small>Chapter 2 Remote Sensing Systems</small>
+      </div>
+
+      <button class="menu-btn" type="button"
+              aria-label="Toggle navigation"
+              aria-expanded="false"
+              aria-controls="site-nav">
+        Menu
+      </button>
+
+      <nav class="nav" id="site-nav" aria-label="Chapter navigation">
+        <a href="#toc">Contents</a>
+        <a href="#section-2-1">2.1</a>
+        <a href="#section-2-2">2.2</a>
+        <a href="#section-2-3">2.3</a>
+        <a href="#section-2-4">2.4</a>
+        <a href="#section-2-5">2.5</a>
+        <a href="#section-2-6">2.6</a>
+        <a href="#section-2-7">2.7</a>
+        <a href="#section-2-8">2.8</a>
+        <a href="#exercises">Exercises</a>
+        <a href="#references">References</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="container">
+    <!-- Page header -->
+    <div class="page-head">
+      <div class="breadcrumbs" aria-label="Breadcrumb">
+        <a href="#" class="link">Home</a>
+        <span>›</span>
+        <span>Chapter 2</span>
+      </div>
+
+      <h1>Chapter 2: Remote Sensing Systems in Satellite Oceanography</h1>
+      <p>
+        This chapter introduces the end-to-end architecture of satellite remote sensing systems
+        used in oceanography, from spacecraft subsystems and sensors to data flow, orbital mechanics,
+        processing levels, and major data distribution centers.
+      </p>
+      <p class="kicker">Systems overview • Orbit consideration • Data flows</p>
+    </div>
+
+    <!-- Hero: Learning objectives + at-a-glance -->
+    <section class="hero" aria-label="Chapter overview">
+      <div class="panel">
+        <h2>Learning objectives</h2>
+        <ul>
+          <li>Describe the major components of a satellite remote sensing system (space segment, ground segment, users) and how they work together.</li>
+          <li>Understand the key satellite “bus” subsystems (structure, thermal, power, attitude control, command and data handling, communications) and explain why each is essential for oceanographic missions.</li>
+          <li>Trace data flow from electromagnetic measurements to calibrated, geolocated products and analysis-ready datasets.</li>
+          <li>Explain common orbit types used in oceanography and compute basic orbital quantities (velocity and period) for circular orbits.</li>
+          <li>Interpret standard satellite data processing levels (Level 0–4) and recognize what changes—and what does not—between levels.</li>
+          <li>Locate major satellite-oceanography data distribution centers and understand typical access workflows.</li>
+        </ul>
+
+        <div class="cta-row">
+          <a class="btn primary" href="#exercises">Jump to Exercises</a>
+          <a class="btn" href="#references">Jump to References</a>
+        </div>
+
+        <div class="callout">
+          <strong>Big picture:</strong> Satellite oceanography is a <em>system-of-systems</em>. Scientific value depends as much on
+          calibration, geolocation, and distribution pipelines as on the instrument itself.
+        </div>
+      </div>
+
+      <aside class="mini" aria-label="At a glance">
+        <h2>At a glance</h2>
+        <dl class="kv">
+          <div>
+            <dt>Core idea</dt>
+            <dd>Space segment + ground segment + users convert physical signals into usable ocean products.</dd>
+          </div>
+          <div>
+            <dt>Key flow</dt>
+            <dd>Signal → digital counts → calibrated data → geophysical variable → gridded/analysis products.</dd>
+          </div>
+          <div>
+            <dt>Orbit math</dt>
+            <dd>\(v=\sqrt{\mu/r}\), \(T=2\pi\sqrt{r^3/\mu}\) for circular orbits. \(\mu=GM=3.986 \times 10^{14} \, m^3/s^2\)</dd>
+          </div>
+          <div>
+            <dt>Common orbits</dt>
+            <dd>LEO (polar, sun-synchronous), inclination 97.1-98.7°-> SSO; GEO altitude at 35786 km over the equator.</dd>
+          </div>
+          <div>
+            <dt>Data levels</dt>
+            <dd>L0 (raw) → L1 (calibrated/geolocated) → L2 (geophysical) → L3 (gridded) → L4 (analysis/model).</dd>
+          </div>
+        </dl>
+      </aside>
+    </section>
+
+    <!-- Table of contents -->
+    <section class="panel" id="toc" aria-label="Table of contents">
+      <div class="section-title">
+        <h2>Table of contents</h2>
+        <span>Click to jump</span>
+      </div>
+      <ol class="toc">
+        <li><a href="#section-2-1">2.1 Introduction to Remote Sensing Systems</a></li>
+        <li><a href="#section-2-2">2.2 Fundamentals of Satellite Construction</a></li>
+        <li><a href="#section-2-3">2.3 Enabling Data Flow in Satellite Systems</a></li>
+        <li><a href="#section-2-4">2.4 Fundamentals of Satellite Orbits</a></li>
+        <li><a href="#section-2-5">2.5 Data Levels in Satellite Oceanography</a></li>
+        <li><a href="#section-2-6">2.6 Major Data Distribution Centers for Satellite Oceanography</a></li>
+        <li><a href="#section-2-7">2.7 Major Space Agencies in Satellite Oceanography</a></li>
+        <li><a href="#section-2-8">2.8 Summary and Key Terms</a></li>
+        <li><a href="#references">References</a></li>
+        <li><a href="#exercises">Exercises</a></li>
+      </ol>
+    </section>
+
+    <div class="hr" role="separator" aria-hidden="true"></div>
+
+    <!-- 2.1 -->
+    <section class="panel" id="section-2-1">
+      <div class="section-title">
+        <h2>2.1 Introduction to Remote Sensing Systems</h2>
+        <span>Space-to-user architecture</span>
+      </div>
+
+      <p>
+        A <strong>remote sensing system</strong> is an integrated end-to-end enterprise that converts measurements of
+        electromagnetic (EM) energy into information products. In satellite oceanography, these systems are designed
+        to observe the ocean at scales difficult to capture using ships, moorings, and autonomous platforms alone—especially
+        for questions requiring <strong>global coverage</strong>, <strong>repeat sampling</strong>, and <strong>consistent multi-year records</strong>.
+      </p>
+
+      <h3>(Recap) Why satellites are transformative for oceanography</h3>
+      <p>
+        Satellites provide a <strong>synoptic view</strong>: they can sample large regions of the ocean within hours to days, repeatedly.
+        This enables observation of variables such as:
+      </p>
+      <ul>
+        <li><strong>Sea surface temperature (SST)</strong> patterns that reveal fronts, eddies, upwelling, and air–sea heat exchange.</li>
+        <li><strong>Sea surface height (SSH)</strong> variability that maps currents and mesoscale circulation through geostrophic balance.</li>
+        <li><strong>Surface winds</strong> that force waves and currents and structure air–sea fluxes.</li>
+        <li><strong>Ocean color</strong> (e.g., chlorophyll-a proxies) related to phytoplankton biomass and ecosystem dynamics.</li>
+      </ul>
+
+      <h3>A system-of-systems viewpoint</h3>
+      <p>A typical satellite oceanography “system” includes three tightly coupled segments:</p>
+      <ol>
+        <li>
+          <strong>Space segment</strong> — the satellite platform (bus) and instrument payload (e.g., radiometer, radar altimeter, scatterometer).
+        </li>
+        <li>
+          <strong>Ground segment</strong> — ground stations and mission operations that receive telemetry, command operations,
+          and perform processing, calibration, archiving, and distribution.
+        </li>
+        <li>
+          <strong>User segment</strong> — scientists, operational agencies, and applications (forecast models, climate services, ecosystem monitoring)
+          that use distributed products to generate knowledge and decisions.
+        </li>
+      </ol>
+
+      <div class="callout">
+        <strong>Practical perspective:</strong> Satellite data are most powerful when combined with in situ observations for calibration/validation,
+        algorithm development, and process interpretation.
+      </div>
+    </section>
+
+    <div class="hr" role="separator" aria-hidden="true"></div>
+
+    <!-- 2.2 -->
+    <section class="panel" id="section-2-2">
+      <div class="section-title">
+        <h2>2.2 Fundamentals of Satellite Construction</h2>
+        <span>Bus + payload</span>
+      </div>
+
+      <p>
+        Satellites must operate reliably in vacuum, radiation, micrometeoroid risk, and large temperature swings, while meeting strict mass,
+        volume, power, and pointing constraints. Oceanographic missions often impose additional requirements such as radiometric stability
+        (ocean color), precise orbit knowledge (altimetry), or high-power operation (active microwave/radar).
+      </p>
+
+      <h3>Key idea: Bus vs. payload</h3>
+      <ul>
+        <li><strong>Bus:</strong> spacecraft support systems (structure, power, thermal, attitude control, communications, command/data handling).</li>
+        <li><strong>Payload:</strong> the scientific instruments (radiometers, altimeters, scatterometers, SAR), plus calibration hardware.</li>
+      </ul>
+
+      <div class="grid" aria-label="Satellite subsystems overview">
+        <div class="card">
+          <h3>Structure &amp; Mechanisms <span class="tag">Bus</span></h3>
+          <p>Primary frame, deployment systems, launch-load survivability, stiffness for pointing stability.</p>
+        </div>
+        <div class="card">
+          <h3>Thermal Control <span class="tag">Bus</span></h3>
+          <p>MLI, radiators, heat pipes, heaters; maintains instrument/electronics temperatures for measurement stability.</p>
+        </div>
+        <div class="card">
+          <h3>ADCS <span class="tag">Bus</span></h3>
+          <p>Star trackers, gyros, reaction wheels/torque rods; controls orientation and geolocation accuracy.</p>
+        </div>
+        <div class="card">
+          <h3>Power <span class="tag">Bus</span></h3>
+          <p>Solar arrays + batteries + regulation/distribution; supports payload duty cycles and eclipse operations.</p>
+        </div>
+        <div class="card">
+          <h3>C&amp;DH <span class="tag">Bus</span></h3>
+          <p>Onboard computers and interfaces; packetization, storage, timing, commanding, housekeeping telemetry.</p>
+        </div>
+        <div class="card">
+          <h3>Communications <span class="tag">Bus</span></h3>
+          <p>TT&amp;C links and high-rate downlink (often S-band for TT&amp;C, X/Ka-band for science data).</p>
+        </div>
+      </div>
+
+      <h3 id="section-2-2-1">2.2.1 Structural and Mechanical Components</h3>
+      <p>
+        The primary structure supports the payload, solar arrays, antennas, and (if present) propulsion components, and must survive launch vibration,
+        acoustics, and shock events (e.g., stage separation). Mechanical design also contributes to pointing stability by minimizing flexing and vibration.
+      </p>
+      <p>
+        <strong>Thermal control</strong> is mission-critical for data quality. Ocean-color radiometry is sensitive to detector temperature drift; microwave
+        oscillators and electronics require stable temperatures to maintain frequency stability. Thermal control may be passive (MLI, radiators, coatings)
+        and/or active (heaters, thermostats; specialized missions may use cryocoolers).
+      </p>
+      <p>
+        <strong>Attitude determination and control</strong> integrates sensors (star trackers, Sun sensors, magnetometers, gyros) and actuators (reaction wheels,
+        torque rods, thrusters). For altimetry, pointing errors can map into range/geolocation errors; for imaging, pointing errors degrade geolocation and
+        can introduce artifacts such as striping.
+      </p>
+
+      <h3 id="section-2-2-2">2.2.2 Power Systems</h3>
+      <p>
+        Most Earth-observing satellites use <strong>solar arrays</strong> to generate power when sunlit and <strong>batteries</strong> to supply power during eclipses.
+        Design must satisfy average and peak power demands, accommodate degradation from radiation, and manage regulation and distribution (PMAD).
+      </p>
+      <p class="note">
+        Active radar instruments often impose high peak power requirements; this can drive solar array sizing, battery capacity, and thermal constraints.
+      </p>
+
+      <h3 id="section-2-2-3">2.2.3 Sensors and Instrumentation</h3>
+      <p>Satellite oceanography uses both passive and active sensors.</p>
+
+      <div class="grid" aria-label="Sensor categories">
+        <div class="card">
+          <h3>Passive: Visible/NIR <span class="tag">Ocean color</span></h3>
+          <p>Measures reflected sunlight; supports chlorophyll-a proxies and optical water properties.</p>
+        </div>
+        <div class="card">
+          <h3>Passive: Thermal IR <span class="tag">SST</span></h3>
+          <p>Measures emitted radiation from the sea-surface “skin”; high spatial detail when cloud-free.</p>
+        </div>
+        <div class="card">
+          <h3>Passive: Microwave <span class="tag">All-weather</span></h3>
+          <p>Measures natural microwave emission; supports salinity and wind speed (coarser resolution, cloud-penetrating).</p>
+        </div>
+        <div class="card">
+          <h3>Active: Altimetry <span class="tag">SSH</span></h3>
+          <p>Transmits pulses and measures return time/waveform; derives SSH, wave height, and roughness proxies.</p>
+        </div>
+        <div class="card">
+          <h3>Active: Scatterometry <span class="tag">Winds</span></h3>
+          <p>Infers near-surface wind vectors from backscatter dependence on wind-driven capillary waves.</p>
+        </div>
+        <div class="card">
+          <h3>Active: SAR <span class="tag">Imaging</span></h3>
+          <p>High-resolution roughness imagery; oil spills, sea ice, coastal processes, waves/currents interactions.</p>
+        </div>
+      </div>
+
+      <p>
+        Many missions combine multiple instruments to observe complementary variables (e.g., ocean color + SST + altimetry), enabling cross-variable
+        interpretation of fronts, eddies, and air–sea coupling.
+      </p>
+
+      <h3 id="section-2-2-4">2.2.4 Communication and Data Handling</h3>
+      <p>
+        Oceanographic satellites must deliver both housekeeping telemetry and science data reliably. Onboard command and data handling (C&amp;DH) systems
+        manage instrument commanding and timing, packetize data, and store it for downlink. Communications subsystems use antennas, radios, amplifiers,
+        and coding/modulation to transmit data to ground stations. Many missions use a lower-rate link for TT&amp;C and a higher-rate link for payload data.
+      </p>
+    </section>
+
+    <div class="hr" role="separator" aria-hidden="true"></div>
+
+    <!-- 2.3 -->
+    <section class="panel" id="section-2-3">
+      <div class="section-title">
+        <h2>2.3 Enabling Data Flow in Satellite Systems</h2>
+        <span>From measurement to product</span>
+      </div>
+
+      <p>
+        The remote sensing value chain transforms a physical signal into geophysical and application-ready information:
+        <strong>physical signal → digital measurement → calibrated measurement → geophysical variable → analysis-ready product</strong>.
+      </p>
+
+      <h3 id="section-2-3-1">2.3.1 Data Acquisition and Onboard Processing</h3>
+      <p>
+        Sensors convert EM radiation (passive) or returned echoes (active) into digitized measurements (often high-rate, multi-channel).
+        Because onboard computing and downlink are constrained, missions may use onboard processing such as compression, packetization,
+        and limited prioritization strategies—while still preserving enough information to enable later reprocessing with improved algorithms.
+      </p>
+
+      <h3 id="section-2-3-2">2.3.2 Telemetry and Downlink</h3>
+      <p>
+        Telemetry includes both science and housekeeping streams. The downlink provides the path to Earth via ground stations, sometimes using
+        distributed global networks. Product <strong>latency</strong> (time between observation and availability) matters for operational applications.
+        Near-real-time products prioritize speed, while delayed-mode products often prioritize accuracy through enhanced calibration and ancillary data.
+      </p>
+
+      <h3 id="section-2-3-3">2.3.3 Ground Segment Operations</h3>
+      <p>After reception, ground segment processing typically includes:</p>
+      <ol>
+        <li><strong>Integrity checks:</strong> completeness and bit-error detection/correction.</li>
+        <li><strong>Archiving:</strong> preserve raw and intermediate data to enable future reprocessing.</li>
+        <li><strong>Calibration and geolocation:</strong> convert counts to physical units and assign accurate Earth coordinates.</li>
+        <li><strong>Higher-level retrievals:</strong> atmospheric correction, geophysical algorithms, quality flags, uncertainty estimates.</li>
+        <li><strong>Distribution:</strong> portals, APIs, subsetting services, and documentation for user workflows.</li>
+      </ol>
+
+      <div class="callout">
+        <strong>Why archiving matters:</strong> Reprocessing can substantially improve climate records as algorithms, auxiliary datasets,
+        and calibration understanding evolve over time.
+      </div>
+    </section>
+
+    <div class="hr" role="separator" aria-hidden="true"></div>
+
+    <!-- 2.4 -->
+    <section class="panel" id="section-2-4">
+      <div class="section-title">
+        <h2>2.4 Fundamentals of Satellite Orbits</h2>
+        <span>Coverage, revisit, and sampling</span>
+      </div>
+
+      <p>
+        Orbital mechanics determine where a satellite can observe, how often it revisits, and how we interpret space–time sampling.
+        For oceanography, orbit design influences what spatial scales and timescales can be resolved.
+      </p>
+
+      <h3 id="section-2-4-1">2.4.1 Basic Orbital Parameters</h3>
+      <p>Key parameters include:</p>
+      <ul>
+        <li><strong>Semi-major axis (a):</strong> orbit “size” (for circular orbits, \(a \approx r\)).</li>
+        <li><strong>Eccentricity (e):</strong> orbit shape (0 is circular; \(0&lt;e&lt;1\) is elliptical).</li>
+        <li><strong>Inclination (i):</strong> orbit plane tilt relative to the equator.</li>
+        <li><strong>Period (T):</strong> time to complete one orbit.</li>
+      </ul>
+
+      <p>Common orbit types in oceanography include:</p>
+      <ul>
+        <li><strong>Polar / near-polar LEO:</strong> supports global coverage as Earth rotates beneath the orbit.</li>
+        <li><strong>Sun-synchronous (SSO):</strong> consistent local solar time sampling; valuable for visible ocean-color work.</li>
+        <li><strong>Geostationary (GEO):</strong> continuous monitoring over one longitude; high temporal resolution, regional focus.</li>
+      </ul>
+
+
+      <p> <a href="orbit_vis.html">Here is an interactive tool to visualization different orbits.</a></p>
+
+      <h3 id="section-2-4-2">2.4.2 Newton’s Laws and Orbital Calculations</h3>
+      <p>Newton’s law of universal gravitation:</p>
+      <p>\[
+        F = G\frac{m_1 m_2}{r^2}
+      \]</p>
+
+      <p>For a satellite of mass \(m\) orbiting Earth (mass \(M\)) at radius \(r\):</p>
+      <p>\[
+        F_g = G\frac{M m}{r^2}
+      \]</p>
+
+      <p>For circular motion, the required centripetal force is:</p>
+      <p>\[
+        F_c = m\frac{v^2}{r}
+      \]</p>
+
+      <p>Setting \(F_g = F_c\) and simplifying yields the circular-orbit speed:</p>
+      <p>\[
+        v = \sqrt{\frac{GM}{r}} = \sqrt{\frac{\mu}{r}}
+      \]</p>
+
+      <p>The orbital period for a circular orbit is:</p>
+      <p>\[
+        T = \frac{2\pi r}{v} = 2\pi \sqrt{\frac{r^3}{\mu}}
+      \]</p>
+
+      <p>For elliptical orbits, replace \(r\) with the semi-major axis \(a\):</p>
+      <p>\[
+        T = 2\pi \sqrt{\frac{a^3}{\mu}}
+      \]</p>
+
+      <div class="callout" aria-label="Worked example">
+        <strong>Worked Example 2.1: Orbital period at 800 km altitude (circular LEO)</strong><br />
+        Let \(h = 800\,\text{km}\), \(R_E \approx 6371\,\text{km}\), so \(r = R_E + h = 7171\,\text{km} = 7.171\times 10^6\,\text{m}\).
+        Using \(\mu = 3.986\times 10^{14}\,\text{m}^3\text{s}^{-2}\):<br /><br />
+        <strong>Speed:</strong> \(v=\sqrt{\mu/r}\approx 7.46\times 10^3\,\text{m s}^{-1}\) \(\approx 7.46\,\text{km s}^{-1}\).<br />
+        <strong>Period:</strong> \(T=2\pi\sqrt{r^3/\mu}\approx 6043\,\text{s}\approx 100.7\,\text{min}\).<br /><br />
+        <strong>Result:</strong> \(T \approx 101\) minutes (first-order circular-orbit estimate).
+      </div>
+
+      <h3 id="section-2-4-3">2.4.3 Orbit Types in Oceanographic Missions</h3>
+      <p>
+        <strong>LEO</strong> generally offers higher spatial resolution and global coverage over days, making it ideal for ocean color, SST, winds, and altimetry.
+        <strong>GEO</strong> offers continuous regional monitoring with high temporal resolution, useful for storm tracking and diurnal variability, but typically at
+        coarser spatial resolution than many LEO imagers.
+      </p>
+
+      <div class="callout">
+        <strong>Sampling trade-off:</strong> Orbit design is a balance among spatial resolution, revisit time, swath width, and the phenomena of interest.
+      </div>
+    </section>
+
+    <div class="hr" role="separator" aria-hidden="true"></div>
+
+    <!-- 2.5 -->
+    <section class="panel" id="section-2-5">
+      <div class="section-title">
+        <h2>2.5 Data Levels in Satellite Oceanography</h2>
+        <span>From raw to analysis-ready</span>
+      </div>
+
+      <p>
+        Satellite measurements are processed through standardized levels to support consistent data stewardship and user interpretation. The central question
+        each level answers is: <em>how far is this dataset from the original measurement?</em>
+      </p>
+
+      <div class="table-wrap" role="region" aria-label="Data processing levels table">
+        <table class="course">
+          <caption>Common satellite data processing levels (oceanography examples)</caption>
+          <thead>
+            <tr>
+              <th scope="col">Level</th>
+              <th scope="col">Name</th>
+              <th scope="col">Typical contents</th>
+              <th scope="col">Common use</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td data-label="Level">0</td>
+              <td data-label="Name"><strong>Raw data</strong></td>
+              <td data-label="Typical contents">Reconstructed instrument packets/counts with minimal processing.</td>
+              <td data-label="Common use">Archival baseline; reprocessing; engineering validation.</td>
+            </tr>
+            <tr>
+              <td data-label="Level">1</td>
+              <td data-label="Name"><strong>Calibrated &amp; geolocated</strong></td>
+              <td data-label="Typical contents">Radiances/brightness temperatures/backscatter; navigation applied.</td>
+              <td data-label="Common use">Algorithm development; quality assessment; retrieval inputs.</td>
+            </tr>
+            <tr>
+              <td data-label="Level">2</td>
+              <td data-label="Name"><strong>Geophysical products</strong></td>
+              <td data-label="Typical contents">SST, chlorophyll, wind vectors, SSH along tracks/swaths; QC flags.</td>
+              <td data-label="Common use">Process studies; validation; high-fidelity local analyses.</td>
+            </tr>
+            <tr>
+              <td data-label="Level">3</td>
+              <td data-label="Name"><strong>Gridded composites</strong></td>
+              <td data-label="Typical contents">Mapped fields on a standard grid (daily/weekly/monthly).</td>
+              <td data-label="Common use">Climatologies; mapping; broad-scale comparisons.</td>
+            </tr>
+            <tr>
+              <td data-label="Level">4</td>
+              <td data-label="Name"><strong>Analyzed / model-integrated</strong></td>
+              <td data-label="Typical contents">Gap-free analyses (often multi-sensor) and/or assimilated products.</td>
+              <td data-label="Common use">Model forcing/validation; operational products; consistent fields.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 id="section-2-5-1">2.5.1 Level 0: Raw Data</h3>
+      <p>
+        Level 0 is reconstructed, unprocessed instrument data at full resolution. It is not “science-ready” and often requires mission-specific metadata and tools,
+        but it is essential for preserving the closest representation of what the instrument measured.
+      </p>
+
+      <h3 id="section-2-5-2">2.5.2 Level 1: Calibrated and Geolocated Data</h3>
+      <p>
+        Level 1 data are radiometrically calibrated and (typically) geolocated. Examples include calibrated radiances, brightness temperatures, radar backscatter,
+        or altimeter waveforms/ranges with navigation information.
+      </p>
+
+      <h3 id="section-2-5-3">2.5.3 Level 2: Geophysical Products</h3>
+      <p>
+        Level 2 products provide derived geophysical variables at the measurement resolution and sampling geometry (e.g., along-track or swath). Atmospheric corrections,
+        auxiliary meteorology, geophysical models (e.g., tides), and quality flags are often incorporated at this stage.
+      </p>
+
+      <h3 id="section-2-5-4">2.5.4 Higher Levels: Gridded and Analyzed Data</h3>
+      <p>
+        Level 3 maps Level 2 variables onto consistent grids, often as space–time composites. Level 4 adds analysis methods and/or model constraints (including data assimilation)
+        to produce gap-free fields. These levels are convenient for mapping and modeling but can be farther from the instrument measurement and may incorporate smoothing or model structure.
+      </p>
+
+      <div class="callout">
+        <strong>Interpretation caution:</strong> Higher levels are easier to use, but they may blend sensors, fill gaps, and impose assumptions.
+        If you need “closest-to-observation” constraints (e.g., algorithm validation), start from Level 1/2 when feasible.
+      </div>
+    </section>
+
+    <div class="hr" role="separator" aria-hidden="true"></div>
+
+    <!-- 2.6 -->
+    <section class="panel" id="section-2-6">
+      <div class="section-title">
+        <h2>2.6 Major Data Distribution Centers for Satellite Oceanography</h2>
+        <span>Where you actually get the data</span>
+      </div>
+
+      <p>
+        Professional practice in satellite oceanography includes knowing where authoritative datasets are archived and how to evaluate product maturity,
+        processing level, latency, and documentation quality.
+      </p>
+
+      <h3 id="section-2-6-1">2.6.1 NASA Earthdata</h3>
+      <p>
+        NASA Earthdata provides discovery and access to NASA Earth observation holdings, supported by discipline-specific Distributed Active Archive Centers (DAACs).
+        Oceanography-relevant DAACs include PO.DAAC (physical oceanography) and OB.DAAC (ocean biology/ocean color). Common workflows include portal download, APIs,
+        and increasingly cloud-optimized analysis.
+      </p>
+
+      <h3 id="section-2-6-2">2.6.2 NOAA CoastWatch</h3>
+      <p>
+        NOAA CoastWatch provides near-real-time and operational ocean products, including SST and ocean color, often organized by latency and product family.
+        This is particularly useful for applications requiring rapid delivery (e.g., hazards, operational monitoring).
+      </p>
+
+      <h3 id="section-2-6-3">2.6.3 ESA Copernicus Hub</h3>
+      <p>
+        Copernicus Sentinel mission data are distributed through modern access portals and services. For many users, the practical workflow is:
+        search → select product level and timeliness → download or access via API → process in Python using netCDF/GeoTIFF/SAFE formats.
+      </p>
+
+      <h3 id="section-2-6-4">2.6.4 Other Centers</h3>
+      <p>Additional important centers for ocean remote sensing include JAXA portals and CNES altimetry services (e.g., AVISO/AVISO+), among others.</p>
+
+      <div class="callout">
+        <strong>Practical note (Python):</strong> Most satellite ocean products are distributed as netCDF/HDF (or mission-specific packaging).
+        Core skills include reading metadata, applying quality flags, handling projections/geolocation, and tracking processing level and version.
+      </div>
+    </section>
+
+    <div class="hr" role="separator" aria-hidden="true"></div>
+
+    <!-- 2.7 -->
+    <section class="panel" id="section-2-7">
+      <div class="section-title">
+        <h2>2.7 Major Space Agencies in Satellite Oceanography</h2>
+        <span>International, collaborative, and sustained</span>
+      </div>
+
+      <p>
+        Satellite oceanography is inherently international. Mission cost, technical complexity, and the need for long-term continuity motivate collaboration,
+        shared calibration strategies, and common data standards.
+      </p>
+
+      <h3 id="section-2-7-1">2.7.1 NASA (United States)</h3>
+      <p>
+        NASA supports research and long-term Earth system records, including sea surface topography, ocean color, SST, salinity, gravity, and wide-swath topography.
+        Many NASA missions emphasize process understanding and climate-quality datasets.
+      </p>
+
+      <h3 id="section-2-7-2">2.7.2 ESA (Europe)</h3>
+      <p>
+        ESA’s Copernicus program provides sustained open data streams through Sentinel missions (ocean color, SST, SAR, altimetry), enabling continuity and
+        multi-mission analysis for ocean monitoring.
+      </p>
+
+      <h3 id="section-2-7-3">2.7.3 NOAA (United States)</h3>
+      <p>
+        NOAA focuses on operational environmental satellites supporting forecasting and hazard monitoring, including geostationary and polar-orbiting systems.
+        These data streams are central to operational weather–ocean services and near-real-time products.
+      </p>
+
+      <h3 id="section-2-7-4">2.7.4 Other Agencies</h3>
+      <p>
+        Additional major contributors include CNSA (China), ISRO (India), JAXA (Japan), and CNES (France). Many flagship ocean missions are joint efforts,
+        particularly in ocean topography/altimetry where reference frame stability and cross-mission calibration are critical.
+      </p>
+    </section>
+
+    <div class="hr" role="separator" aria-hidden="true"></div>
+
+    <!-- 2.8 -->
+    <section class="panel" id="section-2-8">
+      <div class="section-title">
+        <h2>2.8 Summary and Key Terms</h2>
+        <span>Wrap-up and vocabulary</span>
+      </div>
+
+      <h3>Summary</h3>
+      <p>
+        Satellite oceanography is enabled by complete remote sensing systems that integrate spacecraft subsystems (bus + payload), communications and data handling,
+        ground segment processing, standardized data levels (L0–L4), and robust distribution services. Orbit selection (LEO, sun-synchronous, geostationary)
+        shapes sampling, revisit time, and the ocean processes you can resolve. A first-principles understanding (Newton’s laws) provides the foundation for
+        interpreting orbital coverage and computing key quantities such as orbital speed and period.
+      </p>
+
+      <div class="callout">
+        <strong>Preview (Chapter 3):</strong> Sensor types and data interpretation—what each sensor actually measures, how retrieval algorithms work,
+        and how uncertainties and limitations propagate into ocean variables.
+      </div>
+
+      <h3>Key terms</h3>
+      <div class="grid" aria-label="Key terms grid">
+        <div class="card">
+          <h3>ADCS <span class="tag">Attitude</span></h3>
+          <p>Attitude determination and control system; maintains orientation and pointing knowledge.</p>
+        </div>
+        <div class="card">
+          <h3>Bus <span class="tag">Spacecraft</span></h3>
+          <p>Spacecraft support subsystems (power, thermal, ADCS, comms, C&amp;DH, structure).</p>
+        </div>
+        <div class="card">
+          <h3>Payload <span class="tag">Instruments</span></h3>
+          <p>The scientific sensors and associated calibration hardware.</p>
+        </div>
+        <div class="card">
+          <h3>Swath width <span class="tag">Geometry</span></h3>
+          <p>Cross-track width observed during a pass; affects coverage and revisit.</p>
+        </div>
+        <div class="card">
+          <h3>Nadir <span class="tag">Geometry</span></h3>
+          <p>Point directly beneath the satellite; common reference for altimetry geometry.</p>
+        </div>
+        <div class="card">
+          <h3>Latency <span class="tag">Operations</span></h3>
+          <p>Time from observation to product availability; key for operational use.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="hr" role="separator" aria-hidden="true"></div>
+
+    <!-- References -->
+    <section class="panel" id="references">
+      <div class="section-title">
+        <h2>References</h2>
+        <span>Core texts</span>
+      </div>
+
+      <ol class="ref-list">
+        <li>
+          Robinson, I. S. (2004). <em>Measuring the Oceans from Space</em>. Springer.
+        </li>
+      </ol>
+
+      <div class="hr" role="separator" aria-hidden="true"></div>
+
+      <h3>Optional online portals (for practical data access)</h3>
+      <ul>
+        <li><a class="link" href="https://search.earthdata.nasa.gov/" target="_blank" rel="noopener">NASA Earthdata Search</a></li>
+        <li><a class="link" href="https://podaac.jpl.nasa.gov/" target="_blank" rel="noopener">NASA PO.DAAC</a></li>
+        <li><a class="link" href="https://oceancolor.gsfc.nasa.gov/" target="_blank" rel="noopener">NASA OB.DAAC / Ocean Color</a></li>
+        <li><a class="link" href="https://coastwatch.noaa.gov/" target="_blank" rel="noopener">NOAA CoastWatch</a></li>
+        <li><a class="link" href="https://dataspace.copernicus.eu/" target="_blank" rel="noopener">Copernicus Data Space Ecosystem</a></li>
+      </ul>
+    </section>
+
+    <div class="hr" role="separator" aria-hidden="true"></div>
+
+    <!-- Exercises -->
+    <section class="panel" id="exercises">
+      <div class="section-title">
+        <h2>Exercises</h2>
+        <span>Check your understanding</span>
+      </div>
+
+      <ol>
+        <li>
+          <strong>Calculate an orbital period:</strong> Compute the orbital period for a satellite at 400 km altitude (ISS) using Newton’s laws.
+          State all assumptions (e.g., circular orbit, standard Earth radius and \(\mu\)).
+        </li>
+        <li>
+          <strong>Compare data levels:</strong> Choose an ocean color product (e.g., from MODIS or Sentinel-3). Identify what changes from Level 1 to Level 2
+          and what additional processing/assumptions appear at Level 3 and Level 4.
+        </li>
+        <li>
+          <strong>Orbit design discussion:</strong> Explain why sun-synchronous orbits are advantageous for ocean monitoring. Provide at least two ocean variables
+          that benefit from consistent local solar time sampling, and describe why.
+        </li>
+      </ol>
+
+      <div class="callout">
+        <strong>Suggestion:</strong> For Exercise 2, include a short paragraph describing the role of atmospheric correction and quality flags, and how those affect interpretation.
+      </div>
+    </section>
+
+    <footer>
+      <div>OCNG 489/689 — Studying the Oceans from Space</div>
+      <div class="foot-badge">Chapter 2 • Remote Sensing Systems</div>
+    </footer>
+  </main>
+
+  <script>
+    // Mobile nav toggle (matches the CSS ".nav.open" behavior)
+    (function () {
+      const btn = document.querySelector('.menu-btn');
+      const nav = document.getElementById('site-nav');
+      if (!btn || !nav) return;
+
+      btn.addEventListener('click', () => {
+        const isOpen = nav.classList.toggle('open');
+        btn.setAttribute('aria-expanded', String(isOpen));
+      });
+    })();
+  </script>
+</body>
+</html>
