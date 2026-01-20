@@ -1,0 +1,1645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Electromagnetic Spectrum & Radiation — Fundamentals for Ocean Remote Sensing</title>
+
+  <!-- Course site stylesheet (place styles.css in the same folder as this HTML file) -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- MathJax (for clean equations and symbols) -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)'], ['$', '$']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']],
+        macros: {
+          // Vectors & operators
+          vE: '\\mathbf{E}',
+          vB: '\\mathbf{B}',
+          vS: '\\mathbf{S}',
+          grad: '\\nabla',
+          // Differentials
+          d: ['\\,\\mathrm{d}#1', 1],
+          dd: ['\\frac{\\mathrm{d}#1}{\\mathrm{d}#2}', 2],
+          pd: ['\\frac{\\partial #1}{\\partial #2}', 2],
+          // Units helper
+          unit: ['\\,\\mathrm{#1}', 1],
+          // Common constants
+          eps0: '\\varepsilon_0',
+          mu0: '\\mu_0',
+          // Solid angle
+          domega: '\\mathrm{d}\\Omega'
+        }
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
+  <style>
+    /* =========================================================
+       Add-ons to the provided styles.css for math + pedagogy
+       ========================================================= */
+
+    /* Make sure long equations can scroll on small screens */
+    .eq {
+      border: 1px solid rgba(148,163,184,.22);
+      border-radius: 12px;
+      background: rgba(15,26,46,.55);
+      padding: 10px 12px;
+      margin: 10px 0;
+      overflow-x: auto;
+    }
+    .eq .meta{
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+      color: rgba(148,163,184,.95);
+      font-size: .88rem;
+    }
+    .eq .meta .tag{
+      font-family: var(--mono);
+      font-size: .78rem;
+    }
+    .math-note{
+      color: var(--muted);
+      font-size: .92rem;
+      margin-top: 6px;
+    }
+
+    /* Terminology boxes */
+    .defgrid{
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 10px;
+    }
+    .def{
+      border: 1px solid rgba(148,163,184,.18);
+      border-radius: 14px;
+      background: rgba(148,163,184,.06);
+      padding: 12px;
+      display: grid;
+      gap: 6px;
+    }
+    .def h4{
+      margin: 0;
+      font-size: 1.0rem;
+      letter-spacing: .2px;
+    }
+    .def p{ margin: 0; color: rgba(229,231,235,.88); font-size: .93rem; }
+    .def .sym{
+      font-family: var(--mono);
+      color: rgba(229,231,235,.92);
+      font-size: .9rem;
+    }
+
+    /* Tables used in this page */
+    .tight-table table{
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: rgba(15,26,46,.45);
+    }
+    .tight-table th, .tight-table td{
+      padding: 10px 12px;
+      border-top: 1px solid rgba(148,163,184,.16);
+      vertical-align: top;
+      font-size: .93rem;
+      color: rgba(229,231,235,.92);
+    }
+    .tight-table thead th{
+      background: rgba(15,26,46,.92);
+      border-top: none;
+      font-weight: 900;
+      font-size: .92rem;
+    }
+    .tight-table tbody tr:nth-child(odd){ background: rgba(148,163,184,.06); }
+
+    /* TOC */
+    .toc{
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+      padding-left: 18px;
+      color: rgba(229,231,235,.92);
+    }
+    .toc a{ text-decoration: none; border-bottom: 1px solid rgba(148,163,184,.22); }
+    .toc a:hover{ border-bottom-color: rgba(96,165,250,.7); }
+
+    /* Mini calculators */
+    .calc{
+      display: grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .calc .row{
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .calc label{
+      display: grid;
+      gap: 6px;
+      font-size: .9rem;
+      color: rgba(229,231,235,.90);
+    }
+    .calc input, .calc select{
+      padding: 10px 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(148,163,184,.26);
+      background: rgba(11,18,32,.55);
+      color: rgba(229,231,235,.96);
+      font: inherit;
+      outline: none;
+    }
+    .calc input:focus, .calc select:focus{
+      border-color: rgba(96,165,250,.55);
+      box-shadow: 0 0 0 2px rgba(96,165,250,.18);
+    }
+    .calc .out{
+      border: 1px solid rgba(148,163,184,.18);
+      border-radius: 12px;
+      background: rgba(15,26,46,.55);
+      padding: 10px 12px;
+      color: rgba(229,231,235,.92);
+      font-size: .93rem;
+    }
+    .calc .out code{
+      font-family: var(--mono);
+      font-size: .92rem;
+    }
+
+    /* Figures */
+    figure{
+      margin: 12px 0;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(148,163,184,.18);
+      background: rgba(15,26,46,.45);
+    }
+    figcaption{
+      margin-top: 8px;
+      color: rgba(148,163,184,.95);
+      font-size: .88rem;
+    }
+
+    /* Responsive add-on */
+    @media (max-width: 980px){
+      .defgrid{ grid-template-columns: 1fr; }
+      .calc .row{ grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body id="top">
+  <a class="skip" href="#content">Skip to content</a>
+
+  <header class="topbar" role="banner">
+    <div class="topbar-inner">
+      <div class="brand" aria-label="Page title">
+        <a href="#top">EM Spectrum & Radiation</a>
+        <small>Foundations for satellite oceanography and ocean remote sensing</small>
+      </div>
+
+      <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="nav">
+        Menu
+      </button>
+
+      <nav class="nav" id="nav" aria-label="Section navigation">
+        <a href="#why" class="active">Why</a>
+        <a href="#toc">Contents</a>
+        <a href="#notation">Notation</a>
+        <a href="#maxwell">Maxwell → Waves</a>
+        <a href="#describe">Describe EMR</a>
+        <a href="#matter">Matter Interactions</a>
+        <a href="#radiometry">Radiometry</a>
+        <a href="#thermal">Thermal Emission</a>
+        <a href="#resolution">Resolution</a>
+        <a href="#practice">Practice</a>
+        <a href="#glossary">Glossary</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="content" class="container" role="main">
+
+    <!-- =======================================================
+         HERO
+         ======================================================= -->
+    <section class="hero" aria-label="Overview">
+      <div class="panel">
+        <h1>Electromagnetic spectrum and radiation: a unified toolkit for remote sensing</h1>
+        <p>
+          Every satellite sensor in oceanography—ocean color radiometers, thermal infrared imagers,
+          microwave radiometers, scatterometers, SAR, radar altimeters—ultimately measures
+          <em>electromagnetic radiation</em> (EMR). This chapter builds a shared “physics language”
+          you will reuse across all later chapters: how EM waves propagate, how they interact with
+          matter, and how we quantify what the sensor actually measures.
+        </p>
+
+        <div class="cta-row" role="navigation" aria-label="Primary actions">
+          <a class="btn primary" href="#toc">Start the learning path</a>
+          <a class="btn good" href="#practice">Jump to practice</a>
+        </div>
+
+        <div class="callout">
+          <strong>Big picture:</strong> This module builds a layered understanding of remote sensing:
+          <em>fields → waves → spectrum → interactions → radiometric measurement → thermal emission → resolution</em>.
+          Each layer depends on the previous one.
+        </div>
+      </div>
+
+      <aside class="mini" aria-label="Module metadata">
+        <h2>How this page is meant to be used</h2>
+        <dl class="kv">
+          <div>
+            <dt>Goal</dt>
+            <dd>Understand the fundamentals of electromagnetism that underpin remote sensing technologies.</dd>
+          </div>
+          <div>
+            <dt>What to master</dt>
+            <dd>Definitions, units, physical intuition, and “why this quantity exists.”</dd>
+          </div>
+          <div>
+            <dt>Common pitfall</dt>
+            <dd>Mixing up <span class="sym">field vectors</span> with <span class="sym">radiometric E</span> (irradiance).</dd>
+          </div>
+          <div>
+            <dt>Math</dt>
+            <dd>Try to work through the equations and concepts presented.</dd>
+          </div>
+        </dl>
+      </aside>
+    </section>
+
+    <!-- =======================================================
+         WHY
+         ======================================================= -->
+    <section id="why" class="panel" aria-label="Why it matters">
+      <div class="section-title">
+        <h2>Why EM spectrum and radiation matter in satellite oceanography</h2>
+        <span>Big picture → what you will reuse later</span>
+      </div>
+
+      <p>
+        Remote sensing is “physics with a camera”—except the “camera” may be a radiometer, an antenna,
+        or a coherent radar. The instrument does not measure temperature, chlorophyll, or winds directly.
+        It measures <em>EMR</em> that has been shaped by the environment:
+      </p>
+
+      <div class="tight-table" role="region" aria-label="Measurement chain table">
+        <table>
+          <thead>
+            <tr>
+              <th>Stage</th>
+              <th>Physical question</th>
+              <th>Key concept you learn here</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Source</strong></td>
+              <td>Is the radiation emitted (thermal) or reflected (solar)?</td>
+              <td>Planck radiation, black/gray bodies, emissivity</td>
+            </tr>
+            <tr>
+              <td><strong>Propagation</strong></td>
+              <td>Does the medium change speed, bend rays, or attenuate waves?</td>
+              <td>Refractive index, dispersion, absorption length</td>
+            </tr>
+            <tr>
+              <td><strong>Interaction</strong></td>
+              <td>At the surface/atmosphere: reflection, scattering, absorption?</td>
+              <td>Scattering regimes (Rayleigh/Mie), spectral signatures</td>
+            </tr>
+            <tr>
+              <td><strong>Measurement</strong></td>
+              <td>What exactly does a sensor record?</td>
+              <td>Radiant flux, irradiance, radiance, solid angle, BRDF</td>
+            </tr>
+            <tr>
+              <td><strong>Resolution</strong></td>
+              <td>What spatial detail is fundamentally possible?</td>
+              <td>Diffraction, Rayleigh criterion, wavelength–aperture tradeoffs</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout">
+        <strong>Transfer to later chapters:</strong> The same radiometric and wave concepts appear in
+        ocean color (visible), SST (thermal IR), salinity/wind (microwave), SAR/scatterometry (active
+        microwave scattering), and altimetry (propagation delays and dispersion corrections).
+      </div>
+    </section>
+
+    <!-- =======================================================
+         TOC
+         ======================================================= -->
+    <section id="toc" class="panel" aria-label="Table of contents">
+      <div class="section-title">
+        <h2>Learning path</h2>
+        <span>Suggested order</span>
+      </div>
+      <ol class="toc">
+        <li><a href="#notation">Notation, symbols, and units (avoid confusion early)</a></li>
+        <li><a href="#maxwell">From Maxwell’s equations to EM waves (what “radiation” is)</a></li>
+        <li><a href="#describe">Ways to describe EMR (wave, photon, spectrum, polarization)</a></li>
+        <li><a href="#matter">Interaction with matter (refraction, absorption, scattering, spectral effects)</a></li>
+        <li><a href="#radiometry">Radiometry “measurement grammar” (flux, irradiance, radiance, brightness, Lambertian)</a></li>
+        <li><a href="#thermal">Thermal radiation (blackbody, Planck law, limits, emissivity, brightness temperature)</a></li>
+        <li><a href="#resolution">Diffraction and resolution (Rayleigh criterion and why wavelength matters)</a></li>
+        <li><a href="#practice">Practice set + mini-calculators</a></li>
+        <li><a href="#glossary">Glossary and equation cheat-sheet</a></li>
+      </ol>
+    </section>
+
+    <!-- =======================================================
+         NOTATION
+         ======================================================= -->
+    <section id="notation" class="panel" aria-label="Notation">
+      <div class="section-title">
+        <h2>Notation and symbol conventions</h2>
+        <span>Clean symbols = fewer mistakes later</span>
+      </div>
+
+      <p>
+        Remote sensing combines <em>electromagnetism</em> and <em>radiometry</em>. Unfortunately,
+        many symbols are re-used across subfields. Here are the conventions used on this page.
+      </p>
+
+      <div class="defgrid">
+        <div class="def">
+          <h4>Two different “E” symbols</h4>
+          <p class="sym">
+            Electric field: \(\vE\) (vector, units \(\unit{V\,m^{-1}}\))<br/>
+            Irradiance: \(E\) or \(E_\lambda\) (scalar, units \(\unit{W\,m^{-2}}\))
+          </p>
+          <p>
+            This is the most common source of confusion. If you are doing Maxwell/waves, you are using
+            \(\vE\). If you are doing radiometry, \(E\) means <em>irradiance</em>.
+          </p>
+        </div>
+
+        <div class="def">
+          <h4>Two different “k” symbols</h4>
+          <p class="sym">
+            Wavenumber: \(k = 2\pi/\lambda\) (units \(\unit{rad\,m^{-1}}\))<br/>
+            Boltzmann constant: \(k_B\) (units \(\unit{J\,K^{-1}}\))
+          </p>
+          <p>
+            In thermal radiation, always write <em>Boltzmann</em> as \(k_B\) to keep wavenumber \(k\)
+            available for wave physics.
+          </p>
+        </div>
+      </div>
+
+      <div class="tight-table" role="region" aria-label="Symbol table">
+        <table>
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>Symbol</th>
+              <th>Meaning</th>
+              <th>Typical unit</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Wave</strong></td>
+              <td>\(\lambda, \nu, \omega, k\)</td>
+              <td>wavelength, frequency, angular frequency, wavenumber</td>
+              <td>\(\unit{m}, \unit{Hz}, \unit{rad\,s^{-1}}, \unit{rad\,m^{-1}}\)</td>
+            </tr>
+            <tr>
+              <td><strong>Fields</strong></td>
+              <td>\(\vE, \vB, \vS\)</td>
+              <td>electric field, magnetic field, Poynting vector (energy flux)</td>
+              <td>\(\unit{V\,m^{-1}}, \unit{T}, \unit{W\,m^{-2}}\)</td>
+            </tr>
+            <tr>
+              <td><strong>Medium</strong></td>
+              <td>\(n, \tilde{n}=n-i\kappa, \tilde{\varepsilon}=\varepsilon'-i\varepsilon''\)</td>
+              <td>refractive index, complex refractive index, complex permittivity</td>
+              <td>dimensionless</td>
+            </tr>
+            <tr>
+              <td><strong>Radiometry</strong></td>
+              <td>\(\Phi, E, L, I, M, \Omega\)</td>
+              <td>radiant flux, irradiance, radiance, radiant intensity, exitance, solid angle</td>
+              <td>\(\unit{W}, \unit{W\,m^{-2}}, \unit{W\,m^{-2}\,sr^{-1}}, \unit{W\,sr^{-1}}, \unit{W\,m^{-2}}, \unit{sr}\)</td>
+            </tr>
+            <tr>
+              <td><strong>Thermal</strong></td>
+              <td>\(B_\lambda(\lambda,T), \varepsilon, T_B\)</td>
+              <td>blackbody spectral radiance, emissivity, brightness temperature</td>
+              <td>\(\unit{W\,m^{-2}\,sr^{-1}\,\mu m^{-1}}\), dimensionless, \(\unit{K}\)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout">
+        <strong>Rule of thumb:</strong> If a quantity includes “per steradian” (\(\unit{sr^{-1}}\)),
+        it is directional (radiance or intensity). If it is “per area” only, it is an areal flux (irradiance/exitance).
+      </div>
+    </section>
+
+    <!-- =======================================================
+         MAXWELL -> WAVES
+         ======================================================= -->
+    <section id="maxwell" class="panel" aria-label="Maxwell equations and waves">
+      <div class="section-title">
+        <h2>From Maxwell’s equations to electromagnetic waves</h2>
+        <span>What “radiation” means physically</span>
+      </div>
+
+      <p>
+        The “electromagnetic” in EMR is literal: radiation is a coupled oscillation of
+        \(\vE\) and \(\vB\) that propagates through space (and through materials).
+        A key result for remote sensing is that material properties enter primarily through the
+        <em>dielectric response</em> (permittivity), which determines both wave speed and attenuation.
+      </p>
+
+      <h3>Maxwell’s equations: the four rules with physical meaning</h3>
+      <p class="math-note">
+        We show them in vacuum form (most intuitive), then apply common remote-sensing assumptions
+        (no free charge/current in the propagation region).
+      </p>
+
+      <div class="eq" aria-label="Maxwell equations">
+        \[
+          \begin{aligned}
+            \grad \cdot \vE &= \frac{\rho}{\eps0} \\
+            \grad \cdot \vB &= 0 \\
+            \grad \times \vE &= -\pd{\vB}{t} \\
+            \grad \times \vB &= \mu_0 \mathbf{J} + \mu_0 \eps0 \pd{\vE}{t}
+          \end{aligned}
+        \]
+        <div class="meta">
+          <span class="tag">Core concept</span>
+          <span>Interpretation: sources (\(\rho, \mathbf{J}\)) and coupling between \(\vE\) and \(\vB\)</span>
+        </div>
+      </div>
+
+      <div class="defgrid">
+        <div class="def">
+          <h4>Intuition: why time variation matters</h4>
+          <p>
+            A static electric field can exist without a magnetic field. A static magnetic field can exist
+            without an electric field. But when one field changes in time, Maxwell says it <em>creates the other</em>.
+            That mutual “chasing” is what makes a self-propagating wave possible.
+          </p>
+        </div>
+        <div class="def">
+          <h4>Remote-sensing simplification</h4>
+          <p>
+            In many propagation problems we assume no free charge/current and non-magnetic materials
+            (\(\rho \approx 0\), \(\mathbf{J}\approx 0\), \(\mu_r \approx 1\)). Then the fields satisfy wave equations.
+          </p>
+        </div>
+      </div>
+
+      <h3>Wave equation and wave speed in a material</h3>
+      <p>
+        Under common assumptions (no free charge/current; \(\mu_r \approx 1\)), the fields obey a
+        wave equation in which the <em>relative permittivity</em> \(\varepsilon\) (dielectric constant) controls the speed:
+      </p>
+
+      <div class="eq" aria-label="Wave equation in material">
+        \[
+          \grad^2 \vE - \frac{\varepsilon}{c_0^2}\,\pd{^2 \vE}{t^2} = 0,
+          \qquad
+          \grad^2 \vB - \frac{\varepsilon}{c_0^2}\,\pd{^2 \vB}{t^2} = 0
+        \]
+        <div class="meta">
+          <span class="tag">Key result</span>
+          <span>Material property enters via \(\varepsilon\) (dielectric constant)</span>
+        </div>
+      </div>
+
+      <p>
+        A plane-wave solution leads to the relationships
+        \[
+          v = \frac{\omega}{k} = \frac{c_0}{\sqrt{\varepsilon}} \equiv \frac{c_0}{n},
+          \qquad
+          n = \sqrt{\varepsilon}.
+        \]
+        Here \(n\) is the refractive index (for \(\mu_r \approx 1\)). A larger \(n\) means slower propagation and shorter wavelength inside the material.
+      </p>
+
+      <h3>Energy transport: the Poynting vector and flux density</h3>
+      <p>
+        EM waves carry energy. The direction of energy flow is given by the Poynting vector
+        \(\vS\), and its time-average magnitude relates to what many remote-sensing notes call
+        “flux density” (power per area).
+      </p>
+
+      <div class="eq" aria-label="Poynting vector and flux density">
+        \[
+          \vS = \frac{1}{\mu_0}\,(\vE \times \vB),
+          \qquad
+          \langle |\vS| \rangle \sim \text{(power per area)}.
+        \]
+        <div class="meta">
+          <span class="tag">Bridge</span>
+          <span>This is where EM “field language” meets radiometry (W/m²)</span>
+        </div>
+      </div>
+
+      <p class="callout">
+        <strong>Practical bridge:</strong> The wave physics produces a physically meaningful power-per-area quantity.
+        Radiometry then refines this into directional and spectral forms (irradiance, radiance, etc.).
+      </p>
+
+      <h3>Lossy media: complex refractive index and absorption length</h3>
+      <p>
+        Real media can attenuate waves. This is captured by a complex refractive index
+        \(\tilde{n} = n - i\kappa\) (or equivalently a complex permittivity).
+      </p>
+
+      <div class="eq" aria-label="Complex refractive index and absorption length">
+        \[
+          \tilde{n}=n-i\kappa,
+          \qquad
+          E_x(z,t) = E_0\,e^{-\omega \kappa z / c_0}\,e^{i(\omega t - n\omega z/c_0)}.
+        \]
+        <div class="meta">
+          <span class="tag">Interpretation</span>
+          <span>\(n\) changes phase speed; \(\kappa\) causes exponential decay</span>
+        </div>
+      </div>
+
+      <div class="eq" aria-label="Absorption length">
+        \[
+          \ell_a = \frac{c_0}{\omega \kappa}
+        \]
+        <div class="meta">
+          <span class="tag">Absorption length</span>
+          <span>Distance for amplitude to drop by a factor of \(e\)</span>
+        </div>
+      </div>
+
+      <p>
+        Remote sensing uses this constantly: microwave penetration into ice/soil, absorption in the atmosphere,
+        and attenuation in seawater all map back to \(\kappa\) (or \(\varepsilon''\)).
+      </p>
+
+      <details class="item">
+        <summary><strong>Optional deeper dive: convert \(\tilde{n}\) ↔ \(\tilde{\varepsilon}\)</strong></summary>
+        <p>
+          With \(\tilde{\varepsilon}=\varepsilon'-i\varepsilon''\) and \(\tilde{n}^2=\tilde{\varepsilon}\) (for \(\mu_r\approx 1\)),
+          equating real/imaginary parts yields:
+        </p>
+        <div class="eq" aria-label="Conversion between complex n and epsilon">
+          \[
+            \varepsilon' = n^2 - \kappa^2,
+            \qquad
+            \varepsilon'' = 2n\kappa.
+          \]
+          <div class="meta">
+            <span class="tag">Conversion</span>
+            <span>Useful for microwave remote sensing where \(\tilde{\varepsilon}\) is tabulated</span>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <!-- =======================================================
+         WAYS TO DESCRIBE EMR
+         ======================================================= -->
+    <section id="describe" class="panel" aria-label="Ways to describe EMR">
+      <div class="section-title">
+        <h2>Ways to describe electromagnetic radiation</h2>
+        <span>Wave picture, photon picture, and “what a sensor records”</span>
+      </div>
+
+      <h3>1) Wave descriptors (geometry + oscillation)</h3>
+      <div class="defgrid">
+        <div class="def">
+          <h4>Wavelength \(\lambda\) and frequency \(\nu\)</h4>
+          <p class="sym">\(\nu = c_0/\lambda\), \(\omega = 2\pi\nu\), \(k = 2\pi/\lambda\)</p>
+          <p>
+            <strong>Intuition:</strong> \(\lambda\) sets the “ruler size” of the wave. If objects are much smaller than \(\lambda\),
+            they often behave like weak scatterers (Rayleigh). If objects are comparable to \(\lambda\),
+            scattering becomes strong and complex (Mie).
+          </p>
+        </div>
+        <div class="def">
+          <h4>Phase, coherence, polarization</h4>
+          <p class="sym">Phase: \(\phi = \omega t - kz\)</p>
+          <p>
+            <strong>Intuition:</strong> Phase coherence is what enables SAR interferometry, Doppler processing,
+            and precise altimetry. Polarization tells you the orientation of \(\vE\) and is a key handle on surface roughness,
+            dielectric properties, and scattering mechanisms.
+          </p>
+        </div>
+      </div>
+
+      <h3>2) Photon descriptors (energy and momentum)</h3>
+      <p>
+        For many remote-sensing calculations, EMR behaves like a wave. But when you ask about
+        <em>emission spectra</em> and <em>quantization</em>, the photon description is more natural:
+      </p>
+
+      <div class="eq" aria-label="Photon energy">
+        \[
+          E_\gamma = h\nu = \frac{hc_0}{\lambda},
+          \qquad
+          p_\gamma = \frac{h}{\lambda}.
+        \]
+        <div class="meta">
+          <span class="tag">Photon relations</span>
+          <span>Shorter wavelength ⇒ higher photon energy</span>
+        </div>
+      </div>
+
+      <h3>3) Spectral descriptors (how energy is distributed across wavelength)</h3>
+      <p>
+        Spectral quantities are “per unit wavelength” or “per unit frequency.”
+        A key technical point: the <em>shape of a spectrum depends on the horizontal axis</em>.
+        \(L_\lambda(\lambda)\) and \(L_\nu(\nu)\) are related by a Jacobian factor; you cannot compare peaks
+        without tracking the definition.
+      </p>
+
+      <div class="eq" aria-label="Relationship between per-wavelength and per-frequency">
+        \[
+          L_\nu(\nu)\,\mathrm{d}\nu = L_\lambda(\lambda)\,\mathrm{d}\lambda,
+          \qquad
+          \lambda = \frac{c_0}{\nu}.
+        \]
+        <div class="meta">
+          <span class="tag">Spectral bookkeeping</span>
+          <span>Always specify whether “per \(\lambda\)” or “per \(\nu\)”</span>
+        </div>
+      </div>
+
+      <h3>Mini-tool: convert wavelength ↔ frequency ↔ photon energy</h3>
+      <div class="calc" aria-label="Conversion calculator">
+        <div class="row">
+          <label>
+            Wavelength \(\lambda\) (µm)
+            <input id="lam_um" type="number" step="any" value="0.55" />
+          </label>
+          <label>
+            Frequency \(\nu\) (THz)
+            <input id="nu_thz" type="number" step="any" value="" />
+          </label>
+          <label>
+            Photon energy \(E_\gamma\) (eV)
+            <input id="E_eV" type="number" step="any" value="" />
+          </label>
+        </div>
+        <div class="out" id="conv_out">
+          Enter any one field; the other two update. (Uses exact \(c_0\) and \(h\) in code.)
+        </div>
+      </div>
+
+      <details class="item">
+        <summary><strong>Where the EM spectrum bands show up in ocean remote sensing</strong></summary>
+        <p>
+          Visible/NIR is dominated by <em>reflected solar</em> radiation (ocean color). Thermal IR is dominated by
+          <em>emitted</em> radiation (SST). Microwave includes both emitted brightness (passive) and backscattered
+          power (active radar). The physics language is the same; only the dominant interaction terms change.
+        </p>
+      </details>
+    </section>
+
+    <!-- =======================================================
+         INTERACTION WITH MATTER
+         ======================================================= -->
+    <section id="matter" class="panel" aria-label="Interaction with matter">
+      <div class="section-title">
+        <h2>Interaction of EMR with matter</h2>
+        <span>Refraction, dispersion, absorption, scattering, and spectral fingerprints</span>
+      </div>
+
+      <p>
+        When EMR meets the atmosphere, the ocean surface, or the water column, three broad processes occur:
+        <strong>(i) direction changes</strong> (refraction/scattering), <strong>(ii) amplitude changes</strong> (absorption/attenuation),
+        and <strong>(iii) spectral shape changes</strong> (wavelength-dependent absorption/scattering).
+      </p>
+
+      <h3>Energy accounting at a surface</h3>
+      <p>
+        For radiation incident on a surface, energy must be partitioned. A convenient “first-principles”
+        accounting statement is:
+      </p>
+
+      <div class="eq" aria-label="Energy partitioning">
+        \[
+          \tau + \rho + \alpha = 1
+        \]
+        <div class="meta">
+          <span class="tag">Conservation</span>
+          <span>Transmissivity \(\tau\), reflectivity \(\rho\), absorptivity \(\alpha\)</span>
+        </div>
+      </div>
+
+      <p class="math-note">
+        In solar-reflectance remote sensing, \(\rho\) is often called <em>albedo</em> (broadband) or
+        <em>spectral reflectance</em> (band-limited). In thermal remote sensing, \(\alpha\) links to emissivity.
+      </p>
+
+      <h3>Refraction and Snell’s law</h3>
+      <div class="defgrid">
+        <div class="def">
+          <h4>Definition</h4>
+          <p>
+            <strong>Refraction</strong> is the bending of a ray at an interface because wave speed differs between media.
+            The ratio of speeds defines the refractive index \(n\).
+          </p>
+          <p class="sym">
+            Snell’s law: \(n_1 \sin\theta_1 = n_2 \sin\theta_2\)
+          </p>
+        </div>
+        <div class="def">
+          <h4>Intuition (the “shopping cart in mud” analogy)</h4>
+          <p>
+            If one side of a rolling cart enters mud first, that side slows down first and the cart turns.
+            A wavefront behaves similarly: the side that enters the slower medium first “lags,” rotating the direction of travel.
+          </p>
+        </div>
+      </div>
+
+      <h3>Dispersion: phase velocity vs group velocity</h3>
+      <p>
+        A medium is <strong>dispersive</strong> if its dielectric properties (and thus \(n\)) vary with frequency.
+        Then different frequency components travel at different speeds.
+      </p>
+
+      <div class="eq" aria-label="Phase and group velocity">
+        \[
+          v_p = \frac{\omega}{k},
+          \qquad
+          v_g = \frac{\mathrm{d}\omega}{\mathrm{d}k}.
+        \]
+        <div class="meta">
+          <span class="tag">Dispersion</span>
+          <span>Important for ionosphere corrections and wave packets</span>
+        </div>
+      </div>
+
+      <h3>Absorption, attenuation, and absorption length</h3>
+      <p>
+        Absorption converts EM energy into internal energy (often heat). In wave language, it appears as exponential decay with distance.
+        In radiometry language, it appears as a reduction in transmitted flux.
+      </p>
+
+      <div class="defgrid">
+        <div class="def">
+          <h4>Absorption length \(\ell_a\)</h4>
+          <p class="sym">\(\ell_a = c_0/(\omega \kappa)\)</p>
+          <p>
+            <strong>Intuition:</strong> \(\ell_a\) is how far the wave goes before it “forgets” its initial amplitude. Longer \(\ell_a\) means deeper penetration.
+          </p>
+        </div>
+        <div class="def">
+          <h4>Atmospheric absorption windows</h4>
+          <p>
+            Different gases absorb different wavelengths; the remaining low-absorption intervals are “windows” where satellites can see the surface.
+          </p>
+        </div>
+      </div>
+
+      <h3>Scattering: Rayleigh, Mie, and non-selective</h3>
+      <p>
+        Scattering differs from mirror-like reflection because the outgoing direction is not uniquely determined by the incoming direction.
+        In the atmosphere, scattering is strongly wavelength- and particle-size-dependent.
+      </p>
+
+      <div class="tight-table" role="region" aria-label="Scattering regimes table">
+        <table>
+          <thead>
+            <tr>
+              <th>Regime</th>
+              <th>Particle size relative to \(\lambda\)</th>
+              <th>Key dependence</th>
+              <th>Remote-sensing impact</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Rayleigh</strong></td>
+              <td>\(d \ll \lambda\)</td>
+              <td>Scattering \(\propto \lambda^{-4}\) (strong for short \(\lambda\))</td>
+              <td>Blue sky; strong path radiance in visible bands</td>
+            </tr>
+            <tr>
+              <td><strong>Mie</strong></td>
+              <td>\(d \sim \lambda\)</td>
+              <td>Weaker wavelength dependence, often forward-peaked</td>
+              <td>Aerosols, haze; complicates ocean color retrievals</td>
+            </tr>
+            <tr>
+              <td><strong>Non-selective</strong></td>
+              <td>\(d \gg \lambda\)</td>
+              <td>All visible wavelengths scattered similarly</td>
+              <td>Clouds/fog appear white; strong loss of contrast</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout">
+        <strong>Transfer to ocean color:</strong> Ocean color is largely about separating
+        <em>water-leaving radiance</em> from atmospheric scattering contributions. Understanding “which scattering regime dominates” is foundational.
+      </div>
+    </section>
+
+    <!-- =======================================================
+         RADIOMETRY
+         ======================================================= -->
+    <section id="radiometry" class="panel" aria-label="Radiometry and measurement">
+      <div class="section-title">
+        <h2>Radiometry: the measurement grammar of remote sensing</h2>
+        <span>Flux, irradiance, radiance, brightness, Lambertian surfaces</span>
+      </div>
+
+      <p>
+        Radiometry is the bookkeeping system for radiant energy and power—how much, where, and in what direction.
+        Sensors are designed around radiometric quantities because these map directly to detector signals.
+      </p>
+
+      <h3>Start with the simplest: radiant energy and radiant flux</h3>
+      <div class="defgrid">
+        <div class="def">
+          <h4>Radiant energy</h4>
+          <p class="sym">\(Q\) (joules)</p>
+          <p>
+            Total EM energy. Useful for pulses or exposures.
+          </p>
+        </div>
+        <div class="def">
+          <h4>Radiant flux (radiant power)</h4>
+          <p class="sym">\(\Phi = \mathrm{d}Q/\mathrm{d}t\) (watts)</p>
+          <p>
+            “How fast energy flows.” Think of it like total water flow rate in a pipe.
+          </p>
+        </div>
+      </div>
+
+      <h3>Irradiance and radiance: the two workhorses</h3>
+      <p>
+        These two are often confused. They answer different questions:
+      </p>
+
+      <div class="defgrid">
+        <div class="def">
+          <h4>Irradiance \(E\)</h4>
+          <p class="sym">\(E = \mathrm{d}\Phi/\mathrm{d}A\)  \(\big[\unit{W\,m^{-2}}\big]\)</p>
+          <p>
+            Power arriving per area on a surface (like “rainfall rate” onto the ground).
+            It does <em>not</em> say from which direction the radiation came.
+          </p>
+        </div>
+
+        <div class="def">
+          <h4>Radiance \(L\)</h4>
+          <p class="sym">\(L = \mathrm{d}^2\Phi / (\mathrm{d}A\cos\theta\,\mathrm{d}\Omega)\) \(\big[\unit{W\,m^{-2}\,sr^{-1}}\big]\)</p>
+          <p>
+            Directional power per projected area per solid angle—what an imaging sensor “sees” along a line of sight.
+            Radiance is the closest radiometric cousin of perceived “brightness.”
+          </p>
+        </div>
+      </div>
+
+      <div class="eq" aria-label="Radiance definition">
+        \[
+          L \equiv \frac{\mathrm{d}^2\Phi}{\mathrm{d}\Omega\,\mathrm{d}(A\cos\theta)}.
+        \]
+        <div class="meta">
+          <span class="tag">Definition</span>
+          <span>\(\theta\): angle between surface normal and viewing direction</span>
+        </div>
+      </div>
+
+      <p class="callout">
+        <strong>Intuition:</strong> Irradiance answers “how much hits the surface?” Radiance answers “how bright is that patch in my direction?”
+        Satellites usually measure <strong>radiance</strong> (or a radar backscatter quantity derived from it).
+      </p>
+
+      <h3>Brightness: a useful word with an ambiguity warning</h3>
+      <p>
+        In remote sensing, “brightness” is often used informally to mean radiance (or digital number).
+        In thermal microwave sensing, “brightness temperature” \(T_B\) is a specific, defined quantity linked to radiance via the Rayleigh–Jeans approximation (see Thermal Emission section).
+      </p>
+
+      <h3>Lambertian (Lambert) surfaces and Lambert’s cosine law</h3>
+      <p>
+        A <strong>Lambertian surface</strong> is an ideal diffuse reflector/emitter whose radiance is independent of viewing direction.
+        The directional power decreases with \(\cos\theta\) due to projection, but radiance stays constant because the visible projected area changes in the same way.
+      </p>
+
+      <div class="eq" aria-label="Lambertian BRDF">
+        \[
+          f_r = \frac{\mathrm{d}L_r}{E_i\,\mathrm{d}\Omega_i},
+          \qquad
+          \text{Lambertian: } f_r = \frac{\rho}{\pi}.
+        \]
+        <div class="meta">
+          <span class="tag">Surface model</span>
+          <span>\(\rho\): (diffuse) reflectance; \(f_r\): BRDF</span>
+        </div>
+      </div>
+
+      <details class="item">
+        <summary><strong>Why Lambertian matters (even when it’s wrong)</strong></summary>
+        <p>
+          Lambertian is a baseline reference. Real ocean surfaces are not Lambertian (they have specular glint and
+          anisotropic scattering), but many retrieval algorithms start from “Lambertian + correction.”
+          Understanding the ideal case clarifies what must be corrected in the real case.
+        </p>
+      </details>
+
+      <h3>Mini-tool: “What power enters my sensor?”</h3>
+      <p>
+        A radiance-based instrument with entrance area \(A\), viewing a patch under a small solid angle \(\Omega\),
+        records power proportional to \(L\,A\,\Omega\) (with geometry and bandpass factors). This is why radiance is the natural
+        quantity for imaging systems.
+      </p>
+      <div class="eq" aria-label="Radiance to power relationship">
+        \[
+          \mathrm{d}\Phi \approx L\,\cos\theta\,\mathrm{d}A\,\mathrm{d}\Omega
+          \quad (\text{and for spectral forms, multiply by } \mathrm{d}\lambda \text{ or integrate over the band}).
+        \]
+        <div class="meta">
+          <span class="tag">Sensor connection</span>
+          <span>Radiance × etendue (AΩ) → power</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================
+         THERMAL EMISSION
+         ======================================================= -->
+    <section id="thermal" class="panel" aria-label="Thermal emission">
+      <div class="section-title">
+        <h2>Thermal radiation and perfect emitters</h2>
+        <span>Planck law, Wien displacement, Rayleigh–Jeans, emissivity, brightness temperature</span>
+      </div>
+
+      <p>
+        Thermal emission is the backbone of SST retrievals (thermal IR) and passive microwave retrievals (salinity, sea ice, water vapor proxies).
+        The key “perfect emitter” concept is the <strong>blackbody</strong>.
+      </p>
+
+      <div class="defgrid">
+        <div class="def">
+          <h4>Perfect emitter (blackbody)</h4>
+          <p>
+            An ideal object that absorbs all incident radiation and, in thermal equilibrium, emits the maximum possible radiation at each wavelength for its temperature.
+          </p>
+        </div>
+        <div class="def">
+          <h4>Graybody</h4>
+          <p>
+            A real object that emits like a blackbody scaled by an emissivity \(\varepsilon(\lambda)\), often less than 1 and wavelength-dependent.
+          </p>
+        </div>
+      </div>
+
+      <h3>Planck’s law (spectral radiance of a blackbody)</h3>
+      <p>
+        Planck’s law is most often written for spectral radiance per unit wavelength or per unit frequency. Here is the per-wavelength form:
+      </p>
+
+      <div class="eq" aria-label="Planck law per wavelength">
+        \[
+          B_\lambda(\lambda,T)
+          = \frac{2hc_0^2}{\lambda^5}\,
+            \left[\exp\!\left(\frac{hc_0}{\lambda k_B T}\right)-1\right]^{-1}.
+        \]
+        <div class="meta">
+          <span class="tag">Planck</span>
+          <span>\(B_\lambda\): blackbody spectral radiance (per wavelength)</span>
+        </div>
+      </div>
+
+      <p class="math-note">
+        In some remote sensing notes you will see the symbol \(L_\lambda\) used instead of \(B_\lambda\).
+        A good habit is to reserve \(B_\lambda\) for the ideal blackbody and \(L_\lambda\) for measured radiance.
+      </p>
+
+      <h3>Three properties you should be able to explain</h3>
+      <div class="defgrid">
+        <div class="def">
+          <h4>(1) The peak shifts with temperature (Wien displacement)</h4>
+          <p class="sym">\(\lambda_{\max} T = b\)</p>
+          <p>
+            Hotter objects peak at shorter wavelengths. That is why the Sun peaks in visible, while the Earth peaks in thermal IR.
+          </p>
+        </div>
+        <div class="def">
+          <h4>(2) Total emitted power rises fast with temperature (Stefan–Boltzmann)</h4>
+          <p class="sym">Integrated emission \(\propto T^4\)</p>
+          <p>
+            Small temperature changes can produce noticeable radiance changes, especially near the peak.
+          </p>
+        </div>
+      </div>
+
+      <div class="defgrid">
+        <div class="def">
+          <h4>(3) Two limiting forms (Planck simplifications)</h4>
+          <p>
+            In the long-wavelength limit you get Rayleigh–Jeans; in the short-wavelength limit you get a Wien-like exponential.
+            These approximations explain why microwave radiometers can use “brightness temperature.”
+          </p>
+        </div>
+        <div class="def">
+          <h4>Emissivity \(\varepsilon(\lambda)\) and measured radiance</h4>
+          <p class="sym">\(L_{\lambda,\text{meas}} \approx \varepsilon(\lambda)\,B_\lambda(\lambda,T)\)</p>
+          <p>
+            Real surfaces emit less than a blackbody. If \(\varepsilon\) is unknown, temperature retrieval becomes ill-posed without additional information.
+          </p>
+        </div>
+      </div>
+
+      <h3>Limiting forms of Planck’s law</h3>
+      <p>
+        Define the dimensionless parameter \(x = \frac{hc_0}{\lambda k_B T}\).
+      </p>
+
+      <div class="eq" aria-label="Rayleigh-Jeans approximation">
+        \[
+          \text{If } x \ll 1 \text{ (long wavelengths):}\quad
+          B_\lambda(\lambda,T) \approx \frac{2c_0 k_B T}{\lambda^4}.
+        \]
+        <div class="meta">
+          <span class="tag">Rayleigh–Jeans</span>
+          <span>Long-wavelength (microwave) approximation</span>
+        </div>
+      </div>
+
+      <div class="eq" aria-label="Wien approximation">
+        \[
+          \text{If } x \gg 1 \text{ (short wavelengths):}\quad
+          B_\lambda(\lambda,T) \approx \frac{2hc_0^2}{\lambda^5}\exp\!\left(-\frac{hc_0}{\lambda k_B T}\right).
+        \]
+        <div class="meta">
+          <span class="tag">Wien limit</span>
+          <span>Short-wavelength exponential tail</span>
+        </div>
+      </div>
+
+      <h3>Brightness temperature \(T_B\)</h3>
+      <p>
+        In the microwave band, Rayleigh–Jeans makes radiance approximately linear in temperature, motivating
+        the brightness temperature concept:
+      </p>
+
+      <div class="eq" aria-label="Brightness temperature idea">
+        \[
+          L_{\lambda,\text{meas}} \approx \varepsilon\,\frac{2c_0 k_B T_p}{\lambda^4}
+          \quad\Rightarrow\quad
+          T_B \propto L_{\lambda,\text{meas}}.
+        \]
+        <div class="meta">
+          <span class="tag">Microwave remote sensing</span>
+          <span>Why passive microwave often reports “\(T_B\)”</span>
+        </div>
+      </div>
+
+      <details class="item">
+        <summary><strong>Absorption and emission: the physical link (conceptual)</strong></summary>
+        <p>
+          A surface or gas that absorbs strongly at a wavelength typically also emits efficiently at that wavelength when in thermal equilibrium.
+          This is the basis of why atmospheric absorption bands are also strong emission bands—critical for thermal IR sounding and microwave retrieval physics.
+        </p>
+      </details>
+
+      <h3>Mini-tool: evaluate blackbody radiance quickly</h3>
+      <div class="calc" aria-label="Planck calculator">
+        <div class="row">
+          <label>
+            Temperature \(T\) (K)
+            <input id="T_K" type="number" step="any" value="300" />
+          </label>
+          <label>
+            Wavelength \(\lambda\) (µm)
+            <input id="lam2_um" type="number" step="any" value="10" />
+          </label>
+          <label>
+            Output units
+            <select id="planck_units">
+              <option value="per_um">W·m⁻²·sr⁻¹·µm⁻¹</option>
+              <option value="per_m">W·m⁻³·sr⁻¹ (per meter)</option>
+            </select>
+          </label>
+        </div>
+        <div class="out" id="planck_out">
+          Enter \(T\) and \(\lambda\) to compute \(B_\lambda(\lambda,T)\).
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================
+         RESOLUTION
+         ======================================================= -->
+    <section id="resolution" class="panel" aria-label="Diffraction and resolution">
+      <div class="section-title">
+        <h2>Diffraction, Rayleigh criterion, and why wavelength sets resolution costs</h2>
+        <span>Fundamental limits that shape satellite design</span>
+      </div>
+
+      <p>
+        Even a perfect optical system cannot focus a point to a point: wave diffraction creates a finite blur spot.
+        The Rayleigh criterion gives a widely used “just-resolved” angular separation for a circular aperture.
+      </p>
+
+      <div class="eq" aria-label="Rayleigh criterion">
+        \[
+          \theta \approx 1.22\,\frac{\lambda}{D}
+        \]
+        <div class="meta">
+          <span class="tag">Rayleigh criterion</span>
+          <span>\(\theta\): radians; \(D\): aperture diameter</span>
+        </div>
+      </div>
+
+      <p>
+        For a satellite at altitude \(H\) viewing near-nadir, a rough “diffraction-limited” ground scale is:
+      </p>
+
+      <div class="eq" aria-label="Ground resolution from angular resolution">
+        \[
+          \Delta x \approx H\,\theta \approx 1.22\,H\,\frac{\lambda}{D}.
+        \]
+        <div class="meta">
+          <span class="tag">Design implication</span>
+          <span>Longer wavelength ⇒ larger aperture needed for same spatial resolution</span>
+        </div>
+      </div>
+
+      <div class="callout">
+        <strong>Why this matters across chapters:</strong> Optical sensors (tiny \(\lambda\)) can achieve meter-scale resolution with modest apertures,
+        while microwave instruments (centimeter \(\lambda\)) would require extremely large antennas unless they use techniques like synthetic aperture.
+      </div>
+
+      <h3>Mini-tool: compute diffraction-limited resolution</h3>
+      <div class="calc" aria-label="Rayleigh resolution calculator">
+        <div class="row">
+          <label>
+            Wavelength \(\lambda\) (cm)
+            <input id="lam_cm" type="number" step="any" value="2.2" />
+          </label>
+          <label>
+            Aperture \(D\) (m)
+            <input id="D_m" type="number" step="any" value="1" />
+          </label>
+          <label>
+            Altitude \(H\) (km)
+            <input id="H_km" type="number" step="any" value="800" />
+          </label>
+        </div>
+        <div class="out" id="ray_out">
+          Enter \(\lambda\), \(D\), \(H\) to compute \(\theta\) and \(\Delta x\).
+        </div>
+      </div>
+
+      <details class="item">
+        <summary><strong>Concept checkpoint: diffraction vs scattering</strong></summary>
+        <p>
+          <strong>Diffraction</strong> is a wave phenomenon caused by finite apertures and edges; it limits imaging resolution.
+          <strong>Scattering</strong> is an interaction with particles/roughness that redirects energy; it modifies the radiance field.
+          Both are wave effects, but they appear in very different parts of the remote sensing chain.
+        </p>
+      </details>
+    </section>
+
+    <!-- =======================================================
+         PRACTICE
+         ======================================================= -->
+    <section id="practice" class="panel" aria-label="Practice problems">
+      <div class="section-title">
+        <h2>Practice: build fluency with concepts and symbols</h2>
+        <span>Use these as homework-style fundamentals</span>
+      </div>
+
+      <div class="list" aria-label="Practice list">
+
+        <div class="item">
+          <div class="top">
+            <strong>1) Convert descriptors</strong>
+            <time>Wave ↔ photon</time>
+          </div>
+          <p>
+            A sensor band is centered at \(\lambda = 0.86\unit{\mu m}\). Compute frequency \(\nu\) and photon energy \(E_\gamma\) in eV.
+          </p>
+          <details>
+            <summary>Answer / hint</summary>
+            <p>
+              Use \(\nu=c_0/\lambda\) and \(E_\gamma=hc_0/\lambda\).
+              Compare your result to the converter above.
+            </p>
+          </details>
+        </div>
+
+        <div class="item">
+          <div class="top">
+            <strong>2) Refraction reasoning</strong>
+            <time>Snell’s law intuition</time>
+          </div>
+          <p>
+            If \(n_2 > n_1\), does the refracted ray bend toward or away from the normal? Explain using the “slower in medium 2” idea.
+          </p>
+          <details>
+            <summary>Answer</summary>
+            <p>
+              Toward the normal. In the slower medium, the wavefront “lags” more on the side that enters first, rotating the ray toward the normal.
+            </p>
+          </details>
+        </div>
+
+        <div class="item">
+          <div class="top">
+            <strong>3) Radiometry bookkeeping</strong>
+            <time>Units test</time>
+          </div>
+          <p>
+            Which quantity has units \(\unit{W\,m^{-2}\,sr^{-1}}\): irradiance, radiance, or radiant flux? Why does that unit structure make sense?
+          </p>
+          <details>
+            <summary>Answer</summary>
+            <p>
+              Radiance. It is power per projected area <em>and</em> per solid angle (directional). Irradiance has no solid-angle term.
+            </p>
+          </details>
+        </div>
+
+        <div class="item">
+          <div class="top">
+            <strong>4) Planck peak scale</strong>
+            <time>Thermal intuition</time>
+          </div>
+          <p>
+            Using Wien’s law, estimate \(\lambda_{\max}\) for a surface at \(T=300\unit{K}\). Which part of the spectrum is this?
+          </p>
+          <details>
+            <summary>Answer / hint</summary>
+            <p>
+              \(\lambda_{\max} \approx b/T\). You should get a value near \(\sim 10\unit{\mu m}\) (thermal infrared).
+            </p>
+          </details>
+        </div>
+
+        <div class="item">
+          <div class="top">
+            <strong>5) Rayleigh resolution</strong>
+            <time>Instrument design</time>
+          </div>
+          <p>
+            Compare \(\Delta x\) for an optical system (\(\lambda=0.55\unit{\mu m}\), \(D=0.5\unit{m}\), \(H=700\unit{km}\))
+            versus a microwave system (\(\lambda=2.2\unit{cm}\), same \(D,H\)). What does this imply?
+          </p>
+          <details>
+            <summary>Answer / hint</summary>
+            <p>
+              Use \(\Delta x\approx 1.22H\lambda/D\). The microwave footprint is vastly larger, motivating very large antennas or synthetic aperture.
+            </p>
+          </details>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =======================================================
+         GLOSSARY + CHEAT SHEET
+         ======================================================= -->
+    <section id="glossary" class="panel" aria-label="Glossary and cheat sheet">
+      <div class="section-title">
+        <h2>Glossary and equation cheat sheet</h2>
+        <span>Definitions you should be able to state precisely</span>
+      </div>
+
+      <div class="defgrid">
+        <div class="def">
+          <h4>Refraction</h4>
+          <p>
+            Bending of propagation direction at an interface due to a change in wave speed; quantified by refractive index \(n\) and Snell’s law.
+          </p>
+        </div>
+
+        <div class="def">
+          <h4>Irradiance \(E\)</h4>
+          <p>
+            Incident radiant flux per unit area: \(E=\mathrm{d}\Phi/\mathrm{d}A\). Unit \(\unit{W\,m^{-2}}\).
+          </p>
+        </div>
+
+        <div class="def">
+          <h4>Radiance \(L\)</h4>
+          <p>
+            Directional radiant flux per unit projected area per unit solid angle:
+            \(L=\mathrm{d}^2\Phi / (\mathrm{d}A\cos\theta\,\mathrm{d}\Omega)\). Unit \(\unit{W\,m^{-2}\,sr^{-1}}\).
+          </p>
+        </div>
+
+        <div class="def">
+          <h4>Radiant flux \(\Phi\)</h4>
+          <p>
+            Power in EM radiation: \(\Phi=\mathrm{d}Q/\mathrm{d}t\). Unit \(\unit{W}\).
+          </p>
+        </div>
+
+        <div class="def">
+          <h4>Brightness</h4>
+          <p>
+            Informal term often used for radiance or image intensity. In passive microwave, brightness temperature \(T_B\) is a defined radiometric proxy for temperature under Rayleigh–Jeans.
+          </p>
+        </div>
+
+        <div class="def">
+          <h4>Lambertian surface</h4>
+          <p>
+            Ideal diffuse reflector/emitter with radiance independent of viewing direction. BRDF \(f_r=\rho/\pi\).
+          </p>
+        </div>
+
+        <div class="def">
+          <h4>Planck’s equation (Planck law)</h4>
+          <p>
+            Blackbody spectral radiance as a function of \(\lambda\) and \(T\): \(B_\lambda(\lambda,T)=\frac{2hc_0^2}{\lambda^5}\left[\exp\left(\frac{hc_0}{\lambda k_B T}\right)-1\right]^{-1}\).
+          </p>
+        </div>
+
+        <div class="def">
+          <h4>Limiting forms</h4>
+          <p>
+            Rayleigh–Jeans (long \(\lambda\)): \(B_\lambda\approx 2c_0k_BT/\lambda^4\). Wien (short \(\lambda\)): \(B_\lambda\approx (2hc_0^2/\lambda^5)\exp(-hc_0/(\lambda k_BT))\).
+          </p>
+        </div>
+
+        <div class="def">
+          <h4>Absorption and emission</h4>
+          <p>
+            Absorption removes radiant energy from the wave and converts it to internal energy; emission adds radiant energy, often as thermal radiation. Their spectral patterns control atmospheric windows and thermal-band retrievals.
+          </p>
+        </div>
+
+        <div class="def">
+          <h4>Rayleigh criterion</h4>
+          <p>
+            Diffraction-limited angular resolution for a circular aperture:
+            \(\theta\approx 1.22\lambda/D\).
+          </p>
+        </div>
+
+        <div class="def">
+          <h4>Scattering</h4>
+          <p>
+            Redirection of radiation by particles or roughness. In the atmosphere, common regimes are Rayleigh (molecular), Mie (aerosol), and non-selective (cloud droplets).
+          </p>
+        </div>
+      </div>
+
+      <h3>Equation quick list</h3>
+      <div class="eq" aria-label="Equation list">
+        \[
+          \nu=\frac{c_0}{\lambda},\quad \omega=2\pi\nu,\quad k=\frac{2\pi}{\lambda}
+        \]
+        \[
+          E_\gamma=h\nu=\frac{hc_0}{\lambda}
+        \]
+        \[
+          n=\sqrt{\varepsilon},\quad v=\frac{c_0}{n}
+        \]
+        \[
+          n_1\sin\theta_1=n_2\sin\theta_2
+        \]
+        \[
+          E=\frac{\mathrm{d}\Phi}{\mathrm{d}A},\quad
+          L=\frac{\mathrm{d}^2\Phi}{\mathrm{d}\Omega\,\mathrm{d}(A\cos\theta)}
+        \]
+        \[
+          B_\lambda(\lambda,T)=\frac{2hc_0^2}{\lambda^5}\left[\exp\!\left(\frac{hc_0}{\lambda k_BT}\right)-1\right]^{-1}
+        \]
+        \[
+          \theta\approx 1.22\frac{\lambda}{D},\quad \Delta x \approx H\theta
+        \]
+        <div class="meta">
+          <span class="tag">Cheat sheet</span>
+          <span>Use units as a self-check</span>
+        </div>
+      </div>
+    </section>
+
+    <footer role="contentinfo">
+      <span class="foot-badge">EM spectrum & radiation — foundational module</span>
+      <span>Prepared for upper-level ocean remote sensing instruction.</span>
+    </footer>
+  </main>
+
+  <script>
+    // =========================================================
+    // Responsive nav toggle (matches styles.css behavior)
+    // =========================================================
+    (function(){
+      const btn = document.getElementById('menuBtn');
+      const nav = document.getElementById('nav');
+      if(!btn || !nav) return;
+
+      btn.addEventListener('click', () => {
+        const open = nav.classList.toggle('open');
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+    })();
+
+    // =========================================================
+    // Mini conversion calculator: lambda <-> nu <-> photon energy
+    // Uses exact SI values for c and h in the code.
+    // =========================================================
+    (function(){
+      const c0 = 299792458;               // m/s (exact)
+      const h  = 6.62607015e-34;          // J s (exact SI definition)
+      const e  = 1.602176634e-19;         // J per eV (exact)
+      const lam = document.getElementById('lam_um');
+      const nu  = document.getElementById('nu_thz');
+      const EeV = document.getElementById('E_eV');
+      const out = document.getElementById('conv_out');
+
+      let lock = null;
+
+      function fmt(x){
+        if (!isFinite(x)) return '—';
+        const ax = Math.abs(x);
+        if (ax === 0) return '0';
+        if (ax >= 1e4 || ax < 1e-3) return x.toExponential(4);
+        return x.toFixed(6).replace(/0+$/,'').replace(/\.$/,'');
+      }
+
+      function updateFromLambda(){
+        const lam_um = parseFloat(lam.value);
+        if(!isFinite(lam_um) || lam_um <= 0) return;
+        const lam_m = lam_um * 1e-6;
+        const nu_hz = c0 / lam_m;
+        const E_J = h * nu_hz;
+        nu.value  = fmt(nu_hz * 1e-12);   // THz
+        EeV.value = fmt(E_J / e);         // eV
+        out.innerHTML =
+          `Computed from <code>λ = ${fmt(lam_um)} µm</code>: `
+          + `<code>ν = ${fmt(nu_hz*1e-12)} THz</code>, `
+          + `<code>E = ${fmt(E_J/e)} eV</code>.`;
+      }
+
+      function updateFromNu(){
+        const nu_thz = parseFloat(nu.value);
+        if(!isFinite(nu_thz) || nu_thz <= 0) return;
+        const nu_hz = nu_thz * 1e12;
+        const lam_m = c0 / nu_hz;
+        const E_J = h * nu_hz;
+        lam.value = fmt(lam_m * 1e6);     // µm
+        EeV.value = fmt(E_J / e);
+        out.innerHTML =
+          `Computed from <code>ν = ${fmt(nu_thz)} THz</code>: `
+          + `<code>λ = ${fmt(lam_m*1e6)} µm</code>, `
+          + `<code>E = ${fmt(E_J/e)} eV</code>.`;
+      }
+
+      function updateFromE(){
+        const E_eV = parseFloat(EeV.value);
+        if(!isFinite(E_eV) || E_eV <= 0) return;
+        const E_J = E_eV * e;
+        const nu_hz = E_J / h;
+        const lam_m = c0 / nu_hz;
+        nu.value = fmt(nu_hz * 1e-12);
+        lam.value = fmt(lam_m * 1e6);
+        out.innerHTML =
+          `Computed from <code>E = ${fmt(E_eV)} eV</code>: `
+          + `<code>ν = ${fmt(nu_hz*1e-12)} THz</code>, `
+          + `<code>λ = ${fmt(lam_m*1e6)} µm</code>.`;
+      }
+
+      function onInput(which){
+        if(lock && lock !== which) return;
+        lock = which;
+        try{
+          if(which === 'lam') updateFromLambda();
+          if(which === 'nu') updateFromNu();
+          if(which === 'E')  updateFromE();
+        } finally {
+          lock = null;
+        }
+      }
+
+      if(lam && nu && EeV){
+        lam.addEventListener('input', () => onInput('lam'));
+        nu.addEventListener('input',  () => onInput('nu'));
+        EeV.addEventListener('input', () => onInput('E'));
+        updateFromLambda();
+      }
+    })();
+
+    // =========================================================
+    // Planck calculator (per wavelength)
+    // Outputs either per meter or per µm.
+    // =========================================================
+    (function(){
+      const c0 = 299792458;               // m/s
+      const h  = 6.62607015e-34;          // J s
+      const kB = 1.380649e-23;            // J/K (exact)
+      const T  = document.getElementById('T_K');
+      const lam = document.getElementById('lam2_um');
+      const units = document.getElementById('planck_units');
+      const out = document.getElementById('planck_out');
+
+      function B_lambda(lam_m, T_K){
+        // Blackbody spectral radiance per wavelength (per meter), W·m^-3·sr^-1
+        const x = (h*c0)/(lam_m*kB*T_K);
+        const a = (2*h*c0*c0)/(Math.pow(lam_m,5));
+        const b = 1.0/(Math.exp(x) - 1.0);
+        return a*b;
+      }
+
+      function fmt(x){
+        if (!isFinite(x)) return '—';
+        const ax = Math.abs(x);
+        if (ax === 0) return '0';
+        if (ax >= 1e4 || ax < 1e-3) return x.toExponential(4);
+        return x.toFixed(6).replace(/0+$/,'').replace(/\.$/,'');
+      }
+
+      function update(){
+        const T_K = parseFloat(T.value);
+        const lam_um = parseFloat(lam.value);
+        if(!isFinite(T_K) || T_K <= 0 || !isFinite(lam_um) || lam_um <= 0){
+          out.textContent = 'Please enter positive T and λ.';
+          return;
+        }
+        const lam_m = lam_um*1e-6;
+        const Bm = B_lambda(lam_m, T_K);           // per meter
+        if(units.value === 'per_m'){
+          out.innerHTML = `B<sub>λ</sub>(λ,T) ≈ <code>${fmt(Bm)} W·m⁻³·sr⁻¹</code> (per meter of wavelength).`;
+        } else {
+          const Bum = Bm * 1e-6;                   // per µm
+          out.innerHTML = `B<sub>λ</sub>(λ,T) ≈ <code>${fmt(Bum)} W·m⁻²·sr⁻¹·µm⁻¹</code> (per µm).`;
+        }
+      }
+
+      if(T && lam && units){
+        T.addEventListener('input', update);
+        lam.addEventListener('input', update);
+        units.addEventListener('change', update);
+        update();
+      }
+    })();
+
+    // =========================================================
+    // Rayleigh resolution calculator
+    // =========================================================
+    (function(){
+      const lam = document.getElementById('lam_cm');
+      const D   = document.getElementById('D_m');
+      const H   = document.getElementById('H_km');
+      const out = document.getElementById('ray_out');
+
+      function fmt(x){
+        if (!isFinite(x)) return '—';
+        const ax = Math.abs(x);
+        if (ax === 0) return '0';
+        if (ax >= 1e4 || ax < 1e-3) return x.toExponential(4);
+        return x.toFixed(6).replace(/0+$/,'').replace(/\.$/,'');
+      }
+
+      function update(){
+        const lam_cm = parseFloat(lam.value);
+        const D_m = parseFloat(D.value);
+        const H_km = parseFloat(H.value);
+        if(!isFinite(lam_cm) || lam_cm <= 0 || !isFinite(D_m) || D_m <= 0 || !isFinite(H_km) || H_km <= 0){
+          out.textContent = 'Please enter positive λ, D, and H.';
+          return;
+        }
+        const lam_m = lam_cm * 1e-2;
+        const H_m = H_km * 1e3;
+
+        const theta = 1.22 * lam_m / D_m;              // radians
+        const arcsec = theta * (180/Math.PI) * 3600;    // arcseconds
+        const dx = H_m * theta;                         // meters
+
+        out.innerHTML =
+          `θ ≈ <code>${fmt(theta)} rad</code> `
+          + `(<code>${fmt(arcsec)} arcsec</code>), `
+          + `Δx ≈ <code>${fmt(dx)} m</code> (near-nadir).`;
+      }
+
+      if(lam && D && H){
+        lam.addEventListener('input', update);
+        D.addEventListener('input', update);
+        H.addEventListener('input', update);
+        update();
+      }
+    })();
+  </script>
+</body>
+</html>
