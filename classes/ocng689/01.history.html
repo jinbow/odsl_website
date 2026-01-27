@@ -1,496 +1,22 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Chapter 1 — The History and Development of Satellite Oceanography</title>
 
-  <!-- Single-file version: styles.css is embedded below (verbatim), plus a small formatting add-on.
-       Source stylesheet: :contentReference[oaicite:0]{index=0} -->
-
-  <style>
-:root{
-  --bg: #0b1220;
-  --card: rgba(255,255,255,.05);
-  --card2: rgba(15,26,46,.55);
-  --text: #e5e7eb;
-  --muted: #94a3b8;
-  --line: rgba(148,163,184,.22);
-  --accent: #60a5fa;
-  --accent2: #34d399;
-  --warn: #fbbf24;
-  --shadow: 0 10px 30px rgba(0,0,0,.35);
-  --radius: 14px;
-  --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-}
-
-*{ box-sizing: border-box; }
-
-html, body{ height: 100%; }
-body{
-  margin: 0;
-  font-family: var(--sans);
-  color: var(--text);
-  background:
-    radial-gradient(1200px 600px at 12% -10%, rgba(96,165,250,.22), transparent 55%),
-    radial-gradient(900px 500px at 92% 0%, rgba(52,211,153,.14), transparent 55%),
-    var(--bg);
-  line-height: 1.45;
-}
-
-a{ color: inherit; }
-a.link{
-  color: rgba(229,231,235,.96);
-  text-decoration: none;
-  border-bottom: 1px solid rgba(96,165,250,.35);
-}
-a.link:hover{ border-bottom-color: rgba(96,165,250,.9); }
-
-/* Accessibility */
-.skip{
-  position: absolute;
-  left: -999px;
-  top: 10px;
-  padding: 10px 12px;
-  border-radius: 10px;
-  background: rgba(96,165,250,.18);
-  border: 1px solid rgba(96,165,250,.35);
-  color: var(--text);
-  z-index: 50;
-}
-.skip:focus{ left: 12px; }
-
-/* Layout */
-.container{
-  max-width: 1180px;
-  margin: 0 auto;
-  padding: 18px 18px 48px;
-}
-
-/* Topbar */
-.topbar{
-  position: sticky;
-  top: 0;
-  z-index: 30;
-  backdrop-filter: blur(10px);
-  background: rgba(11,18,32,.70);
-  border-bottom: 1px solid var(--line);
-}
-.topbar-inner{
-  max-width: 1180px;
-  margin: 0 auto;
-  padding: 12px 18px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-}
-.brand{
-  display: grid;
-  gap: 2px;
-}
-.brand a{
-  text-decoration: none;
-  font-weight: 900;
-  letter-spacing: .2px;
-  font-size: 1.02rem;
-}
-.brand small{
-  color: var(--muted);
-  font-size: .86rem;
-}
-
-/* Nav */
-.nav{
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-}
-.nav a{
-  text-decoration: none;
-  color: rgba(229,231,235,.92);
-  font-size: .92rem;
-  padding: 8px 10px;
-  border-radius: 10px;
-  border: 1px solid transparent;
-  transition: background .15s ease, border-color .15s ease;
-  white-space: nowrap;
-}
-.nav a:hover{
-  background: rgba(148,163,184,.08);
-  border-color: rgba(148,163,184,.18);
-}
-.nav a.active{
-  background: rgba(96,165,250,.16);
-  border-color: rgba(96,165,250,.35);
-  font-weight: 750;
-}
-.nav a.active:hover{
-  background: rgba(96,165,250,.22);
-  border-color: rgba(96,165,250,.48);
-}
-
-.menu-btn{
-  display: none;
-  border: 1px solid var(--line);
-  background: rgba(96,165,250,.14);
-  color: rgba(229,231,235,.96);
-  padding: 9px 11px;
-  border-radius: 10px;
-  cursor: pointer;
-  font: inherit;
-}
-
-/* Panels/cards/buttons */
-.panel{
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-  box-shadow: var(--shadow);
-  padding: 14px;
-}
-
-.btn{
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 10px 12px;
-  border-radius: 10px;
-  border: 1px solid var(--line);
-  text-decoration: none;
-  color: rgba(229,231,235,.96);
-  background: rgba(148,163,184,.06);
-  transition: transform .06s ease, background .15s ease, border-color .15s ease;
-  font-weight: 650;
-  font-size: .92rem;
-}
-.btn:hover{
-  background: rgba(148,163,184,.10);
-  border-color: rgba(148,163,184,.26);
-}
-.btn:active{ transform: translateY(1px); }
-
-.btn.primary{
-  background: rgba(96,165,250,.18);
-  border-color: rgba(96,165,250,.35);
-}
-.btn.primary:hover{
-  background: rgba(96,165,250,.24);
-  border-color: rgba(96,165,250,.48);
-}
-.btn.good{
-  background: rgba(52,211,153,.14);
-  border-color: rgba(52,211,153,.28);
-}
-.btn.good:hover{
-  background: rgba(52,211,153,.20);
-  border-color: rgba(52,211,153,.42);
-}
-
-/* Home hero */
-.hero{
-  margin-top: 18px;
-  display: grid;
-  grid-template-columns: 1.2fr .8fr;
-  gap: 14px;
-  align-items: stretch;
-}
-.hero h1{
-  margin: 0 0 6px;
-  font-size: clamp(1.25rem, 2.8vw, 2.0rem);
-  letter-spacing: .2px;
-}
-.hero p{
-  margin: 0 0 12px;
-  color: var(--muted);
-  max-width: 80ch;
-}
-.cta-row{
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-top: 10px;
-}
-
-/* Mini info box (right-side) */
-.mini{
-  background: rgba(15,26,46,.55);
-  border: 1px solid rgba(148,163,184,.18);
-  border-radius: 12px;
-  padding: 12px;
-}
-.mini h2{
-  margin: 0 0 8px;
-  font-size: 1.0rem;
-  letter-spacing: .2px;
-}
-.kv{
-  display: grid;
-  gap: 8px;
-  color: rgba(229,231,235,.92);
-  font-size: .92rem;
-}
-.kv div{
-  display: grid;
-  grid-template-columns: 120px 1fr;
-  gap: 10px;
-  align-items: start;
-}
-.kv dt{ color: var(--muted); font-weight: 750; }
-.kv dd{ margin: 0; }
-
-/* Titles and grids */
-.section-title{
-  margin: 18px 0 10px;
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-.section-title h2{
-  margin: 0;
-  font-size: 1.05rem;
-  letter-spacing: .2px;
-}
-.section-title span{
-  color: var(--muted);
-  font-size: .92rem;
-}
-
-.grid{
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-}
-.card{
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  background: rgba(15,26,46,.45);
-  padding: 12px;
-  transition: transform .08s ease, border-color .15s ease, background .15s ease;
-  min-height: 120px;
-  display: grid;
-  gap: 6px;
-}
-.card:hover{
-  transform: translateY(-1px);
-  background: rgba(15,26,46,.58);
-  border-color: rgba(96,165,250,.35);
-}
-.card h3{
-  margin: 0;
-  font-size: 1.0rem;
-  letter-spacing: .2px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-.tag{
-  font-family: var(--mono);
-  font-size: .78rem;
-  padding: 2px 8px;
-  border-radius: 999px;
-  border: 1px solid rgba(148,163,184,.22);
-  background: rgba(148,163,184,.08);
-  color: rgba(229,231,235,.92);
-  white-space: nowrap;
-}
-.card p{
-  margin: 0;
-  color: var(--muted);
-  font-size: .92rem;
-}
-.card a{ margin-top: 6px; width: fit-content; }
-
-/* List items (announcements, lecture items, etc.) */
-.list{ display: grid; gap: 10px; }
-.item{
-  border: 1px solid rgba(148,163,184,.16);
-  border-radius: 12px;
-  background: rgba(148,163,184,.06);
-  padding: 10px 12px;
-}
-.item .top{
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-.item strong{ letter-spacing: .2px; }
-.item time{
-  color: var(--muted);
-  font-family: var(--mono);
-  font-size: .82rem;
-}
-.item p{
-  margin: 6px 0 0;
-  color: rgba(229,231,235,.88);
-  font-size: .92rem;
-}
-
-/* Page header (non-home pages) */
-.page-head{
-  margin-top: 18px;
-  display: grid;
-  gap: 6px;
-}
-.page-head h1{
-  margin: 0;
-  font-size: clamp(1.25rem, 2.5vw, 1.85rem);
-  letter-spacing: .2px;
-}
-.page-head p{
-  margin: 0;
-  color: var(--muted);
-  max-width: 90ch;
-}
-.breadcrumbs{
-  display: inline-flex;
-  gap: 8px;
-  align-items: center;
-  flex-wrap: wrap;
-  font-size: .9rem;
-  color: var(--muted);
-}
-.breadcrumbs a{
-  text-decoration: none;
-  border-bottom: 1px solid rgba(148,163,184,.22);
-}
-.breadcrumbs a:hover{
-  border-bottom-color: rgba(96,165,250,.7);
-}
-
-/* Tables */
-.table-wrap{
-  margin-top: 10px;
-  overflow-x: auto;
-  border-radius: 12px;
-  border: 1px solid var(--line);
-  background: rgba(15,26,46,.45);
-}
-table.course{
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 980px;
-}
-table.course caption{
-  caption-side: top;
-  text-align: left;
-  padding: 12px 12px 10px;
-  font-weight: 800;
-  letter-spacing: .2px;
-  color: rgba(229,231,235,.98);
-}
-table.course thead th{
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  background: rgba(15,26,46,.92);
-  backdrop-filter: blur(8px);
-  border-bottom: 1px solid var(--line);
-  padding: 12px;
-  text-align: left;
-  font-size: .92rem;
-  font-weight: 900;
-}
-table.course tbody td{
-  padding: 12px;
-  border-top: 1px solid rgba(148,163,184,.16);
-  vertical-align: top;
-  font-size: .93rem;
-  color: rgba(229,231,235,.92);
-}
-table.course tbody tr:nth-child(odd){ background: rgba(148,163,184,.06); }
-table.course tbody tr:nth-child(even){ background: rgba(148,163,184,.02); }
-table.course tbody tr:hover{ background: rgba(96,165,250,.10); }
-
-/* Notes / callouts */
-.callout{
-  margin-top: 12px;
-  border-left: 3px solid rgba(96,165,250,.55);
-  padding-left: 12px;
-  color: var(--muted);
-  font-size: .92rem;
-}
-.callout strong{ color: rgba(229,231,235,.92); }
-
-/* Footer */
-footer{
-  margin-top: 18px;
-  color: var(--muted);
-  font-size: .9rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-.foot-badge{
-  font-family: var(--mono);
-  font-size: .82rem;
-  padding: 3px 8px;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  background: rgba(148,163,184,.08);
-  color: rgba(229,231,235,.86);
-}
-
-/* Responsive */
-@media (max-width: 980px){
-  .hero{ grid-template-columns: 1fr; }
-  .grid{ grid-template-columns: 1fr; }
-  .kv div{ grid-template-columns: 110px 1fr; }
-  table.course{ min-width: 0; }
-}
-
-@media (max-width: 840px){
-  .menu-btn{ display: inline-flex; }
-  .nav{
-    display: none;
-    width: 100%;
-    padding-top: 10px;
-  }
-  .nav.open{ display: flex; }
-  .topbar-inner{
-    align-items: flex-start;
-    flex-wrap: wrap;
-  }
-}
-
-/* Optional: card-style tables on phones */
-@media (max-width: 720px){
-  .table-wrap{ overflow-x: visible; }
-  table.course, table.course thead, table.course tbody, table.course th, table.course td, table.course tr { display: block; }
-  table.course thead { display: none; }
-  table.course{ min-width: 0; }
-  table.course tbody tr{
-    border-top: 1px solid var(--line);
-    padding: 10px 10px 4px;
-  }
-  table.course tbody td{
-    border: none;
-    padding: 8px 6px;
-  }
-  table.course tbody td::before{
-    content: attr(data-label);
-    display: block;
-    font-size: .78rem;
-    color: rgba(148,163,184,.95);
-    letter-spacing: .2px;
-    margin-bottom: 2px;
-  }
-}
-  </style>
+  <!-- External stylesheet (light theme tokens + components) -->
+  <link rel="stylesheet" href="styles-light.css" />
 
   <!-- Small, purely presentational add-on to improve formatting without altering content -->
   <style>
+    /* styles-light.css uses a fixed topbar; reserve space so content isn't hidden */
+    body { padding-top: 72px; }
+
+    /* Ensure in-page anchor jumps aren't covered by the fixed header */
+    section[id],
+    #refs { scroll-margin-top: 90px; }
+
     /* Improve default typography for long-form reading */
     h1, h2, h3 { line-height: 1.2; }
     h3 { margin-top: 14px; }
@@ -498,7 +24,7 @@ footer{
     ul, ol { max-width: 95ch; }
     li { margin: 6px 0; }
 
-    /* Media helpers (kept from prior version) */
+    /* Media helpers */
     figure.media{
       margin: 0;
       display: grid;
@@ -509,7 +35,7 @@ footer{
       height: auto;
       border-radius: 12px;
       border: 1px solid var(--line);
-      background: rgba(15,26,46,.35);
+      background: var(--card-bg);
     }
     figure.media figcaption{
       color: var(--muted);
@@ -521,14 +47,13 @@ footer{
     .toc{
       margin: 0;
       padding-left: 18px;
-      color: rgba(229,231,235,.92);
     }
     .toc li{ margin: 6px 0; }
     .toc a{
       text-decoration: none;
-      border-bottom: 1px solid rgba(96,165,250,.35);
+      border-bottom: 1px solid color-mix(in oklab, var(--accent) 35%, transparent);
     }
-    .toc a:hover{ border-bottom-color: rgba(96,165,250,.9); }
+    .toc a:hover{ border-bottom-color: color-mix(in oklab, var(--accent) 90%, transparent); }
 
     /* Media grid */
     .media-grid{
@@ -545,7 +70,7 @@ footer{
     .kicker{
       font-family: var(--mono);
       font-size: .82rem;
-      color: rgba(229,231,235,.88);
+      color: var(--muted);
       opacity: .95;
       letter-spacing: .2px;
     }
@@ -561,10 +86,20 @@ footer{
     .ref-list{
       margin: 0;
       padding-left: 18px;
-      color: rgba(229,231,235,.92);
     }
     .ref-list li{ margin: 10px 0; }
-    .ref-list em{ color: rgba(229,231,235,.96); }
+    .ref-list em{ color: color-mix(in oklab, var(--text) 96%, transparent); }
+
+    /* Optional: slightly more top padding on narrow screens (header can feel taller) */
+    @media (max-width: 840px){
+      body { padding-top: 78px; }
+    }
+
+    /* Optional: printing */
+    @media print{
+      body { padding-top: 0; }
+      .topbar { position: static !important; }
+    }
   </style>
 </head>
 
@@ -575,7 +110,7 @@ footer{
     <div class="topbar-inner">
       <div class="brand">
         <a href="#" aria-label="Course home">OCNG 489/689 • Studying the Oceans from Space</a>
-        <small>Chapter 1 — History and development</small>
+        <small>History and development</small>
       </div>
 
       <button class="menu-btn" type="button" aria-label="Toggle navigation" aria-controls="site-nav" aria-expanded="false">
@@ -598,11 +133,9 @@ footer{
   <main id="main" class="container">
     <div class="page-head">
       <div class="breadcrumbs">
-        <a class="link" href="#">Course</a>
-        <span>›</span>
-        <span>Chapter 1</span>
+
       </div>
-      <h1>Chapter 1: The History and Development of Satellite Oceanography</h1>
+      <h1>The History and Development of Satellite Oceanography</h1>
       <p>
         Satellite oceanography emerged from mid-20th-century advances in rocketry, radiometry, radar, and geodesy,
         and it now provides essential, routinely available observations of the ocean surface and near-surface
@@ -610,56 +143,86 @@ footer{
         strategies to modern multi-mission, multi-sensor Earth observing systems.
       </p>
       <p class="callout">
-        <strong>Scope note.</strong> “Satellite oceanography” is used here in the broad sense that is common in ocean
-        remote sensing: measurement of ocean variables from orbit (directly or via retrieval algorithms), coupled
+        <strong>Scope note.</strong> “Satellite oceanography” is used here in the broad sense that is common in ocean remote sensing: measurement of ocean variables from orbit (directly or via retrieval algorithms), coupled
         with the calibration, validation, and interpretation frameworks that make those measurements scientifically
         usable.
       </p>
     </div>
 
-    <section class="hero" aria-label="Chapter overview">
-      <div class="panel">
-        <div class="kicker">In this chapter</div>
+    <section class="panel" aria-label="Chapter overview" style="margin-top:14px;">
+
         <h1 style="margin-top:6px;">From the Space Age to an ocean observing infrastructure</h1>
-        <p>
-          The distinctive contribution of satellites is <em>synoptic, repeated</em> sampling of the global ocean surface
-          with standardized instrumentation. Progress in satellite oceanography has therefore been tightly linked to
-          (i) sensor physics, (ii) platform and orbit design, and (iii) the development of geophysical retrieval
-          algorithms and uncertainty characterization.
+       <p>
+        The modern practice of satellite oceanography is the outcome of a historical transition: early spaceflight proved that
+        measurements from orbit were possible, and subsequent decades transformed those demonstrations into an operational
+        <em>ocean observing infrastructure</em>—with repeatable orbits, well-calibrated sensors, sustained reference missions,
+        and data systems that routinely deliver analysis-ready fields (e.g., SST, SSH, winds, ocean color, sea ice, and
+        salinity). This section traces how the field evolved from first-generation imaging and radiometry to integrated,
+        multi-mission observing systems, and why that evolution matters scientifically: every “new capability” also brought
+        new retrieval algorithms, correction strategies, and uncertainty frameworks that underpin how we interpret ocean
+        variability from space today.
         </p>
 
       </div>
 
-      <aside class="mini" aria-label="Key milestones">
-        <h2>Milestones at a glance</h2>
-        <dl class="kv">
-          <div>
-            <dt>1957–1958</dt>
-            <dd>Sputnik-1 and Explorer-1 inaugurate orbital science and demonstrate the value of space-based measurement.</dd>
-          </div>
-          <div>
-            <dt>1960</dt>
-            <dd>TIROS-1 establishes routine Earth imaging from orbit for weather and Earth system observation.</dd>
-          </div>
-          <div>
-            <dt>1978</dt>
-            <dd>Seasat demonstrates radar-based ocean remote sensing; Nimbus-7/CZCS initiates ocean color from space.</dd>
-          </div>
-          <div>
-            <dt>1992</dt>
-            <dd>TOPEX/Poseidon launches the precision altimetry era for global circulation and sea level variability.</dd>
-          </div>
-          <div>
-            <dt>2009–2011</dt>
-            <dd>Dedicated satellite salinity observations mature (e.g., SMOS; later Aquarius/SAC-D).</dd>
-          </div>
-          <div>
-            <dt>2022</dt>
-            <dd>SWOT introduces wide-swath interferometric altimetry for fine-scale sea surface height structure.</dd>
-          </div>
-        </dl>
-      </aside>
     </section>
+    <section class="panel" aria-label="Learning objectives" style="margin-top:14px;">
+      <div class="section-title">
+        <h2>Learning objectives</h2>
+        <span>What you should be able to do after completing this chapter</span>
+      </div>
+      <ul>
+        <li>Describe the historical context and motivations for satellite oceanography</li>
+        <li>Identify key early missions and their contributions to ocean remote sensing</li>
+        <li>Summarize decade-by-decade developments in satellite oceanography from the 1960s to the present</li>
+        <li>Explain how modern satellite oceanography builds on earlier technological and scientific advances</li>
+      </ul>
+    </section>
+
+    <section class="panel" aria-label ="Milestones" style="margin-top:14px;">
+      <aside class="mini" aria-label="Key milestones">
+        <div class="section-title">
+        <h2>Milestones</h2>
+        <span>A quick overview</span>
+      </div>
+  <dl class="kv">
+    <div>
+      <dt>1957–1958</dt>
+      <dd> <b>Sputnik-1</b> (USSR, 1957) and <b>Explorer-1</b> (USA, 1958) inaugurate Space Age, proving orbital platforms for geophysical measurements.</dd>
+    </div>
+    <div>
+      <dt>1960</dt>
+      <dd><b>TIROS-1</b> (NASA) delivers first routine orbital Earth imaging; initial cloud patterns reveal ocean fronts/storms. Late 1960s Nimbus series (e.g., Nimbus-1 HRIR, 1964–) enables pioneering satellite sea surface temperature (SST) retrievals (~3–6 K accuracy under clear skies) [NASA TN D-4072].</dd>
+    </div>
+    <div>
+      <dt>1975 & 1978</dt>
+      <dd><b>GEOS-3</b> (1975) proves extended radar altimetry for marine geoid/sea surface height; <b>Seasat</b> (1978, 105 days) demonstrates full microwave suite (altimeter, scatterometer, SAR) for global winds, waves, currents, eddies. <b>Nimbus-7/CZCS</b> (1978–1986) pioneers ocean color/chlorophyll.</dd>
+    </div>
+    <div>
+      <dt>1985</dt>
+      <dd><b>Geosat</b> (US Navy, launched March 12) provides first multi-year altimetry (GM/ERM phases to 1990), mapping mesoscale eddies/geoid (declassified 1990s); <b>AVHRR/NOAA</b> initiates continuous global SST climatologies.</dd>
+    </div>
+    <div>
+      <dt>1991–1997</dt>
+      <dd><b>ERS-1</b> (ESA, 1991)/<b>ERS-2</b> (1995) add radar altimetry, scatterometer winds, SAR waves/ice; <b>TOPEX/Poseidon</b> (NASA/CNES, 1992) achieves ~2 cm SSH precision for circulation, tides, sea level rise; <b>SeaWiFS</b> (1997) revives high-accuracy ocean color/productivity post-CZCS.</dd>
+    </div>
+    <div>
+      <dt>2002</dt>
+      <dd><b>ENVISAT</b> (ESA) integrates MERIS ocean color, AATSR SST, RA-2 altimetry, ASAR winds/waves; <b>Aqua MODIS</b> (NASA, 2002) enhances color/SST continuity; <b>GRACE</b> (2002) tracks ocean mass/steric sea level.</dd>
+    </div>
+    <div>
+      <dt>2009–2011</dt>
+      <dd><b>SMOS</b> (ESA, Nov 2009) pioneers L-band salinity (~0.1–0.2 psu); <b>Aquarius/SAC-D</b> (NASA/CNES/CONAE, 2011) refines global SSS for circulation/feedbacks.</dd>
+    </div>
+    <div>
+      <dt>2020 & 2022</dt>
+      <dd><b>Sentinel-6 Michael Freilich</b> (ESA/NASA, 2020) sustains Jason-class altimetry; <b>SWOT</b> (NASA/CNES, Dec 16, 2022) introduces KaRIn wide-swath (~15–25 km) interferometric altimetry, resolving submesoscale O(1-10) km SSH gradients, fronts, internal waves, eddy fluxes critical for upper ocean energy cascades/frontogenesis.</dd>
+    </div>
+  </dl>
+ 
+</aside>
+    </section>
+
 
     <section class="panel" aria-label="Table of contents" style="margin-top:14px;">
       <div class="section-title">
@@ -672,7 +235,7 @@ footer{
         <li><a href="#s1-3">1.3 The Space Age begins</a></li>
         <li><a href="#s1-4">1.4 Decade-by-decade development</a></li>
         <li><a href="#s1-5">1.5 Modern context: satellites and in-situ systems</a></li>
-        <li><a href="#s1-6">1.6 Sensor showcase: observing ocean variables from space</a></li>
+        <li><a href="#s1-6">1.6 Sensor showcase</a></li>
         <li><a href="#s1-7">1.7 Summary</a></li>
         <li><a href="#refs">References and figure sources</a></li>
       </ol>
@@ -686,36 +249,21 @@ footer{
       </div>
 
       <p>
-        <strong>Satellite oceanography</strong> is the observation of the ocean (and its interaction with the atmosphere
-        and cryosphere) using sensors carried by Earth-orbiting platforms. In practice, satellites measure radiance,
-        backscatter, or propagation time at the top of the atmosphere, and ocean variables are obtained by combining
-        those measurements with geophysical models, calibration information, and retrieval algorithms.
+        <strong>Satellite oceanography</strong> is the observation of the ocean (and its interaction with the atmosphere and cryosphere) using sensors carried by Earth-orbiting platforms. In practice, satellites measure radiance, backscatter, or propagation time at the top of the atmosphere, and ocean variables are obtained by combining those measurements with geophysical models, calibration information, and retrieval algorithms.
       </p>
 
       <h3>1.1.1 What is remote sensing in oceanography?</h3>
       <p>
-        Remote sensing is the acquisition of information about a target without physical contact. For oceanography,
-        most satellite measurements are inherently surface-weighted because seawater strongly attenuates electromagnetic
-        radiation. Important exceptions include <em>ocean color</em> (which is sensitive to optical properties within the
-        upper ocean) and <em>active microwave methods</em> (which respond to surface roughness and enable all-weather
-        sampling in many conditions).
+        Remote sensing is the acquisition of information about a target without physical contact. For oceanography, most satellite measurements are inherently surface-weighted because seawater strongly attenuates electromagnetic radiation. Important exceptions include <em>ocean color</em> (which is sensitive to optical properties within the upper ocean) and <em>active microwave methods</em> (which respond to surface roughness and enable all-weather sampling in many conditions).
       </p>
 
       <p class="callout">
-        <strong>Measurement principle.</strong> Different ocean properties imprint distinct signatures on electromagnetic
-        observations. For example, sea surface height is inferred from radar range measurements combined with precise
-        orbit determination; surface winds are retrieved from the dependence of microwave backscatter on wind-generated
-        surface roughness; and chlorophyll-a is estimated from the spectral dependence of water-leaving radiance after
-        atmospheric correction.
+        <strong>Measurement principle.</strong> Different ocean properties imprint distinct signatures on electromagnetic observations. For example, sea surface height is calculated from radar range measurements combined with precise orbit determination; surface winds are retrieved from the dependence of microwave backscatter on wind-generated surface roughness; and chlorophyll-a is estimated from the spectral dependence of water-leaving radiance after atmospheric correction.
       </p>
 
       <h3>1.1.2 Why observe the oceans from space?</h3>
       <p>
-        The global ocean’s extent and dynamical variability impose practical limits on ship-based sampling. Satellites
-        complement in-situ observing systems by providing repeated, standardized, spatially extensive measurements that
-        enable the study of phenomena ranging from basin-scale circulation patterns to mesoscale eddies and coastal
-        fronts. In addition, satellite missions support operational needs in weather, climate monitoring, and marine
-        services by delivering consistent data streams with defined revisit schedules.
+        The global ocean’s extent and dynamical variability impose practical limits on ship-based sampling. Satellites complement in-situ observing systems by providing repeated, standardized, spatially extensive measurements that enable the study of phenomena ranging from basin-scale circulation patterns to mesoscale and submesoscale  eddies and coastal fronts. In addition, satellite missions support operational needs in weather, climate monitoring, and marine services by delivering consistent data streams with defined revisit schedules.
       </p>
     </section>
 
@@ -771,7 +319,7 @@ footer{
       <p>
         The United States responded with <strong>Explorer-1</strong>, launched on <strong>31 January 1958</strong>. Data
         from Explorer-1’s Geiger counter experiment led to the identification of intense radiation regions now known
-        as the <strong>Van Allen radiation belts</strong>, illustrating a recurring theme in satellite history:
+        as the <a href="https://en.wikipedia.org/wiki/Van_Allen_radiation_belt"><strong>Van Allen radiation belts</strong></a>, illustrating a recurring theme in satellite history:
         space-based platforms not only operationalize measurement, but can reveal previously unknown components of the
         Earth system. 
       </p>
@@ -787,7 +335,6 @@ footer{
             <figcaption>
               <strong>Sputnik-1</strong> (1957). Often cited as the start of the Space Age.
               Credit: NASA. Source: NASA History archive.
-              
             </figcaption>
           </figure>
         </div>
@@ -800,9 +347,8 @@ footer{
               loading="lazy"
             />
             <figcaption>
-              <strong>Explorer-1</strong> (1958). Early U.S. science satellite; associated with discovery of the Van Allen belts. The image showed Explorer-1 on top of a Jupiter-C rocket.
+              <a href="https://en.wikipedia.org/wiki/Explorer_1"><strong>Explorer-1</strong></a> (1958). Early U.S. science satellite; associated with discovery of the Van Allen belts. The image showed Explorer-1 on top of a Jupiter-C rocket.
               Credit: NASA.
-              
             </figcaption>
           </figure>
         </div>
@@ -815,7 +361,6 @@ footer{
         While TIROS was designed for meteorology, its imaging capability established a template for observing the
         coupled ocean–atmosphere system: storms, frontal cloud bands, and marine stratocumulus patterns provide
         indirect—but often oceanographically informative—evidence of underlying ocean states and air–sea interaction.
-        
       </p>
 
       <div class="panel" style="margin-top:10px;">
@@ -827,13 +372,17 @@ footer{
           />
           <figcaption>
             <strong>TIROS-1</strong> (1960). First successful weather satellite; established routine Earth imaging from orbit.
-            Credit: NASA. 
+            Credit: NASA.
           </figcaption>
         </figure>
       </div>
 
-       <a href="https://svs.gsfc.nasa.gov/10552/#media_group_353331">Here is a video on the TIROS program's 50th anniversary from NASA </a>
-      
+      <div class="panel" style="margin-top:10px;">
+      <a class="link" href="https://svs.gsfc.nasa.gov/10552/#media_group_353331">
+        Here is a video on the TIROS program's 50th anniversary from NASA
+      </a>
+      </div>
+
       <h3>1.3.3 Technology pathfinders: ATS and Nimbus</h3>
       <p>
         Early programs such as NASA’s <strong>Applications Technology Satellites (ATS)</strong> demonstrated the value
@@ -846,7 +395,6 @@ footer{
         Of particular relevance to oceanography, <strong>Nimbus-5</strong> carried the <strong>Electrically Scanning
         Microwave Radiometer (ESMR)</strong>, enabling early spaceborne microwave observations of the cryosphere and
         demonstrating that microwave methods could provide critical information in cloudy or polar-night conditions.
-        
       </p>
     </section>
 
@@ -871,57 +419,63 @@ footer{
 
       <div class="grid" aria-label="Decade timeline cards">
         <article class="card">
-          <h3><span class="tag">1960s</span> Operational imaging emerges</h3>
+          <h3><span class="tag">1960s</span> Inception </h3>
           <p>
-            TIROS establishes weather imaging; ATS and Nimbus programs mature sensors and orbital concepts that later
-            support ocean applications.
+            The 1960s initiated satellite-based Earth observation with meteorological missions providing the first incidental ocean views. <b>TIROS-1 (1960)</b> delivered orbital cloud imagery, revealing marine storm systems and fronts tied to ocean-atmosphere interactions. Later TIROS and <b>Nimbus-1 (1964)</b> advanced infrared radiometry, enabling initial sea surface temperature (SST) estimates in the late 1960s using cloud-cleared channels, though limited by atmospheric effects and ~10–50 km resolution. These observations indirectly captured ocean features like upwelling and currents, while early workshops identified marine remote sensing potential, laying groundwork for dedicated oceanographic satellites in the 1970s.
           </p>
         </article>
 
         <article class="card">
-          <h3><span class="tag">1970s</span> Dedicated ocean sensing begins</h3>
+          <h3><span class="tag">1970s</span> Beginning of dedicated ocean sensing</h3>
           <p>
-            Nimbus-7 carries <strong>CZCS</strong> for ocean color; <strong>Seasat</strong> demonstrates radar altimetry,
-            SAR, and scatterometry for ocean remote sensing (despite a short mission life).
+            The 1970s launched dedicated satellite oceanography with proof-of-concept missions validating microwave techniques. <b></b>GEOS-3 (1975)</b> supplied the first extended radar altimeter data (1975–1978), mapping sea surface height anomalies, marine geoid, gravity fields, and mesoscale features. <b>Seasat (1978)</b>, NASA's pioneering ocean satellite, operated 105 days but produced the first global synoptic views of sea surface height, significant wave height, vector winds, wave spectra, and sea ice using altimeter, scatterometer, SAR, and radiometer. These data revealed eddies, currents, and air-sea interactions, proving all-weather monitoring feasibility and catalyzing sustained altimetry, scatterometry, and SAR programs.
           </p>
         </article>
 
         <article class="card">
           <h3><span class="tag">1980s</span> Operational SST and mesoscale variability</h3>
           <p>
-            NOAA polar orbiters with <strong>AVHRR</strong> support routine SST; <strong>GEOSAT</strong> extends the
-            altimetry record and reveals mesoscale variability at basin scale.
+            The 1980s transitioned to sustained multi-year observations. <b>CZCS on Nimbus-7 (until 1986)</b> delivered the first extended global ocean color dataset for chlorophyll and phytoplankton productivity. <b>Geosat (1985)</b> provided long-duration altimetry for sea surface height, eddies, and geoid (later declassified). <b>AVHRR on NOAA satellites (e.g., NOAA-7 1981, NOAA-11 1988)</b> established continuous global SST records, supporting El Niño research. <b>Japan's MOS-1 (1987)</b> contributed ocean color and thermal data. These consolidated satellite utility for climate variability but revealed continuity gaps, motivating the advanced missions of the 1990s.
           </p>
         </article>
 
         <article class="card">
           <h3><span class="tag">1990s</span> Precision altimetry era</h3>
           <p>
-            <strong>TOPEX/Poseidon</strong> provides a high-accuracy global sea surface height record; ocean color is
-            restored and improved with sensors such as <strong>SeaWiFS</strong>.
+            The 1990s established sustained global ocean monitoring. <b></b>ERS-1 (1991)</b> and <b>ERS-2 (1995)</b> introduced scatterometry for winds and altimetry. <b>TOPEX/Poseidon (1992)</b> achieved ~2 cm sea surface height accuracy, mapping circulation, tides, El Niño, and sea level trends. <b>NSCAT (1996)</b> and <b>QuikSCAT (1999)</b> supplied high-resolution ocean vector winds. <b>SeaWiFS (1997)</b> revived ocean color for chlorophyll and marine productivity. International datasets enabled near-continuous multi-parameter records, advancing climate understanding, operational forecasting, and the golden age of satellite oceanography.
           </p>
         </article>
 
         <article class="card">
           <h3><span class="tag">2000s</span> Multi-parameter Earth observing systems</h3>
           <p>
-            Mature integration of SST, color, winds, and altimetry in widely used data systems; dedicated salinity
-            observation becomes feasible with L-band radiometry (e.g., <strong>SMOS</strong>).
+           The 2000s enhanced multi-sensor precision for climate and ecosystems. <b>Jason-1 (2001)</b> continued high-accuracy altimetry. <b>Aqua (2002) with MODIS</b> delivered ocean color and SST. <b>ENVISAT (2002)</b> provided MERIS color, AATSR SST, and altimetry. <b>GRACE (2002)</b> tracked ocean mass changes and sea level contributions. <b>OceanSat-2 (2009)</b> added color and winds. Dual orbits improved diurnal sampling and long-term records, advancing sea level attribution, circulation modeling, and biological monitoring while transitioning toward operational continuity.
           </p>
         </article>
 
         <article class="card">
-          <h3><span class="tag">2010s–2020s</span> Constellations and wide-swath mapping</h3>
+          <h3><span class="tag">2010s–2020</span> Constellations and wide-swath mapping</h3>
           <p>
-            Copernicus Sentinel missions operationalize multi-sensor coverage; reference altimetry is extended
-            (e.g., Sentinel-6); <strong>SWOT</strong> introduces wide-swath interferometric altimetry.
+            The 2010s emphasized continuity and new parameters, featuring ESA's Earth Explorer and Copernicus series. <b></b>SMOS (ESA, 2009)</b> pioneered global ocean salinity via L-band interferometry. <b>CryoSat-2 (ESA, 2010)</b> measured sea ice thickness and polar ocean dynamics. <b>Jason-2 (2008)</b> and <b>Jason-3 (2016)</b> sustained altimetry for sea level/climate. <b>Sentinel-3 (ESA/Copernicus, 2016+)</b> offered altimetry, ocean color, and SST. <b>Aquarius (2011)</b> and <b>SMAP (2015)</b> refined salinity. SWOT planning targeted wide-swath height. Higher resolutions and constellations supported marine heatwaves, biodiversity, and forecasting.
           </p>
         </article>
       </div>
 
-      <div class="hr"></div>
+      <article class="card" style="margin-top:14px;">
+        <h3><span class="tag">2020s–present</span> Advanced capabilities and integration</h3>
+        <p>
+          The 2020s prioritize resolution, new variables, and climate resilience with ESA leadership. <b>Sentinel-6 Michael Freilich (ESA/NASA, 2020)</b> extends precise altimetry for sea level continuity. <b>SWOT (2022, NASA/CNES)</b> enables wide-swath sea surface height for submesoscale dynamics (ESA collaboration). <b>Sentinel-3 series</b> continues altimetry/color/SST. Advanced color missions (e.g., PACE 2024) target plankton/aerosols; ESA's SMOS and CryoSat extend salinity/ice data. Multi-mission synergies drive accurate sea level attribution, extreme event monitoring, ecosystem studies, and Copernicus operational services amid accelerating climate change.
+        </p>
+      </article>
 
-      <h3>1.4.1 The 1970s: “True” satellite oceanography (Seasat and CZCS)</h3>
+
+      <div class="hr"></div>
+  <div class="section-title">
+    <h2>1.4.1 The 1970s: “True” satellite oceanography </h2>
+    <span>(<b>Seasat and CZCS</b>)</span>
+  </div>
+
+      <h3></h3>
       <p>
         Two 1978 missions are commonly treated as foundational for modern satellite oceanography. First,
         <strong>Seasat</strong> (launched <strong>27 June 1978</strong>) carried a radar altimeter, synthetic aperture
@@ -931,6 +485,7 @@ footer{
       </p>
 
       <div class="media-grid">
+
         <div class="panel">
           <figure class="media">
             <img
@@ -941,7 +496,6 @@ footer{
             <figcaption>
               <strong>Seasat</strong> (1978). First satellite designed specifically for comprehensive ocean remote sensing.
               Credit: NASA/JPL-Caltech.
-              
             </figcaption>
           </figure>
         </div>
@@ -956,10 +510,10 @@ footer{
             <figcaption>
               <strong>Seasat SAR example (1978):</strong> internal wave signatures visible as alternating roughness bands.
               Credit: NASA Earth Observatory / Seasat SAR archive.
-              
             </figcaption>
           </figure>
         </div>
+
       </div>
 
       <p>
@@ -979,108 +533,946 @@ footer{
           <figcaption>
             <strong>CZCS ocean color examples:</strong> early demonstrations of large-scale, satellite-derived bio-optical structure.
             Credit: NASA Earthdata / CZCS instrument archive.
-            
           </figcaption>
         </figure>
       </div>
 
-      <h3>1.4.2 The 1980s: operational SST and continuing altimetry</h3>
+      <!-- ===================================================== -->
+<section id="s1-4-80s" class="panel" style="margin-top:14px;">
+  <div class="section-title">
+    <h2>1.4.2 The 1980s Increase reliability</h2>
+    <span>Operationalization, calibration discipline, and the bridge to precision oceanography</span>
+  </div>
+
+  <p>
+    The 1980s are often best understood as the “operationalization decade” for satellite oceanography: the period when
+    several measurement concepts demonstrated in the 1970s were translated into repeatable, routinely processed data
+    streams with increasing attention to calibration stability, algorithm maturity, and sustained archiving. While the
+    decade did not produce a single “Seasat-like” step change across all variables, it delivered something arguably more
+    important for modern ocean remote sensing—an emerging expectation that satellite observations should support
+    multi-year records, objective mapping, and quantitative comparison to in-situ measurements and numerical models.
+  </p>
+
+  <div class="callout">
+    <strong>Decadal theme.</strong> The 1980s shifted the field from “Can we measure this from space?” to “Can we measure
+    it reliably enough to build a record?” That shift elevated three priorities: (i) calibration/validation practice,
+    (ii) repeatable geophysical retrieval algorithms, and (iii) mission continuity planning.
+  </div>
+
+  <h3>Operational infrared SST: AVHRR and the rise of routine global mapping</h3>
+  <p>
+    Sea surface temperature (SST) became one of the first ocean variables to move toward quasi-operational satellite
+    monitoring in the 1980s through NOAA’s polar-orbiting platforms carrying the <strong>Advanced Very High Resolution
+    Radiometer (AVHRR)</strong>. AVHRR’s thermal infrared channels enabled high-frequency SST estimation at
+    moderate spatial resolution, well suited for resolving fronts, coastal upwelling signatures, and mesoscale features
+    when cloud cover permitted. The decade also saw rapid refinement of “split-window” and multi-channel SST approaches
+    to correct for atmospheric absorption, along with growing use of in-situ matchups (buoys, ships) to quantify bias,
+    drift, and regional performance.
+  </p>
+
+  <h3>Passive microwave radiometry: all-weather sea ice and wind speed foundations</h3>
+  <p>
+    In parallel, passive microwave radiometry matured into a practical ocean–cryosphere observing capability. Sensors
+    such as <strong>SMMR</strong> Scanning Multichannel Microwave Radiometer (on Nimbus-7, continuing into the early 1980s) and later the <strong>SSM/I</strong> Special Sensor Microwave/Imager
+    series (on DMSP platforms beginning in the late 1980s) established the power of microwave observations for mapping
+    sea ice concentration, polar conditions, and related surface/atmospheric variables in cloudy regions and during
+    polar night. Compared with infrared and visible methods, passive microwave retrievals typically trade spatial detail
+    for sampling robustness—an exchange that became central to designing multi-sensor observing strategies.
+  </p>
+
+  <h3>Altimetry continuity: GEOSAT and the push toward “precision” sea level</h3>
+  <p>
+    After Seasat’s short life, the 1980s continued radar altimetry through missions such as the U.S. Navy’s
+    <strong>GEOSAT</strong> (launched mid-decade), extending sea surface height and wave-related observations and
+    reinforcing how strongly scientific value depends on orbit knowledge and geophysical corrections. This period
+    coincided with major improvements in orbit determination methods, tracking systems, and gravity field knowledge,
+    laying technical groundwork for the “precision altimetry era” that would fully mature with TOPEX/Poseidon in the
+    early 1990s. Scientifically, 1980s altimetry helped solidify the view that mesoscale variability is ubiquitous and
+    dynamically central at basin scale.
+  </p>
+
+  <h3>Radar winds and imaging: consolidating algorithms and building the mission pipeline</h3>
+  <p>
+    Active microwave oceanography (scatterometry and SAR) experienced a transitional phase in the 1980s. With Seasat’s
+    scatterometer and SAR serving as proof-of-concept, much of the decade’s progress occurred through algorithm
+    development, airborne campaigns, and mission formulation that culminated in early-1990s launches (e.g., European
+    multi-instrument platforms and later dedicated scatterometers). In practical terms, this is when the community
+    became more explicit about the full measurement chain—instrument design, geophysical model functions (GMFs),
+    calibration strategy, and validation datasets—required to retrieve winds and interpret radar signatures of surface
+    roughness modulated by currents, internal waves, and surface films.
+  </p>
+
+  <h3>Ocean color: end of CZCS and the planning of next-generation optical missions</h3>
+  <p>
+    Ocean color provides a useful “historical counterpoint” for the 1980s. <strong>CZCS</strong> (flown on Nimbus-7)
+    continued to demonstrate scientific value into the early-to-mid 1980s, but the end of its operations created a
+    recognized gap in continuous biological ocean observation from space. That gap, and the lessons learned about
+    atmospheric correction and calibration stability, directly shaped later mission concepts and programmatic emphasis
+    on long-term, well-characterized radiometry—setting the stage for SeaWiFS and, later, EOS-era instruments such as
+    MODIS (Moderate Resolution Imaging Spectroradiometer).
+  </p>
+
+  <div class="section-title">
+    <h2>Key 1980s development threads</h2>
+    <span>What changed in practice</span>
+  </div>
+
+  <div class="grid" aria-label="1980s sensor and mission development themes">
+    <article class="card">
+      <h3><span class="tag">SST</span> Infrared operationalization</h3>
       <p>
-        In the 1980s, operational polar-orbiting satellite programs enabled routine sea surface temperature products
-        using instruments such as the <strong>Advanced Very High Resolution Radiometer (AVHRR)</strong>, including
-        data streams beginning with missions such as <strong>NOAA-7</strong> (launched 1981). 
+        AVHRR-era workflows pushed SST toward routine mapping, with growing emphasis on atmospheric correction,
+        cloud screening, and matchup-based bias assessment.
       </p>
+    </article>
 
+    <article class="card">
+      <h3><span class="tag">Microwave</span> All-weather coverage</h3>
       <p>
-        This decade also extended the radar altimetry lineage after Seasat. The U.S. Navy’s <strong>GEOSAT</strong>
-        (launched 1985) provided an important continuation of altimetric observations, with substantial scientific
-        impact following later data release to the research community. 
+        Passive microwave time series (SMMR → SSM/I) demonstrated robust polar and cloudy-region observing capability,
+        supporting sea ice monitoring and related surface retrievals.
       </p>
+    </article>
 
-      <h3>1.4.3 The 1990s: TOPEX/Poseidon and global sea level variability</h3>
+    <article class="card">
+      <h3><span class="tag">Altimetry</span> Continuity + geodesy</h3>
       <p>
-        The launch of <strong>TOPEX/Poseidon</strong> on <strong>10 August 1992</strong> marked a major step change in
-        the accuracy and stability of satellite altimetry for oceanography. Its measurements enabled high-fidelity
-        mapping of sea level variability associated with large-scale circulation and climate modes such as El Niño,
-        and it established the basis for a long-term reference record later continued by successor missions. 
+        GEOSAT and contemporaneous tracking advances reinforced that precise orbit determination and geophysical
+        corrections are central to SSH science value.
       </p>
+    </article>
 
-      <div class="panel" style="margin-top:10px;">
-        <figure class="media">
-          <img
-            src="https://d2pn8kiwq2w21t.cloudfront.net/original_images/jpegPIA00735.jpg"
-            alt="TOPEX/Poseidon sea surface height map highlighting the 1997 El Nino"
-            loading="lazy"
-          />
-          <figcaption>
-            <strong>Altimetry example:</strong> TOPEX/Poseidon sea surface height patterns during the 1997 El Niño event
-            (“El Niño Watch”). Credit: NASA/JPL-Caltech.
-            
-          </figcaption>
-        </figure>
-      </div>
-
+    <article class="card">
+      <h3><span class="tag">Radar</span> Retrieval “chains” mature</h3>
       <p>
-        Biological satellite oceanography was revived and extended with <strong>SeaWiFS</strong> (Sea-viewing Wide Field-of-view Sensor),
-        which produced global chlorophyll products and improved calibration approaches relative to CZCS-era techniques. 
+        Scatterometer and SAR methods increasingly formalized the end-to-end chain from backscatter to winds and
+        surface interpretation (GMFs, calibration, validation).
       </p>
+    </article>
 
-      <div class="panel" style="margin-top:10px;">
-        <figure class="media">
-          <img
-            src="https://assets.science.nasa.gov/content/dam/science/esd/eo/images/imagerecords/4000/4097/S19972442003273_lrg.jpg"
-            alt="Global ocean color map showing spatial patterns consistent with phytoplankton distribution"
-            loading="lazy"
-          />
-          <figcaption>
-            <strong>Ocean color example (SeaWiFS):</strong> global-scale structure in ocean color consistent with phytoplankton distribution.
-            Credit: NASA Earth Observatory / SeaWiFS.
-            
-          </figcaption>
-        </figure>
-      </div>
-
-      <h3>1.4.4 The 2000s–2020s: salinity, Copernicus, and wide-swath altimetry</h3>
+    <article class="card">
+      <h3><span class="tag">Ocean color</span> Lessons from a gap</h3>
       <p>
-        Ocean salinity became a practical satellite target with L-band radiometry. ESA’s <strong>Soil Moisture and
-        Ocean Salinity (SMOS)</strong> mission, launched <strong>2 November 2009</strong>, is a key milestone in
-        operationalizing spaceborne sea surface salinity observations. 
+        The post-CZCS gap made continuity planning explicit and raised the bar for calibration stability and
+        atmospheric correction in future optical missions.
       </p>
+    </article>
 
+    <article class="card">
+      <h3><span class="tag">Systems</span> Data stewardship emerges</h3>
       <p>
-        In parallel, the Copernicus program strengthened operational continuity through multi-instrument platforms.
-        For example, <strong>Sentinel-3</strong> provides ocean color, sea surface temperature, and radar altimetry, with
-        Sentinel-3A launched in 2016 and Sentinel-3B in 2018. 
+        The decade strengthened expectations for consistent processing, archiving, and later reprocessing—turning
+        satellite datasets into scientific records rather than one-off experiments. NASA's Pilot Ocean Data System (PODS) established in 1984, then evolved to NODS (NASA Ocean Data System) in 1987, and later to PO.DAAC (Physical Oceanography Distributed Active Archive Center) in 1992.
       </p>
+    </article>
+  </div>
 
-      <div class="panel" style="margin-top:10px;">
-        <figure class="media">
-          <img
-            src="https://www.esa.int/var/esa/storage/images/esa_multimedia/images/2018/03/sentinel-3_scans_earth_s_colour/17400626-1-eng-GB/Sentinel-3_scans_Earth_s_colour.jpg"
-            alt="Illustration of Sentinel-3 ocean and land colour instrument scanning with multiple spectral bands"
-            loading="lazy"
-          />
-          <figcaption>
-            <strong>Modern multi-spectral scanning concept (Sentinel-3 / OLCI):</strong> visualization of push-broom
-            scanning and multi-band acquisition used for ocean color retrievals.
-            Credit: ESA/ATG medialab (ESA multimedia).
-            
-          </figcaption>
-        </figure>
-      </div>
+  <div class="table-wrap" role="region" aria-label="Representative 1980s missions and sensor contributions">
+    <table class="course">
+      <caption>Representative 1980s-era missions/sensors and their oceanographic roles</caption>
+      <thead>
+        <tr>
+          <th>Mission / sensor (era)</th>
+          <th>Primary ocean variables</th>
+          <th>Why it mattered for development</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="Mission / sensor (era)">NOAA polar orbiters / AVHRR (1980s)</td>
+          <td data-label="Primary ocean variables">SST (clear-sky), fronts, coastal upwelling patterns</td>
+          <td data-label="Why it mattered for development">
+            Helped normalize routine geophysical products and accelerated algorithm work (cloud screening, atmospheric
+            correction, matchup validation).
+          </td>
+        </tr>
+        <tr>
+          <td data-label="Mission / sensor (era)">Nimbus-7 / SMMR  (early 1980s continuation)</td>
+          <td data-label="Primary ocean variables">Sea ice concentration (and related microwave-derived fields)</td>
+          <td data-label="Why it mattered for development">
+            Demonstrated the value of microwave methods for polar/night/cloudy conditions, motivating longer-lived
+            passive microwave series.
+          </td>
+        </tr>
+        <tr>
+          <td data-label="Mission / sensor (era)">DMSP / SSM-I (late 1980s start)</td>
+          <td data-label="Primary ocean variables">Sea ice, surface/atmospheric microwave products; wind speed potential</td>
+          <td data-label="Why it mattered for development">
+            Initiated a long operational microwave record that complements optical/IR sensors and supports multi-sensor
+            observing strategies.
+          </td>
+        </tr>
+        <tr>
+          <td data-label="Mission / sensor (era)">GEOSAT / radar altimeter (mid-to-late 1980s)</td>
+          <td data-label="Primary ocean variables">Sea surface height variability; waves (via altimeter-derived metrics)</td>
+          <td data-label="Why it mattered for development">
+            Extended altimetry after Seasat and highlighted how orbit determination, gravity field knowledge, and
+            corrections control scientific utility—directly informing “precision altimetry” mission design.
+          </td>
+        </tr>
+        <tr>
+          <td data-label="Mission / sensor (era)">CZCS legacy and post-CZCS planning (mid-to-late 1980s)</td>
+          <td data-label="Primary ocean variables">Ocean color (heritage), chlorophyll algorithms and atmospheric correction</td>
+          <td data-label="Why it mattered for development">
+            The end of CZCS operations created a visible continuity gap, sharpening requirements for next-generation
+            ocean color calibration stability and sustained data records.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
+  <p class="callout">
+    <strong>Bridge to the 1990s.</strong> Many “headline” missions of the early 1990s were enabled by work done in the
+    1980s: instrument engineering, orbit/track design, geophysical correction models, and calibration/validation
+    culture. This is why the 1980s are best viewed less as a single-mission revolution and more as the decade that
+    professionalized satellite oceanography into an observing infrastructure.
+  </p>
+</section>
+
+<!-- Assumes styles-light.css is loaded -->
+<section id="s1-4-90s" class="panel" style="margin-top:14px;">
+  <div class="section-title">
+    <h2>1.4.3 The 1990s Beginning of precision altimetry climate record</h2>
+    <span>Precision altimetry, revived ocean color, and operational-quality winds</span>
+  </div>
+
+  <p>
+    The 1990s marked a decisive transition in satellite oceanography: the field moved from “capability demonstration”
+    toward <em>climate-relevant, quantitative observing</em> supported by improved calibration practice, better orbit
+    determination, maturing geophysical corrections, and increasingly standardized data systems. Several mission lines
+    converged—precision radar altimetry, scatterometry, ocean color radiometry, and routine SAR imaging—creating the
+    multi-sensor foundation that underpins modern ocean observing and data assimilation.
+  </p>
+
+  <div class="callout">
+    <strong>Decadal theme.</strong> In the 1990s, success was increasingly defined not by a single striking image or
+    short proof-of-concept, but by <em>stability, cross-mission consistency, and scientific traceability</em>:
+    calibration/validation strategies, uncertainty characterization, and reprocessing became part of the observing
+    system rather than “afterthoughts.”
+  </div>
+
+  <h3>Precision altimetry becomes a climate observing system</h3>
+  <p>
+    The strongest single step-change of the decade came from <strong>TOPEX/Poseidon</strong>, which established the
+    precision altimetry paradigm for observing sea surface height (SSH) variability at basin scale and for building
+    an internally consistent global record. This era also benefited from parallel altimeter missions (notably ESA’s
+    ERS series, the U.S. Navy’s <strong>GEOSAT Follow-On</strong>, and of course <strong>SeaSat</strong> ), which strengthened continuity and helped build
+    multi-mission perspectives on ocean topography. The 1990s altimetry story is therefore both scientific and
+    infrastructural: better orbit knowledge and geophysical corrections translated directly into more reliable SSH
+    fields for circulation, variability, and sea level research.
+  </p>
+
+  <h3>Vector winds from space: scatterometry moves into mainstream use</h3>
+  <p>
+    Satellite-derived ocean surface vector winds became substantially more usable—and more widely used—in the 1990s.
+    ESA’s ERS missions provided sustained active microwave observing with instruments that supported both imaging
+    (SAR) and wind retrieval (scatterometry), reinforcing that all-weather capability is essential for routine wind
+    products. The decade also saw the <strong>NASA Scatterometer (NSCAT)</strong> on ADEOS/Midori and the rapid
+    transition to <strong>QuikSCAT/SeaWinds</strong> at the end of the decade, reflecting a clear operational need:
+    consistent global wind vectors for air–sea flux estimation, storm analysis, and numerical weather and ocean model
+    applications.
+  </p>
+
+  <h3>Ocean color returns: SeaWiFS (and the pathway to EOS-era radiometry)</h3>
+  <p>
+    Following the end of the CZCS era, the 1990s restored global biological satellite oceanography through
+    <strong>SeaWiFS</strong>, which re-established a stable ocean color record suitable for basin-to-global analysis of
+    chlorophyll and related bio-optical variability. In addition, the decade included important bridging instruments
+    such as <strong>OCTS</strong> (on ADEOS/Midori), which combined ocean color and temperature objectives and helped
+    mature calibration/processing approaches for multi-band radiometry. By the end of the decade, NASA’s EOS program
+    reached orbit with <strong>Terra</strong> (1999), carrying MODIS—an explicit signal that long-term, multi-disciplinary
+    Earth system radiometry would be a central pillar of the next era of ocean remote sensing.
+  </p>
+
+  <h3>Radar imaging becomes routine: SAR, sea ice, and coastal process applications</h3>
+  <p>
+    The 1990s also expanded the practical use of <strong>synthetic aperture radar (SAR)</strong> for oceanography and
+    cryosphere–ocean interactions. ESA’s ERS SAR data (and successor missions) supported a growing community working on
+    sea ice, oil slick detection, coastal morphology, and ocean surface roughness signatures associated with winds,
+    waves, internal waves, and current shear. Complementary SAR missions—such as <strong>JERS-1</strong> and
+    <strong>RADARSAT-1</strong>—reinforced the value of all-weather, day–night imaging for high-latitude and coastal
+    environments, where optical methods can be persistently limited by clouds and illumination.
+  </p>
+
+  <h3>SST accuracy and inter-sensor consistency: ATSR and the “climate SST” mindset</h3>
+  <p>
+    While AVHRR continued to provide high-frequency infrared SST mapping, the 1990s strengthened the emphasis on
+    <em>accuracy and stability</em> through the <strong>Along-Track Scanning Radiometer (ATSR)</strong> family on ERS
+    platforms. ATSR was designed specifically to improve SST accuracy for environmental and climate applications, and
+    <strong>ATSR-2</strong> on ERS-2 extended that capability mid-decade. This “climate SST” mindset—instrument design
+    tied to calibration strategy, atmospheric correction, and long-term consistency—foreshadowed the EOS-era approach
+    to ocean radiometry and reprocessing-driven record improvement.
+  </p>
+
+  <div class="section-title">
+    <h2>Key 1990s development threads</h2>
+    <span>What changed in practice</span>
+  </div>
+
+  <div class="grid" aria-label="1990s sensor and mission development themes">
+    <article class="card">
+      <h3><span class="tag">Altimetry</span> Precision + continuity</h3>
       <p>
-        Reference altimetry is presently extended by missions such as <strong>Sentinel-6</strong>, which is designed to
-        continue the decades-long record of sea surface height measurements. 
+        TOPEX/Poseidon set a new accuracy standard for SSH, while ERS altimeters and GEOSAT Follow-On strengthened
+        continuity and multi-mission perspectives on ocean topography.
       </p>
+    </article>
 
+    <article class="card">
+      <h3><span class="tag">Winds</span> Scatterometry operationalizes</h3>
       <p>
-        Most recently, <strong>Surface Water and Ocean Topography (SWOT)</strong> (launched <strong>16 December 2022</strong>)
-        introduces a new measurement geometry: wide-swath interferometric altimetry. SWOT’s <strong>Ka-band Radar Interferometer (KaRIn)</strong>
-        collects two ~50 km swaths on either side of the ground track with a ~20 km nadir gap (overall ~120 km), enabling
-        observation of ocean variability at substantially finer spatial scales than traditional nadir altimeters. 
+        ERS scatterometry established sustained coverage; NSCAT and QuikSCAT accelerated adoption of global vector winds
+        for fluxes, storms, and model forcing/assimilation.
       </p>
-    </section>
+    </article>
+
+    <article class="card">
+      <h3><span class="tag">Ocean color</span> Global biology returns</h3>
+      <p>
+        SeaWiFS rebuilt a stable ocean color record after the CZCS gap; OCTS and EOS planning helped mature calibration,
+        processing, and multi-band radiometry practice.
+      </p>
+    </article>
+
+    <article class="card">
+      <h3><span class="tag">SAR</span> All-weather coastal &amp; polar imaging</h3>
+      <p>
+        ERS, JERS-1, and RADARSAT-1 expanded routine SAR use for sea ice monitoring, slick detection, and surface
+        roughness signatures linked to winds, waves, and currents.
+      </p>
+    </article>
+
+    <article class="card">
+      <h3><span class="tag">SST</span> Accuracy mindset grows</h3>
+      <p>
+        ATSR/ATSR-2 emphasized stable, accurate SST for climate and environmental applications, complementing AVHRR’s
+        high-frequency mapping strengths.
+      </p>
+    </article>
+
+    <article class="card">
+      <h3><span class="tag">Infrastructure</span> Records, not snapshots</h3>
+      <p>
+        Standardized processing, archiving, and reprocessing culture became central—turning satellite observations into
+        traceable scientific records suitable for multi-decadal analysis.
+      </p>
+    </article>
+  </div>
+
+  <div class="table-wrap" role="region" aria-label="Representative 1990s missions and sensor contributions">
+    <table class="course">
+      <caption>Representative 1990s-era missions/sensors and their oceanographic roles</caption>
+      <thead>
+        <tr>
+          <th>Mission / sensor</th>
+          <th>Primary ocean variables</th>
+          <th>Why it mattered for development</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="Mission / sensor">TOPEX/Poseidon (1992)</td>
+          <td data-label="Primary ocean variables">Sea surface height (SSH), sea level variability, waves (via altimeter metrics)</td>
+          <td data-label="Why it mattered for development">
+            Established precision altimetry as a climate-scale observing method and anchored the concept of a stable
+            reference record for ocean circulation and sea level science.
+          </td>
+        </tr>
+
+        <tr>
+          <td data-label="Mission / sensor">ERS-1 (1991) / ERS-2 (1995)</td>
+          <td data-label="Primary ocean variables">SAR imaging, vector winds (scatterometer), altimetry, SST (ATSR family)</td>
+          <td data-label="Why it mattered for development">
+            Demonstrated sustained, multi-instrument microwave observing for ocean/ice/coastal applications and helped
+            institutionalize routine, all-weather measurement strategies.
+          </td>
+        </tr>
+
+        <tr>
+          <td data-label="Mission / sensor">NSCAT (1996) &rarr; QuikSCAT/SeaWinds (1999)</td>
+          <td data-label="Primary ocean variables">Ocean surface vector winds</td>
+          <td data-label="Why it mattered for development">
+            Accelerated community reliance on scatterometer winds for air–sea interaction studies, storm analysis, and
+            model forcing; QuikSCAT explicitly filled a continuity gap after NSCAT.
+          </td>
+        </tr>
+
+        <tr>
+          <td data-label="Mission / sensor">SeaWiFS (1997)</td>
+          <td data-label="Primary ocean variables">Ocean color (chlorophyll and related bio-optical fields)</td>
+          <td data-label="Why it mattered for development">
+            Restored a global ocean color data stream after the CZCS-era gap and strengthened calibration/processing
+            workflows that supported long-term biological oceanography from space.
+          </td>
+        </tr>
+
+        <tr>
+          <td data-label="Mission / sensor">ADEOS/Midori OCTS (1996)</td>
+          <td data-label="Primary ocean variables">Ocean color + SST (multi-band optical/IR radiometry)</td>
+          <td data-label="Why it mattered for development">
+            Provided an important bridge in multi-band ocean radiometry, informing later approaches to calibration,
+            processing, and multi-variable product development.
+          </td>
+        </tr>
+
+        <tr>
+          <td data-label="Mission / sensor">RADARSAT-1 (1995) and JERS-1 (1992)</td>
+          <td data-label="Primary ocean variables">SAR imagery (sea ice, coastal processes, surface roughness signatures)</td>
+          <td data-label="Why it mattered for development">
+            Expanded the SAR archive and diversified observing geometries/bands used for ocean and cryosphere studies,
+            reinforcing SAR as a core all-weather tool for oceanography.
+          </td>
+        </tr>
+
+        <tr>
+          <td data-label="Mission / sensor">GEOSAT Follow-On (1998)</td>
+          <td data-label="Primary ocean variables">Ocean topography (altimetry)</td>
+          <td data-label="Why it mattered for development">
+            Extended the altimetry lineage and supported continuity for applications requiring frequent, repeat-track
+            ocean topography information.
+          </td>
+        </tr>
+
+        <tr>
+          <td data-label="Mission / sensor">Terra / EOS AM-1 (1999, EOS transition)</td>
+          <td data-label="Primary ocean variables">EOS-era radiometry (e.g., MODIS ocean color and SST in the next decade)</td>
+          <td data-label="Why it mattered for development">
+            Signaled the shift toward integrated Earth system observing with long-term, multi-disciplinary sensor suites
+            and robust data system support.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="callout">
+    <strong>Bridge to the 2000s.</strong> By the end of the 1990s, satellite oceanography had key ingredients of a modern
+    observing system in place: a precision altimetry reference mission line, global scatterometer winds, revived ocean
+    color radiometry, routine SAR imaging, and an EOS program designed for sustained, multi-variable Earth system
+    monitoring—setting up the rapid expansion of multi-mission synthesis and operational product suites in the 2000s.
+  </p>
+</section>
+
+
+<!--
+  Assumes you are using styles-light.css, e.g.:
+  <link rel="stylesheet" href="styles-light.css">
+  and (optionally) light mode is forced via:
+  <html lang="en" data-theme="light">
+-->
+
+<section id="s1-4-2000-2010" class="panel" style="margin-top:14px;">
+  <div class="section-title">
+    <h2>Satellite Oceanography Sensor and Mission Development (2000–2010)</h2>
+    <span>EOS-era multi-sensor radiometry, reference altimetry continuity, and first dedicated salinity missions</span>
+  </div>
+
+  <p>
+    The 2000–2010 decade marks a shift from primarily experimental satellite oceanography toward a durable
+    observing <em>infrastructure</em>: multi-instrument platforms, deliberate mission succession for climate-quality
+    time series, and institutional data systems capable of routine processing, reprocessing, and distribution.
+    During this period, “heritage-to-continuity” thinking became explicit—design choices increasingly emphasized
+    calibration stability, cross-mission overlap, and standardized geophysical products for ocean monitoring.
+  </p>
+
+  <p class="callout">
+    <strong>Decadal theme.</strong> The defining technical advance was not a single sensor type, but the emergence of
+    <em>repeatable, cross-calibrated measurement lines</em> (SST, ocean color, winds, SSH) that supported sustained
+    climate records and operational use, rather than mission-by-mission snapshots.
+  </p>
+
+  <h3>EOS radiometry becomes a workhorse for SST and ocean color (Terra/Aqua era)</h3>
+  <p>
+    NASA’s Earth Observing System (EOS) anchored the decade with stable, well-calibrated multi-spectral radiometry.
+    Instruments such as MODIS supported routine global products for sea surface temperature (infrared) and ocean
+    color (visible/near-IR), alongside atmospheric properties needed for aerosol correction and quality screening.
+    Complementary passive-microwave radiometry (e.g., AMSR-E on Aqua) strengthened all-weather capability for
+    variables relevant to oceanography, including SST under clouds (with coarser resolution), surface winds, and sea ice.
+  </p>
+  <ul>
+    <li><strong>Operational geometry:</strong> morning/afternoon sampling improved temporal coverage and enabled diurnal comparisons.</li>
+    <li><strong>Radiometric discipline:</strong> long-term calibration/characterization became a first-order mission requirement for climate applications.</li>
+    <li><strong>Multi-sensor synergy:</strong> IR + microwave combinations mitigated cloud limitations and strengthened coastal-to-basin-scale products.</li>
+  </ul>
+
+  <h3>Reference altimetry continuity (Jason series) and the maturation of sea level records</h3>
+  <p>
+    Precision radar altimetry advanced through deliberate mission succession, enabling a continuous, cross-mission
+    record of sea surface height variability used to quantify mesoscale circulation, basin-scale variability,
+    and global mean sea level change. The early-2000s transition to follow-on reference missions emphasized stable
+    orbit determination, consistent geophysical corrections, and overlap strategies that allow time-series splicing
+    without introducing artificial trends.
+  </p>
+
+  <h3>European multi-instrument platforms: Envisat and the “multi-parameter” approach</h3>
+  <p>
+    ESA’s Envisat exemplified an integrated payload philosophy: ocean color, SST-capable radiometry, radar altimetry,
+    and radar imaging were brought together on a single platform. This multi-instrument configuration supported
+    cross-variable interpretation (e.g., relating winds and waves to surface roughness, or linking optical signals
+    to physical context) while also reinforcing continuity from earlier European remote sensing lines.
+  </p>
+
+  <h3>Operational scatterometry expands: routine vector winds for marine and climate applications</h3>
+  <p>
+    In the mid-2000s, operational C-band scatterometry strengthened global wind observing through systems such as
+    MetOp/ASCAT. Reliable wind vectors supported both applied marine services and scientific analysis, and they
+    became a routine assimilation input for weather–ocean coupled forecasting and reanalysis.
+  </p>
+
+  <h3>From sea level “height” to sea level “budget”: gravimetry enters mainstream ocean monitoring</h3>
+  <p>
+    Although not an ocean-surface imager, satellite gravimetry (GRACE) transformed the sea level budget problem by
+    enabling large-scale estimates of time-varying ocean mass. Together with altimetry and in-situ hydrography,
+    gravimetry helped formalize the decomposition of sea level into mass and steric components—an important step
+    for closing global and regional budgets.
+  </p>
+
+  <h3>Sea surface salinity becomes a satellite variable (SMOS)</h3>
+  <p>
+    The late-2000s also established the feasibility of satellite sea surface salinity via L-band radiometry.
+    This was a conceptual expansion of satellite oceanography: from temperature, color, winds, and SSH toward
+    direct constraints on the ocean freshwater cycle and upper-ocean density forcing. SMOS served as a key milestone
+    by demonstrating global salinity retrieval at climate scales.
+  </p>
+
+  <div class="section-title" style="margin-top:16px;">
+    <h2>Representative missions and sensors</h2>
+    <span>Selected examples (not exhaustive)</span>
+  </div>
+
+  <div class="table-wrap" role="region" aria-label="Representative missions during 2000–2010">
+    <table class="course">
+      <caption>Representative satellite missions shaping ocean remote sensing in 2000–2010</caption>
+      <thead>
+        <tr>
+          <th>Mission (launch)</th>
+          <th>Key sensor class</th>
+          <th>Primary ocean variables</th>
+          <th>Development significance</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="Mission (launch)">Terra (1999; MODIS operations from 2000)</td>
+          <td data-label="Key sensor class">Multi-spectral VIS/IR radiometry</td>
+          <td data-label="Primary ocean variables">Ocean color; IR SST</td>
+          <td data-label="Development significance">EOS-era calibration discipline and sustained global products</td>
+        </tr>
+        <tr>
+          <td data-label="Mission (launch)">Aqua (2002)</td>
+          <td data-label="Key sensor class">Multi-spectral radiometry + passive microwave (e.g., AMSR-E)</td>
+          <td data-label="Primary ocean variables">Ocean color; SST; winds/ice (microwave)</td>
+          <td data-label="Development significance">Improved temporal sampling and multi-sensor SST capability</td>
+        </tr>
+        <tr>
+          <td data-label="Mission (launch)">Jason-1 (2001)</td>
+          <td data-label="Key sensor class">Radar altimetry</td>
+          <td data-label="Primary ocean variables">SSH; waves; wind speed</td>
+          <td data-label="Development significance">Reference altimetry succession supporting climate-grade sea level records</td>
+        </tr>
+        <tr>
+          <td data-label="Mission (launch)">OSTM/Jason-2 (2008)</td>
+          <td data-label="Key sensor class">Radar altimetry (reference mission)</td>
+          <td data-label="Primary ocean variables">SSH; wave height; wind-related backscatter</td>
+          <td data-label="Development significance">Strengthened continuity and operational use of precision altimetry</td>
+        </tr>
+        <tr>
+          <td data-label="Mission (launch)">Envisat (2002)</td>
+          <td data-label="Key sensor class">Multi-instrument platform (optical + radar)</td>
+          <td data-label="Primary ocean variables">Ocean color; SST-capable radiometry; SSH; SAR-based surface structure</td>
+          <td data-label="Development significance">European multi-parameter ocean observing on a single platform</td>
+        </tr>
+        <tr>
+          <td data-label="Mission (launch)">MetOp-A (2006)</td>
+          <td data-label="Key sensor class">Scatterometry (ASCAT)</td>
+          <td data-label="Primary ocean variables">Vector winds (and related air–sea forcing fields)</td>
+          <td data-label="Development significance">Operational wind continuity and routine assimilation pathways</td>
+        </tr>
+        <tr>
+          <td data-label="Mission (launch)">SMOS (2009)</td>
+          <td data-label="Key sensor class">L-band passive microwave radiometry</td>
+          <td data-label="Primary ocean variables">Sea surface salinity (SSS)</td>
+          <td data-label="Development significance">Established salinity as a practical satellite geophysical target</td>
+        </tr>
+        <tr>
+          <td data-label="Mission (launch)">GRACE (2002)</td>
+          <td data-label="Key sensor class">Satellite gravimetry</td>
+          <td data-label="Primary ocean variables">Ocean mass change (sea level budget component)</td>
+          <td data-label="Development significance">Enabled mass/steric decomposition and improved sea level budget closure</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="callout" style="margin-top:12px;">
+    <strong>Bridge to the 2010s.</strong> By 2010, the core “pillars” of satellite oceanography—SST, ocean color, winds,
+    and SSH—were supported by continuity-oriented mission planning, and salinity had emerged as the next frontier.
+    The 2010s then accelerated the transition from missions to <em>constellations</em> and <em>services</em>.
+  </p>
+
+</section>
+
+
+<section id="s1-4-2010-2020" class="panel" style="margin-top:14px;">
+  <div class="section-title">
+    <h2>2010–2020, Salinity mission maturity</h2>
+    <span>Constellations, salinity maturity, Copernicus operations, and next-generation reference altimetry</span>
+  </div>
+
+  <p>
+    The 2010–2020 decade is characterized by the operationalization of satellite oceanography through
+    <strong>constellations</strong> (particularly Copernicus Sentinels and U.S. operational polar systems), expanded
+    <strong>open-data distribution</strong>, and strengthened continuity planning for long climate records.
+    Scientifically, the decade consolidated the core ocean variables (SST, winds, SSH, ocean color) while also
+    maturing satellite sea surface salinity into a multi-mission observing capability.
+  </p>
+
+  <p class="callout">
+    <strong>Decadal theme.</strong> Satellite oceanography increasingly behaved like a <em>service</em>:
+    continuity, latency, and cross-mission consistency became as important as single-mission innovation.
+  </p>
+
+  <h3>Sea surface salinity maturity: from single-mission demonstrations to a multi-mission capability</h3>
+  <p>
+    Building on SMOS (launched in 2009), the 2010s established a practical, multi-mission satellite salinity
+    capability. Aquarius/SAC-D was designed with the primary objective of sea surface salinity observation, and
+    SMAP extended L-band radiometry into the operational era with widely distributed data products. Together,
+    these missions strengthened constraints on the ocean freshwater cycle and upper-ocean density forcing at
+    basin-to-global scales.
+  </p>
+  <ul>
+    <li><strong>Measurement class:</strong> L-band passive microwave radiometry (with geophysical corrections for surface roughness and temperature effects).</li>
+    <li><strong>Scientific contribution:</strong> new observing constraints on surface freshwater patterns and variability that are difficult to sample in situ at global scales.</li>
+  </ul>
+
+  <h3>Copernicus constellation: routine SAR, ocean color, SST, and operational altimetry</h3>
+  <p>
+    The Copernicus Sentinel missions transformed access and revisit for ocean-relevant observations. Sentinel-1
+    provided C-band SAR imagery day/night and in most weather, supporting sea ice, surface roughness mapping, and
+    marine monitoring. Sentinel-3 combined dedicated ocean color (OLCI), SST radiometry (SLSTR), and radar altimetry
+    capabilities to support multi-parameter ocean products with operational continuity.
+  </p>
+
+  <h3>Radiometry continuity beyond MODIS: VIIRS and next-generation operational polar orbiters</h3>
+  <p>
+    As MODIS instruments aged, VIIRS became the central “moderate-resolution” imaging radiometer for sustained,
+    operational global coverage. VIIRS on Suomi NPP and NOAA-20 maintained continuity for a broad suite of land,
+    atmosphere, cryosphere, and ocean products—supporting SST, ocean color–related applications, and hazards
+    monitoring—while enabling overlap for cross-calibration and continuity assessments.
+  </p>
+
+  <h3>Reference altimetry continuity: Jason-3 and the Sentinel-6 era</h3>
+  <p>
+    Precision sea level observing continued through the Jason series, culminating in a transition to
+    Copernicus Sentinel-6 as the next radar altimetry reference mission. This continuity is central to detecting
+    long-term sea level change while also supporting routine mapping of ocean variability.
+  </p>
+
+  <h3>Operational wind continuity: MetOp follow-ons and sustained scatterometry</h3>
+  <p>
+    Scatterometer winds remained a foundational air–sea forcing dataset. Follow-on MetOp spacecraft maintained the
+    operational wind record through the decade, reinforcing continuity for both marine services and climate analysis.
+  </p>
+
+  <div class="section-title" style="margin-top:16px;">
+    <h2>Representative missions and sensors</h2>
+    <span>Selected examples (not exhaustive)</span>
+  </div>
+
+  <div class="table-wrap" role="region" aria-label="Representative missions during 2010–2020">
+    <table class="course">
+      <caption>Representative satellite missions shaping ocean remote sensing in 2010–2020</caption>
+      <thead>
+        <tr>
+          <th>Mission (launch)</th>
+          <th>Key sensor class</th>
+          <th>Primary ocean variables</th>
+          <th>Development significance</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="Mission (launch)">Aquarius/SAC-D (2011)</td>
+          <td data-label="Key sensor class">L-band radiometry (salinity-focused mission)</td>
+          <td data-label="Primary ocean variables">Sea surface salinity (SSS)</td>
+          <td data-label="Development significance">First mission with primary goal of global SSS measurement</td>
+        </tr>
+        <tr>
+          <td data-label="Mission (launch)">SMAP (2015)</td>
+          <td data-label="Key sensor class">L-band radiometry</td>
+          <td data-label="Primary ocean variables">Sea surface salinity (SSS) products; related surface fields</td>
+          <td data-label="Development significance">Operational-era salinity products and community reprocessing pipelines</td>
+        </tr>
+        <tr>
+          <td data-label="Mission (launch)">Suomi NPP (2011)</td>
+          <td data-label="Key sensor class">Moderate-resolution VIS/IR radiometry (VIIRS)</td>
+          <td data-label="Primary ocean variables">SST-relevant radiances; ocean/cryosphere monitoring</td>
+          <td data-label="Development significance">Bridge from MODIS/AVHRR heritage toward long-term operational continuity</td>
+        </tr>
+        <tr>
+          <td data-label="Mission (launch)">NOAA-20 / JPSS-1 (2017)</td>
+          <td data-label="Key sensor class">Moderate-resolution VIS/IR radiometry (VIIRS)</td>
+          <td data-label="Primary ocean variables">SST-relevant radiances; ocean/ice/coastal monitoring</td>
+          <td data-label="Development significance">Strengthened operational continuity with overlap for cross-calibration</td>
+        </tr>
+        <tr>
+          <td data-label="Mission (launch)">Sentinel-1A/B (2014/2016)</td>
+          <td data-label="Key sensor class">C-band Synthetic Aperture Radar (SAR)</td>
+          <td data-label="Primary ocean variables">Sea ice; surface roughness structure; marine monitoring</td>
+          <td data-label="Development significance">Routine, open-access SAR for ocean/coastal applications</td>
+        </tr>
+        <tr>
+          <td data-label="Mission (launch)">Sentinel-3A/B (2016/2018)</td>
+          <td data-label="Key sensor class">Ocean color + SST radiometry + altimetry on one platform</td>
+          <td data-label="Primary ocean variables">Ocean color; SST; SSH (and related products)</td>
+          <td data-label="Development significance">Operational multi-parameter ocean observing under Copernicus</td>
+        </tr>
+        <tr>
+          <td data-label="Mission (launch)">MetOp-B/C (2012/2018)</td>
+          <td data-label="Key sensor class">Scatterometry (ASCAT)</td>
+          <td data-label="Primary ocean variables">Vector winds</td>
+          <td data-label="Development significance">Maintained the operational wind vector record across the decade</td>
+        </tr>
+        <tr>
+          <td data-label="Mission (launch)">Jason-3 (2016)</td>
+          <td data-label="Key sensor class">Radar altimetry (reference mission)</td>
+          <td data-label="Primary ocean variables">Sea surface height; wave height; wind speed</td>
+          <td data-label="Development significance">Extended the multi-decadal reference altimetry time series</td>
+        </tr>
+        <tr>
+          <td data-label="Mission (launch)">Sentinel-6 Michael Freilich (2020)</td>
+          <td data-label="Key sensor class">Next-generation radar altimetry (reference mission)</td>
+          <td data-label="Primary ocean variables">Sea surface height (reference record extension)</td>
+          <td data-label="Development significance">Designed to continue the long sea level record into the 2020s</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="callout" style="margin-top:12px;">
+    <strong>Course relevance.</strong> Many “standard” datasets used in modern physical and biogeochemical remote sensing
+    workflows—multi-mission SST, operational winds, reference altimetry, and operational ocean color—derive their
+    institutional structure (continuity planning, reprocessing strategy, latency tiers) from the mission evolution
+    of this decade.
+  </p>
+  
+  
+
+</section>
+
+<!-- Requires: styles-light.css -->
+<section id="s1-4-2020s" class="panel" style="margin-top:14px;">
+  <div class="section-title">
+    <h2>1.4.5 The 2020s: High-resolution observing, continuity missions, and a new development pipeline</h2>
+    <span>Wide-swath altimetry, hyperspectral/diurnal ocean color, renewed SAR capacity, and next-generation microwave</span>
+  </div>
+
+  <p>
+    Satellite oceanography in the 2020s is defined by two parallel advances. First, agencies have doubled down on
+    <em>climate-quality continuity</em> (especially for sea level, SST, winds, and ocean color) by extending reference
+    missions and operational constellations. Second, the decade has introduced a “fine-scale frontier,” where new
+    sensor geometries and richer spectral sampling expand what can be resolved in the upper ocean and coastal zone.
+    The result is an observing system that is simultaneously more stable (for trends) and more capable (for dynamics),
+    while increasingly designed for multi-mission fusion rather than single-sensor interpretation.
+  </p>
+
+  <p class="callout">
+    <strong>2020s signature.</strong> The most important technical shift is moving from “tracks and snapshots” toward
+    <em>surfaces and time series</em>: wide-swath sea surface height mapping (instead of only nadir tracks), hyperspectral
+    ocean color (instead of a limited set of bands), and regional geostationary sampling that resolves diurnal change.
+  </p>
+
+  <h3>1.4.5.1 Selected missions in operation (2020–present)</h3>
+
+  <div class="table-wrap" role="region" aria-label="Selected 2020s missions relevant to satellite oceanography">
+    <table class="course">
+      <caption>Selected 2020s missions relevant to satellite oceanography (status context: January 2026)</caption>
+      <thead>
+        <tr>
+          <th>Mission</th>
+          <th>Launch</th>
+          <th>Core sensor capability</th>
+          <th>Ocean variables and use</th>
+          <th>Why it matters in the 2020s</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="Mission"><strong>Sentinel-6 Michael Freilich (Sentinel-6A)</strong> (NASA/ESA/EUMETSAT/NOAA)</td>
+          <td data-label="Launch">2020</td>
+          <td data-label="Core sensor capability">Reference-class radar altimetry</td>
+          <td data-label="Ocean variables and use">Sea surface height (sea level, circulation, climate variability)</td>
+          <td data-label="Why it matters in the 2020s">Extends the long, stable “reference altimetry” record central to sea-level and large-scale dynamics.</td>
+        </tr>
+
+        <tr>
+          <td data-label="Mission"><strong>Sentinel-6B</strong> (NASA/ESA/EUMETSAT/NOAA)</td>
+          <td data-label="Launch">2025</td>
+          <td data-label="Core sensor capability">Second reference-class altimetry unit for continuity</td>
+          <td data-label="Ocean variables and use">Sea surface height continuity, cross-calibration, long-record stability</td>
+          <td data-label="Why it matters in the 2020s">Strengthens overlap/continuity planning and reduces risk to the climate record.</td>
+        </tr>
+
+        <tr>
+          <td data-label="Mission"><strong>SWOT</strong> (NASA/CNES/CSA/UKSA)</td>
+          <td data-label="Launch">2022</td>
+          <td data-label="Core sensor capability">Wide-swath interferometric altimetry (two-dimensional SSH mapping)</td>
+          <td data-label="Ocean variables and use">Fine-scale sea surface height structure (mesoscale → smaller scales), coastal gradients, internal-tide signatures</td>
+          <td data-label="Why it matters in the 2020s">Shifts altimetry from 1D tracks to 2D swaths, enabling new dynamical questions and better coastal sampling.</td>
+        </tr>
+
+        <tr>
+          <td data-label="Mission"><strong>PACE</strong> (NASA)</td>
+          <td data-label="Launch">2024</td>
+          <td data-label="Core sensor capability">Hyperspectral ocean color + multi-angle polarimetry</td>
+          <td data-label="Ocean variables and use">Phytoplankton/ocean color, improved atmospheric correction, aerosol–ocean coupling</td>
+          <td data-label="Why it matters in the 2020s">Moves from “multispectral chlorophyll” toward more diagnostic bio-optical and atmospheric characterization.</td>
+        </tr>
+
+        <tr>
+          <td data-label="Mission"><strong>GEO-KOMPSAT-2B / GOCI-II</strong> (Korea)</td>
+          <td data-label="Launch">2020</td>
+          <td data-label="Core sensor capability">Geostationary ocean color imaging (high temporal sampling)</td>
+          <td data-label="Ocean variables and use">Coastal ocean color, turbidity/sediment and bloom monitoring, aerosol products; diurnal evolution in a regional domain</td>
+          <td data-label="Why it matters in the 2020s">Operationalizes “diurnal ocean color,” addressing a long-standing limitation of polar-orbiting revisit.</td>
+        </tr>
+
+        <tr>
+          <td data-label="Mission"><strong>Copernicus Sentinel-1C &amp; 1D</strong> (ESA/EU)</td>
+          <td data-label="Launch">2024–2025</td>
+          <td data-label="Core sensor capability">C-band SAR (+ AIS on-board for maritime context)</td>
+          <td data-label="Ocean variables and use">Sea ice, surface roughness signatures (winds/waves/currents proxies), ship/oil-spill context, coastal hazards</td>
+          <td data-label="Why it matters in the 2020s">Restores and strengthens routine, operational SAR capacity after service gaps; improves maritime/ice monitoring.</td>
+        </tr>
+
+        <tr>
+          <td data-label="Mission"><strong>NISAR</strong> (NASA–ISRO)</td>
+          <td data-label="Launch">2025</td>
+          <td data-label="Core sensor capability">L- and S-band SAR (high-resolution, frequent repeat)</td>
+          <td data-label="Ocean variables and use">Primarily land/ice, but highly relevant for cryosphere–ocean coupling (ice sheets, grounding zones, sea-ice dynamics)</td>
+          <td data-label="Why it matters in the 2020s">Major new SAR capability for ice and coastal deformation processes linked to sea-level rise.</td>
+        </tr>
+
+        <tr>
+          <td data-label="Mission"><strong>NOAA-21 (JPSS-2) / VIIRS</strong> (NOAA/NASA)</td>
+          <td data-label="Launch">2022</td>
+          <td data-label="Core sensor capability">Operational visible–IR imaging radiometry</td>
+          <td data-label="Ocean variables and use">Sea surface temperature and ocean color (plus cryosphere/atmosphere products used in coupled analyses)</td>
+          <td data-label="Why it matters in the 2020s">Sustains daily, operational global coverage used for marine services and Earth system monitoring.</td>
+        </tr>
+
+        <tr>
+          <td data-label="Mission"><strong>GOSAT-GW / AMSR3</strong> (JAXA)</td>
+          <td data-label="Launch">2025</td>
+          <td data-label="Core sensor capability">Advanced passive microwave radiometry (expanded channel set)</td>
+          <td data-label="Ocean variables and use">All-weather SST, wind speed proxies, sea ice concentration; improved high-latitude precipitation/snow observing context</td>
+          <td data-label="Why it matters in the 2020s">Extends and expands the AMSR microwave record used heavily in SST/ice applications and air–sea interaction studies.</td>
+        </tr>
+
+        <tr>
+          <td data-label="Mission"><strong>Metop-SG A1 (EPS-SG)</strong> (EUMETSAT/ESA)</td>
+          <td data-label="Launch">2025</td>
+          <td data-label="Core sensor capability">Next-generation polar meteorological payloads feeding coupled ocean–atmosphere products</td>
+          <td data-label="Ocean variables and use">SST/ice/wind-relevant microwave and IR context products supporting operational ocean–atmosphere monitoring</td>
+          <td data-label="Why it matters in the 2020s">Represents the meteorological backbone that many ocean products (and forcing fields) depend on.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>1.4.5.2 Sensor-development trends emphasized in the 2020s</h3>
+  <ul>
+    <li>
+      <strong>Two-dimensional sea surface height mapping:</strong> wide-swath interferometric altimetry expands the observable
+      SSH field beyond nadir tracks, improving access to coastal gradients and fine-scale variability.
+    </li>
+    <li>
+      <strong>More spectral information for ocean color:</strong> hyperspectral imagers and polarimeters aim to improve
+      atmospheric correction and enable more diagnostic bio-optical inference than traditional band-ratio chlorophyll alone.
+    </li>
+    <li>
+      <strong>Temporal densification:</strong> geostationary ocean color (and dense LEO constellations) address aliasing and
+      enable diurnal process studies in coastal seas.
+    </li>
+    <li>
+      <strong>“SAR returns to operations”:</strong> renewed C-band SAR continuity plus new L/S-band systems expands imaging
+      of sea ice, coastal hazards, and roughness structures used as proxies for winds/waves/currents.
+    </li>
+    <li>
+      <strong>All-weather microwave evolution:</strong> new radiometers (and next-generation polar systems) emphasize robust
+      observing in cloudy conditions and at high latitudes, where optical/IR products are often limited.
+    </li>
+  </ul>
+
+  <h3>1.4.5.3 Missions in development and scheduled later in the 2020s</h3>
+
+  <div class="grid" aria-label="Missions in development later in the 2020s">
+    <article class="card">
+      <h3><span class="tag">GEO coastal</span> GLIMR (NASA, planned)</h3>
+      <p>
+        A geostationary, coastal-focused imaging mission concept designed to monitor littoral waters at high temporal
+        resolution—aimed at filling the “diurnal + coastal” gap left by polar-orbiting ocean color systems.
+      </p>
+    </article>
+
+    <article class="card">
+      <h3><span class="tag">Cryosphere–ocean</span> CRISTAL (Copernicus Expansion, planned)</h3>
+      <p>
+        A polar-focused altimetry mission intended to improve sea-ice and snow/ice-sheet topography information, with direct
+        relevance to freshwater fluxes, polar processes, and sea-level attribution.
+      </p>
+    </article>
+
+    <article class="card">
+      <h3><span class="tag">Microwave</span> CIMR (Copernicus Expansion, planned)</h3>
+      <p>
+        A high-latitude imaging microwave radiometer concept aimed at improving all-weather observing of the polar oceans
+        and sea-ice environment (a key limitation area for optical/IR approaches).
+      </p>
+    </article>
+
+    <article class="card">
+      <h3><span class="tag">SAR</span> ROSE-L (Copernicus Expansion, planned)</h3>
+      <p>
+        An L-band SAR mission concept designed to extend radar capability; for oceanography it is most directly relevant
+        through sea-ice and coastal applications and synergy with other radar missions.
+      </p>
+    </article>
+
+    <article class="card">
+      <h3><span class="tag">Formation flying</span> Harmony (ESA Earth Explorer, planned)</h3>
+      <p>
+        A formation-flying InSAR concept designed to fly with Sentinel-1 and enable new measurements of motion (including
+        ocean-surface currents and sea-ice drift), complementing conventional SAR imaging.
+      </p>
+    </article>
+
+    <article class="card">
+      <h3><span class="tag">Operations</span> JPSS follow-on (NOAA, planned)</h3>
+      <p>
+        Planned next launches in the JPSS series maintain operational continuity for global imaging radiometry and derived
+        ocean variables (SST and ocean color among them), supporting marine services and reanalysis/assimilation systems.
+      </p>
+    </article>
+
+    <article class="card">
+      <h3><span class="tag">Operations</span> Metop-SG “B” series (EUMETSAT/ESA, planned)</h3>
+      <p>
+        The companion satellites in the EPS-SG system include core sensors such as a scatterometer and microwave imager,
+        providing essential ocean-surface wind and all-weather context products used throughout satellite oceanography.
+      </p>
+    </article>
+  </div>
+
+  <p class="callout">
+    <strong>Scheduling note.</strong> “Planned” launch windows for expansion missions are programmatic and can shift with
+    procurement, launch-vehicle availability, and system-level risk management. For teaching materials, it is usually best
+    to cite the mission portals (below) and treat dates as targets rather than guarantees.
+  </p>
+
+</section>
+
 
     <!-- ===================================================== -->
     <section id="s1-5" class="panel" style="margin-top:14px;">
@@ -1114,7 +1506,6 @@ footer{
             <strong>Argo float sampling cycle:</strong> repeated profiling and satellite telemetry enable global subsurface coverage
             that complements surface-focused satellite remote sensing.
             Source: Argo Program (UC San Diego).
-            
           </figcaption>
         </figure>
       </div>
@@ -1200,27 +1591,25 @@ footer{
         are historically important because they demonstrated high-resolution ocean imaging from orbit. 
       </p>
 
-
       <h3>1.6.2 Ocean color: chlorophyll and bio-optical structure</h3>
       <p>
         Ocean color sensors estimate the spectral signature of water-leaving radiance after accounting for atmospheric
         contributions. Early sensors such as CZCS established feasibility, and later missions such as SeaWiFS provided
         improved global coverage and calibration stability. 
-
-        <div class="panel" style="margin-top:10px;">
-          <figure class="media">
-            <img
-              src="images/seawifs_bering_sea.png"
-              alt="Bering Sea ocean color image from SeaWiFS showing chlorophyll distribution"
-              loading="lazy"
-            />
-            <figcaption>
-              <strong>SeaWiFS ocean color examples:</strong> Bering Sea ocean color image showing phytoplankton (coccolithophores) distribution.
-              
-            </figcaption>
-          </figure>
-
       </p>
+
+      <div class="panel" style="margin-top:10px;">
+        <figure class="media">
+          <img
+            src="images/seawifs_bering_sea.png"
+            alt="Bering Sea ocean color image from SeaWiFS showing chlorophyll distribution"
+            loading="lazy"
+          />
+          <figcaption>
+            <strong>SeaWiFS ocean color examples:</strong> Bering Sea ocean color image showing phytoplankton (coccolithophores) distribution.
+          </figcaption>
+        </figure>
+      </div>
 
       <h3>1.6.3 Scatterometry: vector winds over the ocean</h3>
       <p>
@@ -1239,7 +1628,6 @@ footer{
           <figcaption>
             <strong>Scatterometer wind example:</strong> QuikSCAT/SeaWinds depiction of wind speed and vectors around Hurricane Dora.
             Credit: NASA/JPL-Caltech (Photojournal).
-            
           </figcaption>
         </figure>
       </div>
@@ -1271,7 +1659,6 @@ footer{
             <figcaption>
               <strong>SWOT swath geometry:</strong> two interferometric swaths plus a nadir track.
               Source: NASA SWOT mission resources.
-              
             </figcaption>
           </figure>
         </div>
@@ -1286,7 +1673,6 @@ footer{
             <figcaption>
               <strong>SWOT data example:</strong> global map of sea surface height RMS from KaRIn measurements (illustrative product).
               Credit: NASA/JPL-Caltech via NASA Earthdata feature article.
-              
             </figcaption>
           </figure>
         </div>
@@ -1302,15 +1688,11 @@ footer{
           <figcaption>
             <strong>SWOT payload overview:</strong> KaRIn, nadir altimeter, microwave radiometer, and orbit/positioning subsystems.
             Source: NASA SWOT mission resources.
-            
           </figcaption>
         </figure>
       </div>
 
-      <p class="note">
-        Note: The examples above are illustrative and emphasize heritage and measurement principles; operational data
-        products typically include additional corrections, uncertainty estimates, and standardized metadata.
-      </p>
+      
     </section>
 
     <!-- ===================================================== -->
@@ -1340,114 +1722,261 @@ footer{
         <strong>Practical implication for the course.</strong> Understanding this history clarifies why modern datasets
         are structured the way they are (e.g., retrieval algorithms, corrections, validation strategy, and mission
         continuity planning) and why multi-sensor thinking is central to interpreting the ocean from space.
+
+        <p>Remeber, the existance of a mission depends on a -often small- group of people's vision and dedication. You can be one of them. </p>
       </div>
     </section>
 
     <!-- ===================================================== -->
     <section id="refs" class="panel" style="margin-top:14px;">
-      <div class="section-title">
-        <h2>References and Figure Sources</h2>
-        <span>Texts, mission resources, and image credits</span>
-      </div>
 
-      <h3>Core textbooks and monographs</h3>
-      <ol class="ref-list">
-        <li>
-          Robinson, I. S. (2004). <em>Measuring the Oceans from Space: The Principles and Methods of Satellite Oceanography</em>.
-          Springer.
-        </li>
-        <li>
-          Fu, L.-L., &amp; Cazenave, A. (Eds.). (2001). <em>Satellite Altimetry and Earth Sciences</em>. Academic Press.
-        </li>
-        <li>
-          Martin, S. (2014). <em>An Introduction to Ocean Remote Sensing</em> (2nd ed.). Cambridge University Press.
-        </li>
-      </ol>
+<section id="sources">
+  <div class="section-title">
+    <h2>References and Figure Sources</h2>
+    <span>Texts, mission resources, and instrument documentation for the “Introduction to Sensors” chapter</span>
+  </div>
 
-      <div class="hr"></div>
+  <h3>Core textbooks and monographs</h3>
+  <ol class="ref-list">
+    <li>
+      Robinson, I. S. (2004). <em>Measuring the Oceans from Space: The Principles and Methods of Satellite Oceanography</em>.
+      Springer.
+    </li>
+    <li>
+      Martin, S. (2014). <em>An Introduction to Ocean Remote Sensing</em> (2nd ed.).
+      Cambridge University Press.
+    </li>
+    <li>
+      Ulaby, F. T., Moore, R. K., &amp; Fung, A. K. (1981–1986). <em>Microwave Remote Sensing: Active and Passive</em> (Vols. 1–3).
+      NASA NTRS entries:
+      <a class="link" href="https://ntrs.nasa.gov/citations/19820039342">Volume 1 (fundamentals &amp; radiometry)</a>;
+      <a class="link" href="https://ntrs.nasa.gov/citations/19860041708">Volume 3 (theory to applications)</a>.
+    </li>
+    <li>
+      Jackson, C. R., &amp; Apel, J. R. (2004). <em>Synthetic Aperture Radar Marine User’s Manual</em>.
+      Public-domain PDF:
+      <a class="link" href="https://repository.library.noaa.gov/view/noaa/1118/noaa_1118_DS1.pdf">NOAA Central Library download</a>.
+    </li>
+  </ol>
 
-      <h3>Mission and data portals (used for fact checking and figure sourcing)</h3>
-      <ol class="ref-list">
-        <li>
-          NASA History — Sputnik and the dawn of the Space Age:
-          <a class="link" href="https://www.nasa.gov/history/sputnik-and-the-dawn-of-the-space-age/">NASA page</a>.
-          
-        </li>
-        <li>
-          NASA/JPL — Explorer-1 resources and mission context:
-          <a class="link" href="https://www.jpl.nasa.gov/images/pia24810-explorer-1-infographic/">JPL image page</a>.
-          
-        </li>
-        <li>
-          NASA History — TIROS-1 overview:
-          <a class="link" href="https://www.nasa.gov/history/tiros-1/">NASA page</a>.
-          
-        </li>
-        <li>
-          NASA/JPL — Seasat mission overview and media:
-          <a class="link" href="https://www.jpl.nasa.gov/missions/seasat/">JPL mission page</a>.
-          
-        </li>
-        <li>
-          NASA Earthdata — CZCS instrument overview and classic scenes:
-          <a class="link" href="https://www.earthdata.nasa.gov/data/instruments/czcs">Earthdata CZCS page</a>.
-          
-        </li>
-        <li>
-          NASA Ocean Biology / SeaWiFS mission archive:
-          <a class="link" href="https://www.earthdata.nasa.gov/data/instruments/seawifs">Earthdata SeaWiFS page</a>.
-          
-        </li>
-        <li>
-          PO.DAAC — TOPEX/Poseidon mission information:
-          <a class="link" href="https://podaac.jpl.nasa.gov/TOPEX-POSEIDON">PO.DAAC TOPEX/Poseidon page</a>.
-          
-        </li>
-        <li>
-          ESA — SMOS mission overview (sea surface salinity):
-          <a class="link" href="https://earth.esa.int/eogateway/missions/smos">ESA Earth Online SMOS</a>.
-          
-        </li>
-        <li>
-          NASA Earthdata — SWOT mission data release and KaRIn measurement description:
-          <a class="link" href="https://www.earthdata.nasa.gov/news/feature-articles/nasas-surface-water-ocean-topography-swot-mission-data-release">Earthdata feature article</a>.
-          
-        </li>
-        <li>
-          NASA SWOT mission resources (swath and payload diagrams):
-          <a class="link" href="https://swot.jpl.nasa.gov/resources/">SWOT resources</a>.
-          
-        </li>
-        <li>
-          Argo Program (UC San Diego) — program overview and profile rates:
-          <a class="link" href="https://argo.ucsd.edu/about/">Argo “About” page</a>.
-          
-        </li>
-        <li>
-          ESA Multimedia — Sentinel-3 OLCI scanning illustration:
-          <a class="link" href="https://www.esa.int/ESA_Multimedia/Images/2018/03/Sentinel-3_scans_Earth_s_colour">ESA image page</a>.
-          
-        </li>
-        <li>
-          NOAA CoastWatch — Sentinel-3 overview and launch dates:
-          <a class="link" href="https://coastwatch.noaa.gov/cwn/products/ocean-color-near-real-time-olci-sentinel-3a-and-3b-global-coverage.html">CoastWatch product page</a>.
-          
-        </li>
-        <li>
-          ESA — Sentinel-6 mission facts and launch information:
-          <a class="link" href="https://www.esa.int/Applications/Observing_the_Earth/Copernicus/Sentinel-6">ESA Sentinel-6 page</a>.
-          
-        </li>
-      </ol>
+  <div class="hr"></div>
 
-      <div class="hr"></div>
+  <h3>Mission and instrument pages (organized high-frequency → low-frequency)</h3>
+  <ol class="ref-list">
+    <li>
+      Ocean color (UV–VIS–NIR; passive reflectance) — mission and instrument context:
+      <a class="link" href="https://pace.oceansciences.org/">NASA PACE mission page</a>;
+      <a class="link" href="https://www.earthdata.nasa.gov/data/instruments/oci">NASA Earthdata: PACE Ocean Color Instrument (OCI)</a>;
+      <a class="link" href="https://oceancolor.gsfc.nasa.gov/">NASA Ocean Color portal</a>;
+      <a class="link" href="https://www.earthdata.nasa.gov/topics/ocean/ocean-color">NASA Earthdata: Ocean Color topic</a>.
+    </li>
 
-      <p class="note">
-        Image use note: Figures are embedded via direct links to agency and mission archives. Users should respect the
-        source site’s stated image policy and credit requirements when reusing figures in course materials or
-        publications.
+    <li>
+      Multispectral ocean color heritage/continuity (broadband VIS–IR radiometry):
+      <a class="link" href="https://www.earthdata.nasa.gov/data/instruments/modis">NASA Earthdata: MODIS instrument</a>;
+      <a class="link" href="https://earth.gsfc.nasa.gov/ocean/missions/noaa-21-viirs">NASA GSFC: NOAA-21 VIIRS (ocean)</a>;
+      <a class="link" href="https://ncc.nesdis.noaa.gov/VIIRS/">NOAA/NESDIS: VIIRS</a>.
+    </li>
+
+    <li>
+      Copernicus ocean color (VIS–NIR) — OLCI instrument characteristics and guides:
+      <a class="link" href="https://ladsweb.modaps.eosdis.nasa.gov/missions-and-measurements/olci/">NASA LAADS: Sentinel-3 OLCI</a>;
+      <a class="link" href="https://user.eumetsat.int/resources/user-guides/sentinel-3-olci-level-1-data-guide">EUMETSAT: Sentinel-3 OLCI L1 data guide</a>;
+      <a class="link" href="https://earth.esa.int/eogateway/documents/20142/1564943/Sentinel-3-OLCI-Marine-User-Handbook.pdf">ESA: Sentinel-3 OLCI Marine User Handbook (PDF)</a>.
+    </li>
+
+    <li>
+      Geostationary ocean color (high-temporal sampling; VIS–NIR) — GOCI-II and observing modes:
+      <a class="link" href="https://space.oscar.wmo.int/instruments/view/goci_ii">WMO OSCAR/Space: GOCI-II</a>;
+      <a class="link" href="https://nosc.go.kr/eng/main.do">Korea NOSC: GK-2B / GOCI-II portal</a>.
+    </li>
+
+    <li>
+      Thermal infrared SST (passive emission in IR window; cloud-limited):
+      <a class="link" href="https://www.earthdata.nasa.gov/data/instruments/avhrr">NASA Earthdata: AVHRR instrument</a>;
+      <a class="link" href="https://www.ncei.noaa.gov/products/avhrr-pathfinder-sst">NOAA NCEI: AVHRR Pathfinder SST (CDR)</a>.
+    </li>
+
+    <li>
+      Passive microwave radiometry (SST/wind/ice; all-weather tendencies; cm–mm wavelengths):
+      <a class="link" href="https://earth.esa.int/eogateway/missions/smos/description">ESA: SMOS mission description (L-band radiometry; SSS)</a>;
+      <a class="link" href="https://www.earthdata.nasa.gov/data/platforms/space-based-platforms/aquarius-sac-d">NASA Earthdata: Aquarius/SAC-D platform (SSS)</a>;
+      <a class="link" href="https://global.jaxa.jp/press/2025/09/20250905-1_e.html">JAXA press release: AMSR3 early observation results (GOSAT-GW)</a>;
+      <a class="link" href="https://www.esa.int/Applications/Observing_the_Earth/Copernicus/CIMR">ESA: CIMR (Copernicus Imaging Microwave Radiometer)</a>.
+    </li>
+
+    <li>
+      Ku/C-band scatterometry (active radar; Bragg-wave-scale roughness → winds):
+      <a class="link" href="https://www.remss.com/missions/ascat/">Remote Sensing Systems (RSS): ASCAT winds</a>;
+      <a class="link" href="https://podaac.jpl.nasa.gov/QuikSCAT">NASA PO.DAAC: QuikSCAT / SeaWinds</a>;
+      <a class="link" href="https://www.ospo.noaa.gov/products/atmosphere/ascat/">NOAA OSPO: ASCAT processing (GMF context)</a>.
+    </li>
+
+    <li>
+      SAR (Synthetic Aperture Radar; active microwave imaging; Bragg scattering &amp; wave/current modulation):
+      <a class="link" href="https://www.esa.int/Applications/Observing_the_Earth/Copernicus/Sentinel-1">ESA: Sentinel-1 mission</a>;
+      <a class="link" href="https://science.nasa.gov/mission/nisar/mission-overview/">NASA Science: NISAR mission overview</a>;
+      <a class="link" href="https://www.earthdata.nasa.gov/learn/earth-observation-data-basics/sar">NASA Earthdata: SAR data basics &amp; references</a>.
+    </li>
+
+    <li>
+      Nadir radar altimetry (active microwave ranging; SSH/SWH/σ0; reference missions):
+      <a class="link" href="https://www.jpl.nasa.gov/missions/sentinel-6/">NASA/JPL: Sentinel-6 mission page</a>;
+      <a class="link" href="https://science.nasa.gov/mission/sentinel-6b/">NASA Science: Sentinel-6B mission page</a>;
+      <a class="link" href="https://sealevel.nasa.gov/missions/jason-3">NASA Sea Level Change Portal: Jason-3</a>;
+      <a class="link" href="https://podaac.jpl.nasa.gov/TOPEX-POSEIDON">NASA PO.DAAC: TOPEX/Poseidon mission page</a>.
+    </li>
+
+    <li>
+      Wide-swath interferometric altimetry (2-D SSH mapping; Ka-band radar interferometry):
+      <a class="link" href="https://www.earthdata.nasa.gov/news/feature-articles/nasas-surface-water-ocean-topography-swot-mission-data-release">NASA Earthdata SWOT data release feature</a>;
+      <a class="link" href="https://www.aviso.altimetry.fr/en/missions/current-missions/swot.html">AVISO: SWOT mission page</a>;
+      <a class="link" href="https://swot.jpl.nasa.gov/data/">SWOT data portal (JPL)</a>.
+    </li>
+
+    <li>
+      Spaceborne lidar altimetry (active optical; photon-counting sea surface/ice elevation):
+      <a class="link" href="https://science.nasa.gov/mission/icesat-2/">NASA Science: ICESat-2 mission</a>;
+      <a class="link" href="https://icesat-2.gsfc.nasa.gov/mission">ICESat-2 GSFC: mission overview</a>.
+    </li>
+
+    <li>
+      Gravity missions (mass redistribution; ocean bottom pressure/large-scale signals; non-EM geodesy):
+      <a class="link" href="https://grace.jpl.nasa.gov/mission/grace/">NASA/JPL: GRACE mission</a>;
+      <a class="link" href="https://grace.jpl.nasa.gov/mission/grace-fo/">NASA/JPL: GRACE-FO mission</a>.
+    </li>
+
+    <li>
+      GNSS-Reflectometry (signals of opportunity at L-band; bistatic “active-like” sensing for winds/sea state):
+      <a class="link" href="https://podaac.jpl.nasa.gov/CYGNSS">NASA PO.DAAC: CYGNSS mission page</a>;
+      <a class="link" href="https://www.earthdata.nasa.gov/data/platforms/space-based-platforms/cygnss">NASA Earthdata: CYGNSS platform overview</a>;
+      <a class="link" href="https://agupubs.onlinelibrary.wiley.com/doi/full/10.1002/2015GL064204">AGU: First GNSS-R ocean winds results (TDS-1)</a>.
+    </li>
+
+    <li>
+      Program continuity / “what’s flying now” context (for operational ocean products continuity):
+      <a class="link" href="https://www.nesdis.noaa.gov/our-satellites/currently-flying/joint-polar-satellite-system">NOAA NESDIS: JPSS currently flying</a>;
+      <a class="link" href="https://www.eumetsat.int/our-satellites/metop-series">EUMETSAT: Metop series</a>;
+      <a class="link" href="https://www.copernicus.eu/en/news/observer-advancing-earth-observation-copernicus-sentinel-expansion-missions">Copernicus: Sentinel Expansion missions overview</a>.
+    </li>
+  </ol>
+
+  <div class="hr"></div>
+
+  <div class="section-title">
+    <h2>Sources</h2>
+    <span>Quick links (by sensor family)</span>
+  </div>
+
+  <div class="list" aria-label="Sources for sensor overview chapter">
+    <div class="item">
+      <div class="top"><strong>Ocean color (UV–VIS–NIR; passive)</strong></div>
+      <p>
+        <a class="link" href="https://pace.oceansciences.org/">PACE mission</a> ·
+        <a class="link" href="https://www.earthdata.nasa.gov/data/instruments/oci">PACE OCI (Earthdata)</a> ·
+        <a class="link" href="https://oceancolor.gsfc.nasa.gov/">NASA Ocean Color</a>
       </p>
-    </section>
+    </div>
+
+    <div class="item">
+      <div class="top"><strong>Multispectral imagers used for ocean color + SST (passive)</strong></div>
+      <p>
+        <a class="link" href="https://www.earthdata.nasa.gov/data/instruments/modis">MODIS (Earthdata)</a> ·
+        <a class="link" href="https://earth.gsfc.nasa.gov/ocean/missions/noaa-21-viirs">NOAA-21 VIIRS (NASA GSFC)</a>
+      </p>
+    </div>
+
+    <div class="item">
+      <div class="top"><strong>Sentinel-3 OLCI (passive VIS–NIR) + guides</strong></div>
+      <p>
+        <a class="link" href="https://ladsweb.modaps.eosdis.nasa.gov/missions-and-measurements/olci/">OLCI overview (LAADS)</a> ·
+        <a class="link" href="https://user.eumetsat.int/resources/user-guides/sentinel-3-olci-level-1-data-guide">OLCI L1 data guide (EUMETSAT)</a>
+      </p>
+    </div>
+
+    <div class="item">
+      <div class="top"><strong>Thermal IR SST (passive)</strong></div>
+      <p>
+        <a class="link" href="https://www.earthdata.nasa.gov/data/instruments/avhrr">AVHRR (Earthdata)</a> ·
+        <a class="link" href="https://www.ncei.noaa.gov/products/avhrr-pathfinder-sst">AVHRR Pathfinder SST (NOAA NCEI)</a>
+      </p>
+    </div>
+
+    <div class="item">
+      <div class="top"><strong>Passive microwave radiometry (SST/SSS/wind/ice)</strong></div>
+      <p>
+        <a class="link" href="https://earth.esa.int/eogateway/missions/smos/description">SMOS (ESA)</a> ·
+        <a class="link" href="https://www.earthdata.nasa.gov/data/platforms/space-based-platforms/aquarius-sac-d">Aquarius/SAC-D (Earthdata)</a> ·
+        <a class="link" href="https://www.esa.int/Applications/Observing_the_Earth/Copernicus/CIMR">CIMR (ESA)</a>
+      </p>
+    </div>
+
+    <div class="item">
+      <div class="top"><strong>Scatterometry (active microwave; Bragg-wave-scale roughness → winds)</strong></div>
+      <p>
+        <a class="link" href="https://www.remss.com/missions/ascat/">ASCAT winds (RSS)</a> ·
+        <a class="link" href="https://podaac.jpl.nasa.gov/QuikSCAT">QuikSCAT (PO.DAAC)</a>
+      </p>
+    </div>
+
+    <div class="item">
+      <div class="top"><strong>SAR (active microwave imaging; waves/currents/internal waves)</strong></div>
+      <p>
+        <a class="link" href="https://www.esa.int/Applications/Observing_the_Earth/Copernicus/Sentinel-1">Sentinel-1 (ESA)</a> ·
+        <a class="link" href="https://science.nasa.gov/mission/nisar/mission-overview/">NISAR (NASA Science)</a> ·
+        <a class="link" href="https://repository.library.noaa.gov/view/noaa/1118/noaa_1118_DS1.pdf">SAR Marine User’s Manual (NOAA PDF)</a>
+      </p>
+    </div>
+
+    <div class="item">
+      <div class="top"><strong>Nadir altimetry (active microwave ranging; SSH/SWH/σ0)</strong></div>
+      <p>
+        <a class="link" href="https://science.nasa.gov/mission/sentinel-6b/">Sentinel-6B (NASA Science)</a> ·
+        <a class="link" href="https://sealevel.nasa.gov/missions/jason-3">Jason-3 (NASA Sea Level)</a>
+      </p>
+    </div>
+
+    <div class="item">
+      <div class="top"><strong>Wide-swath altimetry (Ka-band interferometry; 2-D SSH)</strong></div>
+      <p>
+        <a class="link" href="https://www.aviso.altimetry.fr/en/missions/current-missions/swot.html">SWOT (AVISO)</a> ·
+        <a class="link" href="https://swot.jpl.nasa.gov/data/">SWOT data portal (JPL)</a>
+      </p>
+    </div>
+
+    <div class="item">
+      <div class="top"><strong>Lidar altimetry (active optical; photon-counting elevation)</strong></div>
+      <p>
+        <a class="link" href="https://science.nasa.gov/mission/icesat-2/">ICESat-2 (NASA Science)</a>
+      </p>
+    </div>
+
+    <div class="item">
+      <div class="top"><strong>Gravity (mass redistribution; large-scale ocean signals)</strong></div>
+      <p>
+        <a class="link" href="https://grace.jpl.nasa.gov/mission/grace/">GRACE (NASA/JPL)</a> ·
+        <a class="link" href="https://grace.jpl.nasa.gov/mission/grace-fo/">GRACE-FO (NASA/JPL)</a>
+      </p>
+    </div>
+
+    <div class="item">
+      <div class="top"><strong>GNSS-Reflectometry (signals of opportunity; bistatic “active-like”)</strong></div>
+      <p>
+        <a class="link" href="https://podaac.jpl.nasa.gov/CYGNSS">CYGNSS (PO.DAAC)</a> ·
+        <a class="link" href="https://www.earthdata.nasa.gov/data/platforms/space-based-platforms/cygnss">CYGNSS (Earthdata)</a>
+      </p>
+    </div>
+  </div>
+
+  <p class="note">
+    Image and figure use note: If you embed figures directly from agency/mission archives, follow each source site’s
+    stated image policy and attribution requirements.
+  </p>
+</section>
+
+
+  <div class="section-title" style="margin-top:16px;">
+
 
     <footer>
       <div class="foot-badge">OCNG 489/689 • Studying the Oceans from Space, Chapter 1</div>
