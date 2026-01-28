@@ -1,0 +1,1154 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>module — Introduction to Satellite Oceanography Sensors</title>
+
+  <!-- Use the provided stylesheet -->
+  <link rel="stylesheet" href="styles-light.css" />
+
+  <style>
+    /* Small layout helpers (kept minimal; main styling is from styles-light.css) */
+    body{ padding-top: 64px; }
+    .toc ol{ margin: 0; padding-left: 18px; }
+    .toc li{ margin: 6px 0; }
+    code, pre, .mono{ font-family: var(--mono); }
+    code{ background: var(--card); padding: 2px 6px; border-radius: 8px; border: 1px solid var(--line); }
+    pre{
+      background: var(--card2);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      overflow-x: auto;
+      line-height: 1.35;
+    }
+    .equation{ font-family: var(--mono); background: var(--card); padding: 2px 6px; border-radius: 8px; border: 1px solid var(--line); }
+    .two-col{ display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: start; }
+    .three-col{ display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; align-items: stretch; }
+    @media (max-width: 980px){ .two-col, .three-col{ grid-template-columns: 1fr; } }
+    .kicker{ color: var(--muted); font-size: .92rem; margin: 0 0 10px; }
+    .tight > p{ margin-top: 8px; margin-bottom: 8px; }
+    .hr{ height: 1px; background: var(--line); margin: 14px 0; }
+    .pill{
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--card);
+      font-size: .84rem;
+      color: color-mix(in oklab, var(--text) 88%, transparent);
+      white-space: nowrap;
+    }
+    .pill strong{ font-weight: 850; }
+    .small{ font-size: .92rem; color: color-mix(in oklab, var(--text) 88%, transparent); }
+    .muted{ color: var(--muted); }
+  </style>
+</head>
+
+<body data-theme="light">
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <a href="#main">Remote Sensing Oceanography Sensors</a>
+        <small>module: Sensor overview (Passive vs Active; high → low frequency)</small>
+      </div>
+
+      <button class="menu-btn" id="menuBtn" aria-controls="nav" aria-expanded="false">Menu</button>
+
+      <nav class="nav" id="nav">
+        <a href="#roadmap">Roadmap</a>
+        <a href="#em">EM framework</a>
+        <a href="#passive">Passive</a>
+        <a href="#active">Active</a>
+        <a href="#summary">Spectrum summary</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="container">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="panel">
+        <h1>Introduction to Sensors for Satellite Oceanography</h1>
+        <p class="kicker">
+          This module introduces the major satellite sensor families used in oceanography, organized by the electromagnetic (EM) spectrum and grouped into
+          <strong>passive</strong> and <strong>active</strong> sensing.
+        </p>
+
+        <p>
+          The guiding question throughout is: <strong>what does the sensor actually observe, and what ocean physics makes that observation informative?</strong>
+          You will repeatedly see the same physical ingredients—radiative transfer, dielectric properties, surface roughness, wave spectra, specular reflection,
+          and atmospheric propagation—reappear across different instruments.
+        </p>
+
+        <div class="cta-row">
+          <a class="btn primary" href="#passive">Passive sensors</a>
+          <a class="btn good" href="#active">Active sensors</a>
+          <a class="btn" href="#summary">Full spectrum</a>
+        </div>
+
+        <div class="callout">
+          <strong>Learning note:</strong> Each sensor family is revisited later in a dedicated module for retrieval mathematics, calibration/validation, and case studies.          This module is intentionally “big-picture,” but it includes the minimum ocean physics you need to interpret what each instrument is sensitive to.
+        </div>
+      </div>
+
+      <aside class="mini">
+        <h2>module at a glance</h2>
+        <dl class="kv">
+          <div>
+            <dt>Organizing axis</dt>
+            <dd>Frequency/wavelength (high ν/short λ → low ν/long λ)</dd>
+          </div>
+          <div>
+            <dt>Two families</dt>
+            <dd><strong>Passive</strong> radiometry vs <strong>Active</strong> radar/lidar (Radar: radio detection and ranging, Lidar: light detection and ranging)</dd> 
+          </div>
+          <div>
+            <dt>Unifying ocean physics</dt>
+            <dd>Absorption & scattering (optical), emission & emissivity (IR/microwave), surface roughness & wave spectra (Bragg), specular facets (altimetry)</dd>
+          </div>
+          <div>
+            <dt>Atmosphere matters</dt>
+            <dd>Strongly in optical/IR; differently (but not absent) in microwave</dd>
+          </div>
+
+        </dl>
+        <a class="btn" href="sensors-cheat-sheet.html">Sensor Cheat Sheet</a>
+      </aside>
+    </section>
+
+    <!-- ROADMAP -->
+    <div class="section-title" id="roadmap">
+      <h2>Roadmap</h2>
+      <span>Outline</span>
+    </div>
+
+    <section class="panel toc tight" aria-labelledby="roadmap">
+      <ol>
+        <li><a class="link" href="#em">EM framework</a>: what satellites measure and why wavelength controls sensitivity</li>
+        <li><a class="link" href="#passive">Passive sensors (high → low frequency)</a>: ocean color → thermal IR → passive microwave</li>
+        <li><a class="link" href="#active">Active sensors (high → low frequency)</a>: lidar/laser → Ka/Ku/X/C/L-band radars</li>
+        <li><a class="link" href="#summary">Spectrum summary</a>: a single ladder from high to low frequency (passive + active)</li>
+      </ol>
+
+      <div class="hr"></div>
+
+      <p class="small">
+        <span class="pill"><strong>Principle</strong> Frequency sets interaction physics</span>
+        <span class="pill"><strong>Habit</strong> Always name the observable first</span>
+        <span class="pill"><strong>Reality</strong> Retrievals are models + corrections</span>
+      </p>
+    </section>
+
+    <!-- EM FRAMEWORK -->
+    <div class="section-title" id="em">
+      <h2>EM framework: what satellites actually measure</h2>
+      <span>From photons/radio waves to geophysical variables</span>
+    </div>
+
+    <section class="panel tight">
+      <h3>1) The remote sensing measurement chain</h3>
+      <p>
+        Satellite oceanography is fundamentally an <strong>inference problem</strong>. Instruments measure an electromagnetic signal at the sensor. We then
+        infer an ocean variable by modeling how the EM field was generated and modified on its path:
+      </p>
+
+      <pre aria-label="Remote sensing chain schematic">
+Source → (Atmosphere) → Ocean interaction → (Atmosphere) → Sensor → Retrieval model → Geophysical product
+
+Passive:   Sun or thermal emission             Lλ or TB measured at the sensor
+Active:    Transmitted pulse/waveform          σ⁰ / phase / delay / waveform measured at the sensor</pre>
+
+      <div class="two-col">
+        <div class="panel tight" style="box-shadow:none;">
+          <h4>Passive sensing (radiometry)</h4>
+          <p class="muted">Measures naturally occurring radiance.</p>
+          <ul>
+            <li><strong>Solar-reflective bands</strong> (UV–VIS–NIR–SWIR): mostly reflected sunlight → ocean color</li>
+            <li><strong>Thermal IR</strong>: emitted radiance from the ocean “skin” → sea surface temperature (SST)</li>
+            <li><strong>Passive microwave</strong>: brightness temperature (<span class="mono">TB</span>) → emissivity/temperature/roughness effects (e.g., salinity, wind)</li>
+          </ul>
+        </div>
+
+        <div class="panel tight" style="box-shadow:none;">
+          <h4>Active sensing (radar/lidar)</h4>
+          <p class="muted">Transmits energy and measures the return.</p>
+          <ul>
+            <li><strong>Lidar/laser</strong> (optical): time-of-flight photons → elevation, waves, (sometimes) bathymetry</li>
+            <li><strong>Radar</strong> (microwave): backscatter (<span class="mono">σ⁰</span>), phase, delay/Doppler → winds, roughness features, sea level, waves, sea ice</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="hr"></div>
+
+      <h3>2) Why wavelength matters: the ocean–EM interaction “menu”</h3>
+      <p>
+        Wavelength controls which physical mechanism dominates (and therefore what the measurement is sensitive to). For ocean remote sensing, it is useful to
+        distinguish three interaction regimes:
+      </p>
+
+      <div class="three-col">
+        <div class="card">
+          <h3>Volume optics (UV–SWIR)</h3>
+          <p>
+            Light penetrates and scatters within the upper water column. The signal depends on <strong>absorption</strong> and <strong>scattering</strong> by water,
+            phytoplankton, dissolved organic matter, and particles.
+          </p>
+          <p class="small"><span class="tag">Key idea</span> “Water-leaving radiance” is a small residual after atmospheric correction.</p>
+        </div>
+
+        <div class="card">
+          <h3>Skin emission (thermal IR)</h3>
+          <p>
+            The ocean emits thermal radiation; IR senses the <strong>top tens of micrometers</strong> (“skin”) and requires careful correction for atmospheric absorption
+            and cloud contamination.
+          </p>
+          <p class="small"><span class="tag">Key idea</span> IR SST is usually high resolution but clear-sky only.</p>
+        </div>
+
+        <div class="card">
+          <h3>Boundary roughness & dielectric (microwave)</h3>
+          <p>
+            Microwave signals come from the near-surface boundary and depend strongly on the seawater <strong>dielectric constant</strong> and the sea-surface
+            <strong>roughness spectrum</strong> (from capillary to gravity waves, foam).
+          </p>
+          <p class="small"><span class="tag">Key idea</span> Many radar products are “wind/roughness first,” then derived variables.</p>
+        </div>
+      </div>
+
+      <div class="callout">
+        <strong>Unifying ocean-surface concept:</strong> The sea surface is a spectrum of waves (capillary and gravity). Many microwave sensors are sensitive to
+        specific roughness scales. In particular, off-nadir radars often respond strongly to <strong>Bragg-resonant short waves</strong>, while nadir altimeters emphasize
+        <strong>quasi-specular facets</strong> that satisfy the specular reflection geometry.
+      </div>
+
+      <h3>3) Ocean wave physics you will reuse (minimal toolkit)</h3>
+      <p>
+        The sea surface contains waves across a wide range of wavelengths. Two facts are especially useful for interpreting microwave measurements:
+      </p>
+
+      <ul>
+        <li>
+          <strong>Capillary–gravity waves:</strong> for short waves, surface tension matters. The combined dispersion relation is often written (conceptually) as
+          <span class="equation">ω² = gk + (σ/ρ)k³</span>, where <span class="mono">k</span> is wavenumber, <span class="mono">g</span> gravity, <span class="mono">σ</span> surface tension, and <span class="mono">ρ</span> density.
+          Winds generate these short waves quickly, and they respond rapidly to changes in wind stress.
+        </li>
+        <li>
+          <strong>Bragg (resonant) waves:</strong> for a radar of wavelength <span class="mono">λ<sub>radar</sub></span> viewing at incidence angle <span class="mono">θ</span>,
+          first-order Bragg resonance emphasizes surface waves of wavelength approximately
+          <span class="equation">λ<sub>B</sub> ≈ λ<sub>radar</sub> / (2 sin θ)</span>.
+          These are typically centimeter-scale for Ku/C-band radars and are strongly tied to local wind forcing and damping by surfactants.
+        </li>
+      </ul>
+
+      <p class="small">
+        You do not need to derive these relations yet—but you should practice the habit of asking:
+        “What roughness scale (millimeters? centimeters? meters?) does this instrument care about?”
+      </p>
+
+      <div class="hr"></div>
+
+      
+
+      <h3>4) Practical “observables vocabulary” (what you should name first)</h3>
+      <div class="two-col">
+        <div>
+          <ul>
+            <li><strong>Radiance</strong> (<span class="mono">L<sub>λ</sub></span>) and <strong>reflectance</strong> → ocean color</li>
+            <li><strong>Brightness temperature</strong> (<span class="mono">T<sub>B</sub></span>) → passive microwave (emissivity + temperature)</li>
+            <li><strong>Backscatter coefficient</strong> (<span class="mono">σ⁰</span>) → radar roughness/structure</li>
+          </ul>
+        </div>
+        <div>
+          <ul>
+            <li><strong>Range/delay</strong> (time-of-flight) → altimetry/lidar elevations</li>
+            <li><strong>Waveform shape</strong> → wave height, tracking, surface type</li>
+            <li><strong>Phase/Doppler</strong> → motion sensitivity (coherent radars; SAR specifics)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    
+    <!-- =======================================================
+     CAPILLARY–GRAVITY WAVES + BRAGG RESONANCE (no MathJax)
+     All math rendered as plain HTML entities/sup/sub/italics
+     ======================================================= -->
+<section id="capillary-bragg" class="panel" aria-label="Capillary–gravity waves and Bragg resonance">
+  <div class="section-title">
+    <h2>Capillary–gravity waves and Bragg resonance</h2>
+    <span>Why centimeter-scale roughness ties radar backscatter to local winds (and slicks)</span>
+  </div>
+
+  <p>
+    In active microwave remote sensing (scatterometers and SAR), much of the measured backscatter is controlled by
+    <em>very short surface waves</em>—typically centimeter-scale. Two linked ideas are central:
+    <strong>(1)</strong> the physics of <strong>capillary–gravity waves</strong> (restored by gravity and surface tension), and
+    <strong>(2)</strong> <strong>Bragg resonance</strong>, which describes how a radar preferentially “selects” a narrow band of surface wavelengths
+    that efficiently backscatter energy to the antenna.
+  </p>
+
+  <h3>Capillary–gravity waves: gravity + surface tension as restoring forces</h3>
+  <p>
+    For surface waves, the restoring force that flattens perturbations depends on wavelength.
+    Long waves are primarily restored by <strong>gravity</strong>, while very short waves are increasingly restored by
+    <strong>surface tension</strong> (because curvature becomes large). In deep water, the combined dispersion relation is commonly written:
+  </p>
+
+  <div class="eq" aria-label="Capillary–gravity dispersion relation">
+    <p class="math">
+      <i>&omega;</i><sup>2</sup> = <i>g</i><i>k</i> + (<i>&sigma;</i>/<i>&rho;</i>)<i>k</i><sup>3</sup>,&nbsp;&nbsp;&nbsp;
+      <i>k</i> = 2&pi;/<i>&lambda;</i>.
+    </p>
+    <div class="meta">
+      <span class="tag">Dispersion (deep water)</span>
+      <span>
+        <i>g</i>: gravity,&nbsp; <i>&sigma;</i>: surface tension,&nbsp; <i>&rho;</i>: density,&nbsp; <i>k</i>: wavenumber
+      </span>
+    </div>
+  </div>
+
+  <div class="defgrid">
+    <div class="def">
+      <h4>What the two terms imply</h4>
+      <p class="sym">
+        Gravity-dominated (longer waves): <i>&omega;</i><sup>2</sup> &asymp; <i>g</i><i>k</i><br/>
+        Tension-dominated (shorter waves): <i>&omega;</i><sup>2</sup> &asymp; (<i>&sigma;</i>/<i>&rho;</i>)<i>k</i><sup>3</sup>
+      </p>
+      <p>
+        As <i>k</i> increases (wavelength decreases), the <i>k</i><sup>3</sup> term grows rapidly, so surface tension becomes
+        dynamically important. This is why centimeter-scale roughness can behave differently than swell.
+      </p>
+    </div>
+
+    <div class="def">
+      <h4>Crossover scale to remember</h4>
+      <p class="sym">
+        Set <i>g</i><i>k</i> &asymp; (<i>&sigma;</i>/<i>&rho;</i>)<i>k</i><sup>3</sup> &Rightarrow;
+        <i>k</i><sub>c</sub> &asymp; &radic;(<i>&rho;</i><i>g</i>/<i>&sigma;</i>), and therefore
+      </p>
+      <p class="math">
+        <i>&lambda;</i><sub>c</sub> &asymp; 2&pi;/<i>k</i><sub>c</sub> = 2&pi;&radic;(<i>&sigma;</i>/(<i>&rho;</i><i>g</i>))
+        &asymp; 1.7&nbsp;cm (order of magnitude).
+      </p>
+      <p>
+        Around <i>&lambda;</i> &sim; 1–2&nbsp;cm, gravity and surface tension are comparably important—right in the range
+        emphasized by many microwave radars. These short waves have sub-second periods, so their energy levels
+        can adjust rapidly when wind stress changes.
+      </p>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>Remote-sensing implication:</strong> Winds can generate and maintain centimeter-scale waves quickly, so the
+    short-wave “tail” is often closely tied to the <em>local</em> wind field. Conversely, surfactants (natural films, oil slicks)
+    can strongly damp these short waves, reducing microwave backscatter and producing “dark” signatures in SAR.
+  </div>
+
+  <h3>Bragg (resonant) waves: which surface wavelengths a radar emphasizes</h3>
+  <p>
+    A coherent radar does not respond equally to all ocean waves. In many geometries, the dominant
+    <strong>first-order</strong> backscatter is well explained by <strong>Bragg resonance</strong>—constructive interference from surface
+    ripples that act like a weak diffraction grating. For a monostatic radar with wavelength
+    <i>&lambda;</i><sub>radar</sub> viewing at incidence angle <i>&theta;</i> (from nadir), the resonant surface wavelength is often approximated by:
+  </p>
+
+  <div class="eq" aria-label="Bragg resonance condition">
+    <p class="math">
+      <i>k</i><sub>B</sub> = 2<i>k</i><sub>r</sub> sin<i>&theta;</i>,&nbsp;&nbsp;
+      <i>k</i><sub>r</sub> = 2&pi;/<i>&lambda;</i><sub>radar</sub>,&nbsp;&nbsp;
+      &Rightarrow;&nbsp;&nbsp;
+      <i>&lambda;</i><sub>B</sub> &asymp; <i>&lambda;</i><sub>radar</sub> / (2 sin<i>&theta;</i>).
+    </p>
+    <div class="meta">
+      <span class="tag">First-order Bragg</span>
+      <span><i>&lambda;</i><sub>B</sub>: resonant surface wavelength “selected” by the radar geometry</span>
+    </div>
+  </div>
+
+  <p>
+    The key conceptual point is that “Bragg waves” are not a special physical wave type—they are simply
+    <em>capillary–gravity waves at the resonant scale</em> (i.e., <i>&lambda;</i> &asymp; <i>&lambda;</i><sub>B</sub>).
+    Because <i>&lambda;</i><sub>B</sub> is typically in the centimeter range for common ocean radars, Bragg scattering provides a direct pathway from
+    <em>wind-driven short-wave roughness</em> to measured backscatter <i>&sigma;</i><sup>0</sup>.
+  </p>
+
+  <div class="tight-table" role="region" aria-label="Typical Bragg wavelengths table">
+    <table>
+      <thead>
+        <tr>
+          <th>Radar band (typical)</th>
+          <th><i>&lambda;</i><sub>radar</sub></th>
+          <th><i>&lambda;</i><sub>B</sub> at <i>&theta;</i> = 20&deg;</th>
+          <th><i>&lambda;</i><sub>B</sub> at <i>&theta;</i> = 35&deg;</th>
+          <th><i>&lambda;</i><sub>B</sub> at <i>&theta;</i> = 45&deg;</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Ku-band</strong> (scatterometry common)</td>
+          <td>&sim; 2.2&nbsp;cm</td>
+          <td>&sim; 3.2&nbsp;cm</td>
+          <td>&sim; 1.9&nbsp;cm</td>
+          <td>&sim; 1.6&nbsp;cm</td>
+        </tr>
+        <tr>
+          <td><strong>C-band</strong> (SAR + scatterometry common)</td>
+          <td>&sim; 5.6&nbsp;cm</td>
+          <td>&sim; 8.2&nbsp;cm</td>
+          <td>&sim; 4.9&nbsp;cm</td>
+          <td>&sim; 4.0&nbsp;cm</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    <strong>Practical takeaway:</strong> If the local wind strengthens, Bragg-scale roughness generally increases and
+    backscatter tends to rise (with directionality tied to wind direction). If surfactants damp the Bragg-scale waves,
+    backscatter drops—one reason slicks are often conspicuous in SAR imagery and can bias wind retrievals.
+  </div>
+
+  <details class="item">
+    <summary><strong>Concept checkpoint: how “small” and “large” waves both matter</strong></summary>
+    <p>
+      A useful mental model is the “two-scale” picture: longer waves tilt the local surface (changing the effective
+      incidence angle and facet orientation), while the radar’s coherent return is strongly controlled by the
+      centimeter-scale Bragg waves riding on those facets. In practice, both the short-wave spectrum and
+      larger-scale modulation (gusts, fronts, currents, slicks) can shape the observed radar backscatter patterns.
+    </p>
+  </details>
+</section>
+
+
+
+    <!-- PASSIVE SENSORS -->
+    <div class="section-title" id="passive">
+      <h2>Passive sensors (high frequency → low frequency)</h2>
+      <span>Solar-reflective → thermal emission → microwave emission</span>
+    </div>
+
+    <section class="panel tight">
+      <p>
+        Passive ocean remote sensing is radiometry: the instrument measures EM energy that already exists (sunlight reflected by the ocean/atmosphere, or thermal
+        emission from the Earth system). The key is that <strong>passive sensors do not control illumination</strong>, so the signal strength and contamination pathways
+        differ by band.
+      </p>
+
+      <pre aria-label="Passive ordering by frequency">
+High frequency / short λ
+  UV–VIS–NIR–SWIR (solar reflective)  → ocean color / water constituents
+  Thermal IR (emitted)                → sea surface temperature (skin)
+  Passive microwave (emitted)         → salinity, wind effects, rain/ice (all-weather emphasis)
+Low frequency / long λ</pre>
+
+      <div class="hr"></div>
+
+      <!-- PASSIVE: OPTICAL -->
+      <h3 id="passive-optical">A) UV–VIS–NIR–SWIR radiometry (Ocean Color)</h3>
+      <p class="kicker">What it observes: spectral radiance dominated by atmosphere; the ocean signal is a small residual.</p>
+
+      <div class="three-col">
+        <div class="card">
+          <h3>Observable</h3>
+          <p>
+            Top-of-atmosphere (<span class="mono">TOA</span>) spectral radiance <span class="mono">L<sub>λ</sub></span> in narrow bands.
+            The target geophysical quantity is often expressed as <strong>remote-sensing reflectance</strong>,
+            <span class="equation">R<sub>rs</sub>(λ) = L<sub>w</sub>(λ) / E<sub>d</sub>(λ)</span>,
+            where <span class="mono">L<sub>w</sub></span> is water-leaving radiance and <span class="mono">E<sub>d</sub></span> downwelling irradiance.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Ocean physics link</h3>
+          <p>
+            The water-leaving signal depends on the balance of <strong>absorption</strong> and <strong>scattering</strong> in the upper water column.
+            Inherent optical properties (IOPs) include absorption <span class="mono">a(λ)</span> and backscattering <span class="mono">b<sub>b</sub>(λ)</span>,
+            contributed by water molecules, phytoplankton pigments, suspended particles, and CDOM.
+          </p>
+        </div>
+        <div class="card">
+          <h3>What you infer</h3>
+          <p>
+            Chlorophyll-a proxies, particle backscatter/TSM, CDOM indicators, water clarity, bloom dynamics, optical water types,
+            and (with care) some coastal habitat indicators.
+          </p>
+        </div>
+      </div>
+
+      <h4>How the signal is formed (conceptual)</h4>
+      <ul>
+        <li>
+          <strong>Atmosphere first:</strong> At TOA, most measured radiance is from atmospheric scattering (Rayleigh + aerosols) and sunglint.
+          Ocean color retrieval begins by removing the atmospheric contribution (atmospheric correction).
+        </li>
+        <li>
+          <strong>Ocean contribution:</strong> Photons that enter the ocean are absorbed/scattered. A small fraction is scattered back out of the surface and reaches the sensor.
+          The spectral shape of <span class="mono">R<sub>rs</sub>(λ)</span> contains information about water constituents.
+        </li>
+        <li>
+          <strong>Penetration depth:</strong> Optical sensing is a <em>volume</em> measurement: blue-green bands can sample deeper in clear water; red/NIR are quickly attenuated.
+          Your “effective depth” is on the order of one optical attenuation length (varies strongly by water type).
+        </li>
+      </ul>
+
+      <div class="callout">
+        <strong>Where ocean physics shows up most clearly:</strong> Optical sensors “see” changes in <span class="mono">a(λ)</span> and <span class="mono">b<sub>b</sub>(λ)</span>.
+        That is why pigment absorption features, particle scattering slopes, and CDOM absorption in the blue are central to retrieval strategies.
+      </div>
+
+      <h4>What can go wrong (overview)</h4>
+      <ul>
+        <li><strong>Clouds/aerosols:</strong> mischaracterized aerosols bias atmospheric correction.</li>
+        <li><strong>Sun glint:</strong> specular reflection from facets (wind-dependent) adds radiance unrelated to water constituents.</li>
+        <li><strong>Adjacency effects:</strong> land/case-2 water reflectance can contaminate coastal pixels.</li>
+        <li><strong>Vertical structure:</strong> subsurface maxima can decouple surface color from depth-integrated biomass.</li>
+      </ul>
+
+      <p class="small">
+        <strong>Deeper dive:</strong> full radiative transfer framing, atmospheric correction algorithms, bio-optical models, and validation belong in the dedicated Ocean Color module/week.
+      </p>
+
+      <div class="hr"></div>
+
+      <!-- PASSIVE: THERMAL IR -->
+      <h3 id="passive-tir">B) Thermal Infrared radiometry (Sea Surface Temperature)</h3>
+      <p class="kicker">What it observes: emitted thermal radiance from the ocean surface “skin” (clear-sky emphasis).</p>
+
+      <div class="three-col">
+        <div class="card">
+          <h3>Observable</h3>
+          <p>
+            Thermal IR radiance that is often converted to a <strong>brightness temperature</strong> via the Planck function
+            (conceptually, “the temperature a blackbody would need to match the observed radiance in that band”).
+          </p>
+        </div>
+        <div class="card">
+          <h3>Ocean physics link</h3>
+          <p>
+            IR emission originates from the <strong>skin layer</strong> (top tens of micrometers).
+            The skin can differ from bulk temperature because of the <strong>cool-skin</strong> effect and diurnal <strong>warm-layer</strong> formation.
+          </p>
+        </div>
+        <div class="card">
+          <h3>What you infer</h3>
+          <p>
+            High-resolution SST patterns, fronts/eddies, upwelling signatures, coastal thermal gradients,
+            and temperature context for air–sea flux estimation (with additional meteorological inputs).
+          </p>
+        </div>
+      </div>
+
+      <h4>How the signal is formed (conceptual)</h4>
+      <ul>
+        <li>
+          <strong>Emission + emissivity:</strong> The ocean emits strongly in thermal IR and has high emissivity (near—but not exactly—1). Small emissivity errors can
+          become meaningful SST biases.
+        </li>
+        <li>
+          <strong>Atmospheric absorption:</strong> Water vapor (and other gases) absorb IR. Many SST algorithms use “split-window” bands to correct for water vapor effects.
+        </li>
+        <li>
+          <strong>Clouds dominate:</strong> Even thin clouds can block or contaminate the IR signal. Cloud detection and masking are not optional; they are central to the product.
+        </li>
+      </ul>
+
+      <div class="callout">
+        <strong>Interpretation habit:</strong> When you read “SST” from IR sensors, ask: is this <em>skin</em> SST or a “foundation”/bulk estimate?
+        How is diurnal warming handled? What cloud screening was applied?
+      </div>
+
+      <h4>What can go wrong (overview)</h4>
+      <ul>
+        <li><strong>Cloud contamination:</strong> residual cloud leads to cold biases (typical).</li>
+        <li><strong>Atmospheric correction errors:</strong> water vapor variability affects retrieval.</li>
+        <li><strong>Skin–bulk mismatch:</strong> physical mismatch matters for flux and in situ comparisons.</li>
+      </ul>
+
+      <p class="small">
+        <strong>Deeper dive:</strong> Planck-based retrieval details, split-window physics, cloud detection, and skin/bulk comparisons belong in the dedicated IR/SST module/week.
+      </p>
+
+      <div class="hr"></div>
+
+      <!-- PASSIVE: MICROWAVE -->
+      <h3 id="passive-mw">C) Passive microwave radiometry (Salinity, winds, precipitation/ice context)</h3>
+      <p class="kicker">What it observes: brightness temperature governed by emissivity (dielectric + roughness) and physical temperature, with all-weather capability.</p>
+
+      <div class="three-col">
+        <div class="card">
+          <h3>Observable</h3>
+          <p>
+            Multi-frequency, multi-polarization <strong>brightness temperatures</strong> (<span class="mono">T<sub>B</sub></span>).
+            In simple terms, <span class="mono">T<sub>B</sub></span> reflects
+            <em>how efficiently the surface emits</em> (emissivity) multiplied by physical temperature, plus atmospheric contributions.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Ocean physics link</h3>
+          <p>
+            Microwave emissivity depends strongly on the seawater <strong>dielectric constant</strong>, which varies with <strong>salinity</strong> and <strong>temperature</strong>.
+            Surface roughness and foam modify emissivity by changing the distribution of facets and adding emitting/scattering elements.
+          </p>
+        </div>
+        <div class="card">
+          <h3>What you infer</h3>
+          <p>
+            Sea surface salinity (especially L-band), wind-speed-related roughness corrections, rain/ice signatures, and large-scale hydrologic/cryospheric context
+            for ocean forcing and freshwater fluxes.
+          </p>
+        </div>
+      </div>
+
+      <h4>How the signal is formed (conceptual)</h4>
+      <ul>
+        <li>
+          <strong>Dielectric control:</strong> At long microwave wavelengths (notably L-band), small changes in salinity alter the dielectric constant enough to measurably
+          change emissivity and therefore <span class="mono">T<sub>B</sub></span>.
+        </li>
+        <li>
+          <strong>Roughness/foam correction:</strong> Wind-generated roughness increases effective emissivity. Whitecaps/foam emit strongly and must be accounted for,
+          typically using auxiliary wind information or multi-frequency constraints.
+        </li>
+        <li>
+          <strong>Atmosphere is different (not absent):</strong> Compared with optical/IR, clouds matter far less, but water vapor and especially rain can contribute
+          at higher microwave frequencies. “All-weather” does not mean “no correction needed.”
+        </li>
+      </ul>
+
+      <div class="callout">
+        <strong>Connection to Bragg-wave physics:</strong> Passive microwave radiometers are not “Bragg scatterers” in the same direct way as radars, but they still respond
+        to the <em>same</em> wind-driven short-wave roughness field (and foam) that also controls radar backscatter. In practice, many microwave retrievals succeed because
+        they model how the sea-surface wave spectrum reshapes emissivity across frequency and polarization.
+      </div>
+
+      <h4>What can go wrong (overview)</h4>
+      <ul>
+        <li><strong>Radio-frequency interference (RFI):</strong> can corrupt L-band measurements.</li>
+        <li><strong>Roughness/foam biases:</strong> mis-modeled wind/sea state impacts salinity retrievals.</li>
+        <li><strong>Land/ice contamination:</strong> large footprints near coasts/ice edges challenge interpretation.</li>
+      </ul>
+
+      <p class="small">
+        <strong>Deeper dive:</strong> emissivity modeling, dielectric physics, polarization, RFI mitigation, and practical SSS/wind retrievals belong in the dedicated Passive Microwave module/week.
+      </p>
+    </section>
+
+    <!-- ACTIVE SENSORS -->
+    <div class="section-title" id="active">
+      <h2>Active sensors (high frequency → low frequency)</h2>
+      <span>Lidar/laser → microwave radar bands (Ka → Ku → X → C → L)</span>
+    </div>
+
+    <section class="panel tight">
+      <p>
+        Active sensors transmit energy and measure the return. In oceanography, active sensing is dominated by
+        <strong>lidar/laser (optical)</strong> and <strong>radar (microwave)</strong>.
+        The key advantage is that the instrument controls illumination; the tradeoff is that interpretation must account for transmit/receive geometry, incidence angle,
+        polarization, and the physics of scattering.
+      </p>
+
+      <pre aria-label="Active ordering by frequency">
+High frequency / short λ
+  Optical active (laser/lidar)         → time-of-flight photons: elevation, waves, sometimes bathymetry
+  Ka/Ku-band radar (millimeter–cm)     → altimetry + scattering sensitive to short waves and precipitation
+  X/C/L-band radar (cm–dm)             → SAR imaging, scatterometry, roughness/structure, sea ice
+Low frequency / long λ</pre>
+
+      <div class="hr"></div>
+
+      <!-- ACTIVE: LIDAR -->
+      <h3 id="active-lidar">A) Optical active sensing: lidar & laser altimetry</h3>
+      <p class="kicker">What it observes: time-of-flight and photon returns; strong sensitivity to surface geometry and water optical attenuation.</p>
+
+      <div class="three-col">
+        <div class="card">
+          <h3>Observable</h3>
+          <p>
+            <strong>Return time</strong> (range) and return intensity/counts from laser pulses. In photon-counting systems,
+            individual photons are time-tagged; in waveform systems, the full return pulse shape is measured.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Ocean physics link</h3>
+          <p>
+            Over the ocean, lidar returns are shaped by <strong>surface specular reflection</strong>, surface slope/roughness,
+            and (for green wavelengths) <strong>water-column attenuation</strong> and backscatter.
+            Penetration depends on water clarity (often summarized by diffuse attenuation coefficient <span class="mono">K<sub>d</sub></span>).
+          </p>
+        </div>
+        <div class="card">
+          <h3>What you infer</h3>
+          <p>
+            Surface elevation tracks, wave statistics in some conditions, sea-ice freeboard, and—where water is clear enough—coastal bathymetry
+            from separated surface and bottom returns (with refraction corrections).
+          </p>
+        </div>
+      </div>
+
+      <h4>How the signal is formed (conceptual)</h4>
+      <ul>
+        <li>
+          <strong>Time-of-flight geometry:</strong> Range is inferred from the travel time of the pulse. Precise orbit and pointing knowledge are essential.
+        </li>
+        <li>
+          <strong>Water penetration (for bathymetry):</strong> Green light can penetrate into water; the bottom return appears later in time.
+          Depth estimates require correcting for refraction and the reduced speed of light in water.
+        </li>
+        <li>
+          <strong>Sea state matters:</strong> Rough seas broaden and decorrelate the surface return; glint-like effects occur because the ocean surface is a moving field of facets.
+        </li>
+      </ul>
+
+      <div class="callout">
+        <strong>Interpretation habit:</strong> For lidar bathymetry, always ask: what sets the penetration limit here—water clarity (<span class="mono">K<sub>d</sub></span>),
+        bottom albedo, sun angle/background photons, or sea state?
+      </div>
+
+      <p class="small">
+        <strong>Deeper dive:</strong> photon statistics, geolocation/orbit effects, water-column optics, and bathymetric inversion belong in the dedicated Gravity & Lidar module/week.
+      </p>
+
+      <div class="hr"></div>
+
+      <!-- RADAR PHYSICS PRIMER -->
+      <h3 id="active-radar-primer">B) Microwave radar primer: how the ocean surface creates backscatter</h3>
+      <p class="kicker">Before sensor types: understand the two dominant surface-scattering pictures—Bragg resonance vs quasi-specular facets.</p>
+
+      <div class="two-col">
+        <div class="panel tight" style="box-shadow:none;">
+          <h4>Bragg-resonant scattering (off-nadir viewing)</h4>
+          <p>
+            For many ocean-viewing radars at moderate incidence angles (typically tens of degrees), backscatter is strongly influenced by
+            <strong>short surface waves</strong> that satisfy the Bragg condition:
+            <span class="equation">λ<sub>B</sub> ≈ λ<sub>radar</sub> / (2 sin θ)</span>.
+          </p>
+          <ul>
+            <li>These “Bragg waves” are usually centimeter-scale for Ku/C-band sensors.</li>
+            <li>They are generated by local wind stress and respond quickly (minutes) to changes in wind.</li>
+            <li>They are damped by surfactants/oil, which is why slicks often appear dark in radar images.</li>
+          </ul>
+        </div>
+
+        <div class="panel tight" style="box-shadow:none;">
+          <h4>Quasi-specular facets (near-nadir viewing)</h4>
+          <p>
+            For near-nadir radars (altimetry), the return is dominated by facets oriented to satisfy specular reflection back to the antenna.
+            Sea state affects the distribution of facet slopes and therefore the waveform shape and bias corrections.
+          </p>
+          <ul>
+            <li>Large-scale waves modulate facet slopes.</li>
+            <li>Small-scale roughness influences reflectivity and “sea state bias.”</li>
+            <li>Wave height broadens the leading edge of the altimeter waveform.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout">
+        <strong>One sentence summary:</strong> Scatterometers and SAR often sense the wind-driven short-wave field (Bragg physics); altimeters sense geometry (range) using
+        quasi-specular returns that depend on sea state.
+      </div>
+
+      <div class="hr"></div>
+
+      <!-- ACTIVE: KA-BAND -->
+      <h3 id="active-ka">C) Ka-band radar (highest-frequency microwave): fine-scale surface interaction and altimetry options</h3>
+      <p class="kicker">Ka-band (millimeter wavelength) is sensitive to small-scale roughness and atmospheric liquid water; used notably in some altimetry concepts.</p>
+
+      <div class="three-col">
+        <div class="card">
+          <h3>Observable</h3>
+          <p>
+            Backscatter (<span class="mono">σ⁰</span>), range, and waveform metrics depending on instrument design.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Ocean physics link</h3>
+          <p>
+            Shorter radar wavelength shifts Bragg sensitivity toward smaller waves and increases sensitivity to rain/cloud liquid water.
+            Sea state still shapes returns via facet geometry and short-wave roughness.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Typical use cases</h3>
+          <p>
+            High-resolution altimetry approaches (including interferometric concepts), detailed sea state sensitivity in low-rain conditions,
+            and specialized applications where Ka-band’s footprint/processing advantages matter.
+          </p>
+        </div>
+      </div>
+
+      <p class="small">
+        <strong>Deeper dive:</strong> Ka-band propagation and rain impacts, Ka-band altimetry processing, and wide-swath concepts are treated in the Altimetry module/week.
+      </p>
+
+      <div class="hr"></div>
+
+      <!-- ACTIVE: KU-BAND -->
+      <h3 id="active-ku">D) Ku-band radar (centimeter wavelength): scatterometry and conventional altimetry</h3>
+      <p class="kicker">Ku-band is a workhorse frequency: strong ocean backscatter, strong Bragg sensitivity, and broad heritage in altimetry and wind sensing.</p>
+
+      <div class="two-col">
+        <div class="panel tight" style="box-shadow:none;">
+          <h4>Ku-band scatterometry (vector winds)</h4>
+          <p>
+            <strong>Observable:</strong> normalized radar cross section <span class="mono">σ⁰</span> measured at multiple azimuth angles (and sometimes multiple incidence angles).
+          </p>
+          <p>
+            <strong>How the ocean imprints:</strong> Wind stress generates short capillary–gravity waves. The <em>Bragg-resonant</em> components dominate the return,
+            and because those short waves align preferentially with the wind direction, <span class="mono">σ⁰</span> varies with azimuth.
+            Inversion uses <strong>geophysical model functions (GMFs)</strong> that map <span class="mono">σ⁰</span> to wind speed/direction for given geometry and polarization.
+          </p>
+          <ul>
+            <li><strong>Retrieval target:</strong> near-surface (often “10 m neutral”) wind vectors over the ocean.</li>
+            <li><strong>Key physics phrase:</strong> “Bragg scattering from wind-aligned short waves.”</li>
+            <li><strong>Common confounders:</strong> rain (at Ku), coastal land contamination, sea ice.</li>
+          </ul>
+
+          <div class="callout">
+            <strong>Bragg waves in practice:</strong> If the wind drops suddenly, the short Bragg-scale wave field decays quickly—scatterometer winds often reflect this rapid adjustment.
+            Longer gravity waves decay more slowly; they modulate, but do not solely determine, the scatterometer signal.
+          </div>
+        </div>
+
+        <div class="panel tight" style="box-shadow:none;">
+          <h4>Ku-band radar altimetry (sea surface height & waves)</h4>
+          <p>
+            <strong>Observable:</strong> two-way travel time (range) and echo waveform shape at (near) nadir.
+          </p>
+          <p>
+            <strong>How the ocean imprints:</strong> The waveform is shaped by the distribution of surface facet heights/slopes within the footprint.
+            <strong>Significant wave height</strong> broadens the leading edge; surface roughness affects return power; and subtle electromagnetic effects create
+            <strong>sea state bias</strong> corrections.
+          </p>
+          <ul>
+            <li><strong>Retrieval targets:</strong> sea surface height (SSH), significant wave height (SWH), and wind-related metrics from backscatter.</li>
+            <li><strong>Key physics phrase:</strong> “Quasi-specular nadir reflection modulated by sea state.”</li>
+            <li><strong>Common confounders:</strong> wet/dry troposphere delay, ionosphere, tides, coastal waveform distortion.</li>
+          </ul>
+
+          <div class="callout">
+            <strong>Interpretation habit:</strong> SSH is never “just range.” It is range plus orbit, plus geophysical corrections, plus a reference surface.
+            The altimeter is precise, but the full product is a correction-and-model ecosystem.
+          </div>
+        </div>
+      </div>
+
+      <p class="small">
+        <strong>Deeper dive:</strong> scatterometer GMFs and ambiguity removal belong in the Active Radar: Scatterometry module/week; waveform models, corrections, geoid/tides,
+        and SSH dynamics belong in the Radar Altimetry module/week.
+      </p>
+
+      <div class="hr"></div>
+
+      <!-- ACTIVE: X-BAND -->
+      <h3 id="active-x">E) X-band radar: SAR imaging of ocean roughness patterns</h3>
+      <p class="kicker">What it observes: high-resolution spatial structure in radar backscatter driven by roughness at resonant scales, modulated by ocean dynamics.</p>
+
+      <div class="three-col">
+        <div class="card">
+          <h3>Observable</h3>
+          <p>
+            SAR measures complex-valued backscatter (amplitude and phase) to form a focused image.
+            Most ocean interpretation uses calibrated intensity (related to <span class="mono">σ⁰</span>) plus contextual geometry (incidence angle, polarization).
+          </p>
+        </div>
+        <div class="card">
+          <h3>Ocean physics link</h3>
+          <p>
+            SAR intensity is strongly tied to Bragg-scale roughness, but the patterns you see often come from
+            <strong>modulation</strong> of the short-wave field by larger processes:
+            currents, convergence/divergence, internal waves, fronts, rain cells, and surfactant films.
+          </p>
+        </div>
+        <div class="card">
+          <h3>What you infer</h3>
+          <p>
+            Wind streaks, fronts, internal waves, eddies’ surface signatures, slicks/oil spills (via damping),
+            sea ice morphology, ship wakes; and in some cases wave spectra and surface motion proxies.
+          </p>
+        </div>
+      </div>
+
+      <h4>How SAR “sees” the ocean (conceptual)</h4>
+      <ul>
+        <li>
+          <strong>Bragg-scale sensitivity:</strong> SAR backscatter often responds to centimeter-scale waves satisfying the Bragg condition for its frequency and incidence angle.
+        </li>
+        <li>
+          <strong>Modulation pathways:</strong> Larger ocean processes modify the short-wave field through:
+          <ul>
+            <li><em>Tilt modulation</em>: long waves change local incidence angle (facet orientation).</li>
+            <li><em>Hydrodynamic modulation</em>: current gradients/convergence alter short-wave amplitude (changing <span class="mono">σ⁰</span>).</li>
+            <li><em>Damping</em>: surfactants reduce short-wave energy → reduced <span class="mono">σ⁰</span> (“dark” slicks).</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Important caution:</strong> Many ocean features are visible because they change roughness—not because SAR directly measures temperature, salinity, or current.
+          The interpretation often requires auxiliary data or dynamics reasoning.
+        </li>
+      </ul>
+
+      <div class="callout">
+        <strong>Bragg waves as the “carrier signal” for SAR:</strong> Think of the short-wave field as the carrier. Ocean dynamics imprint information by modulating that carrier.
+        This is why SAR is extraordinarily informative, but also why it can be ambiguous without context.
+      </div>
+
+      <p class="small">
+        <strong>Deeper dive:</strong> coherent imaging, polarization, wave-current interactions, Doppler-based products, and quantitative wind/wave retrieval methods belong in the SAR module/week.
+      </p>
+
+      <div class="hr"></div>
+
+      <!-- ACTIVE: C-BAND -->
+      <h3 id="active-c">F) C-band radar: robust all-weather ocean backscatter (SAR and scatterometry)</h3>
+      <p class="kicker">C-band is widely used because it balances sensitivity to roughness with manageable atmospheric impacts and strong heritage.</p>
+
+      <div class="two-col">
+        <div class="panel tight" style="box-shadow:none;">
+          <h4>C-band scatterometry</h4>
+          <p>
+            <strong>Observable:</strong> multi-azimuth <span class="mono">σ⁰</span>.
+            <strong>Physics:</strong> still Bragg-dominated, but with resonant scales shifted relative to Ku-band. Wind direction and speed are inferred via GMFs.
+          </p>
+          <ul>
+            <li>Often preferred for reduced rain contamination relative to Ku-band.</li>
+            <li>Wind retrieval logic is the same: azimuthal anisotropy of the Bragg-wave field encodes direction.</li>
+          </ul>
+        </div>
+
+        <div class="panel tight" style="box-shadow:none;">
+          <h4>C-band SAR</h4>
+          <p>
+            <strong>Observable:</strong> SAR backscatter images (amplitude/phase).
+            <strong>Physics:</strong> Bragg-scale roughness sensitivity + modulation by dynamics.
+          </p>
+          <ul>
+            <li>Strong utility for sea ice classification and ocean slick detection.</li>
+            <li>Wind/wave retrieval possible with appropriate models and ancillary wind direction constraints.</li>
+          </ul>
+        </div>
+      </div>
+
+      <p class="small">
+        <strong>Deeper dive:</strong> C-band is treated alongside other SAR bands in the SAR module/week and alongside wind retrieval fundamentals in the Scatterometry module/week.
+      </p>
+
+      <div class="hr"></div>
+
+      <!-- ACTIVE: L-BAND -->
+      <h3 id="active-l">G) L-band radar & bistatic reflectometry (low microwave): longer-wave roughness sensitivity and “signals of opportunity”</h3>
+      <p class="kicker">At longer microwave wavelengths, sensitivity shifts toward longer roughness scales; L-band also enables bistatic approaches (GNSS-R).</p>
+
+      <div class="three-col">
+        <div class="card">
+          <h3>Observable</h3>
+          <p>
+            Depending on system: backscatter (<span class="mono">σ⁰</span>) for L-band SAR, or delay–Doppler power distributions for GNSS reflectometry.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Ocean physics link</h3>
+          <p>
+            Longer radar wavelengths emphasize longer Bragg-resonant surface waves and can respond differently to vegetation/ice.
+            For GNSS-R, the key concept is the <strong>glistening zone</strong> around specular reflection whose extent depends on surface roughness.
+          </p>
+        </div>
+        <div class="card">
+          <h3>What you infer</h3>
+          <p>
+            Roughness/wind proxies, sea ice and coastal applications, and in GNSS-R: surface roughness and wind-related metrics from reflected navigation signals
+            (often as complementary/experimental products).
+          </p>
+        </div>
+      </div>
+
+      <div class="callout">
+        <strong>Connecting the dots:</strong> L-band is central in <em>passive</em> microwave salinity because dielectric sensitivity is useful there; in <em>active</em> sensing,
+        L-band shifts the resonant roughness scale and enables bistatic geometries. Across both, the common thread is dielectric + roughness physics.
+      </div>
+
+      <p class="small">
+        <strong>Deeper dive:</strong> If included in the course, L-band SAR/reflectometry is best handled as an advanced extension after you master scatterometry and SAR fundamentals.
+      </p>
+    </section>
+
+    <!-- SPECTRUM SUMMARY -->
+    <div class="section-title" id="summary">
+      <h2>Spectrum summary: one ladder from high → low frequency (passive + active)</h2>
+      <span>A single “mental map” to carry into every later module</span>
+    </div>
+
+    <section class="panel tight">
+      <h3>1) The spectrum ladder (high ν → low ν)</h3>
+      <ol>
+        <li>
+          <strong>UV–VIS–NIR–SWIR (Passive)</strong> — measures reflected sunlight; retrieves ocean color via absorption/scattering of constituents.
+        </li>
+        <li>
+          <strong>Optical lidar/laser (Active)</strong> — measures photon time-of-flight; retrieves elevation/waves; sometimes bathymetry (clear water).
+        </li>
+        <li>
+          <strong>Thermal IR (Passive)</strong> — measures emitted radiance; retrieves skin SST (clear-sky constraint).
+        </li>
+        <li>
+          <strong>Ka/Ku-band radar (Active)</strong> — measures range/waveforms (altimetry) and/or backscatter; sensitive to short-wave roughness and atmospheric liquid water.
+        </li>
+        <li>
+          <strong>X/C-band radar (Active)</strong> — SAR/scatterometry: images and quantifies roughness patterns driven by Bragg-resonant waves, modulated by ocean dynamics.
+        </li>
+        <li>
+          <strong>L-band microwave (Passive + Active)</strong> — passive radiometry for salinity; active SAR/reflectometry for roughness and bistatic products.
+        </li>
+      </ol>
+
+      <div class="callout">
+        <strong>One-sentence integration:</strong> Optical/IR sensors mainly sense <em>water-column optics</em> and <em>skin temperature</em>; microwave sensors mainly sense
+        <em>surface dielectric + roughness</em> (often via Bragg-scale waves) and/or <em>surface geometry</em> (altimetry).
+      </div>
+
+      <div class="hr"></div>
+
+      <h3>2) Cross-sensor summary table (observable → physics → product)</h3>
+      <div class="table-wrap" role="region" aria-label="Sensor summary table" tabindex="0">
+        <table class="course">
+          <caption>Major satellite sensor families for oceanography (overview)</caption>
+          <thead>
+            <tr>
+              <th>Band / freq (conceptual)</th>
+              <th>Passive / Active</th>
+              <th>Primary observable</th>
+              <th>Ocean physics that links observable to the ocean</th>
+              <th>Common products</th>
+              <th>Key limitations (overview)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td data-label="Band / freq">UV–VIS–NIR–SWIR</td>
+              <td data-label="Passive / Active">Passive</td>
+              <td data-label="Primary observable">Spectral radiance; <span class="mono">R<sub>rs</sub>(λ)</span> after correction</td>
+              <td data-label="Ocean physics link">Volume absorption/scattering by pigments, particles, CDOM; water optics</td>
+              <td data-label="Common products">Chl-a proxies, TSM, CDOM, blooms</td>
+              <td data-label="Limitations">Atmospheric correction, glint, clouds, coastal adjacency</td>
+            </tr>
+            <tr>
+              <td data-label="Band / freq">Thermal IR</td>
+              <td data-label="Passive / Active">Passive</td>
+              <td data-label="Primary observable">Thermal radiance → brightness temperature</td>
+              <td data-label="Ocean physics link">Skin-layer emission; emissivity; cool-skin/warm-layer physics</td>
+              <td data-label="Common products">SST, fronts, eddies</td>
+              <td data-label="Limitations">Clouds, water vapor correction, skin–bulk mismatch</td>
+            </tr>
+            <tr>
+              <td data-label="Band / freq">Microwave radiometry (incl. L-band)</td>
+              <td data-label="Passive / Active">Passive</td>
+              <td data-label="Primary observable"><span class="mono">T<sub>B</sub></span> (multi-freq, polarization)</td>
+              <td data-label="Ocean physics link">Dielectric constant (S, T); roughness/foam modifies emissivity; atmosphere/rain at higher freq</td>
+              <td data-label="Common products">SSS (L-band), wind/ice/rain context</td>
+              <td data-label="Limitations">RFI, coarse footprint, roughness/foam corrections</td>
+            </tr>
+            <tr>
+              <td data-label="Band / freq">Laser / lidar (optical)</td>
+              <td data-label="Passive / Active">Active</td>
+              <td data-label="Primary observable">Time-of-flight, photon returns, waveform</td>
+              <td data-label="Ocean physics link">Specular facets + surface roughness; water attenuation for bathymetry</td>
+              <td data-label="Common products">Elevation tracks, waves, bathymetry (conditions)</td>
+              <td data-label="Limitations">Sea state, water clarity, background noise</td>
+            </tr>
+            <tr>
+              <td data-label="Band / freq">Scatterometry (Ku/C)</td>
+              <td data-label="Passive / Active">Active</td>
+              <td data-label="Primary observable"><span class="mono">σ⁰</span> vs azimuth/incidence</td>
+              <td data-label="Ocean physics link">Bragg scattering from wind-generated short waves; azimuthal anisotropy encodes direction</td>
+              <td data-label="Common products">Vector winds</td>
+              <td data-label="Limitations">Rain (esp. Ku), coastal/ice contamination</td>
+            </tr>
+            <tr>
+              <td data-label="Band / freq">SAR (X/C/L)</td>
+              <td data-label="Passive / Active">Active</td>
+              <td data-label="Primary observable">Coherent backscatter image (amplitude/phase)</td>
+              <td data-label="Ocean physics link">Bragg-scale roughness “carrier” modulated by currents/fronts/internal waves/surfactants</td>
+              <td data-label="Common products">Roughness features, ice, slicks, wave proxies</td>
+              <td data-label="Limitations">Ambiguity without context; geometry/polarization sensitivity</td>
+            </tr>
+            <tr>
+              <td data-label="Band / freq">Radar altimetry (Ka/Ku)</td>
+              <td data-label="Passive / Active">Active</td>
+              <td data-label="Primary observable">Range + waveform shape</td>
+              <td data-label="Ocean physics link">Quasi-specular facets; SWH broadens waveform; sea state bias; geophysical corrections</td>
+              <td data-label="Common products">SSH, SWH, sea level trends</td>
+              <td data-label="Limitations">Corrections (tropo/iono/tides), coastal waveform issues</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="hr"></div>
+
+      <h3>3) A “decision rule” you can use immediately</h3>
+      <div class="three-col">
+        <div class="card">
+          <h3>If you need biogeochemistry…</h3>
+          <p>
+            Start with <strong>ocean color</strong>. Your primary job becomes atmospheric correction and understanding optical water types.
+          </p>
+        </div>
+        <div class="card">
+          <h3>If you need temperature patterns…</h3>
+          <p>
+            Start with <strong>thermal IR SST</strong> (high resolution) and consider <strong>microwave SST</strong> or blended products when clouds dominate.
+          </p>
+        </div>
+        <div class="card">
+          <h3>If you need dynamics (winds/SSH/roughness)…</h3>
+          <p>
+            Start with <strong>scatterometry (winds)</strong>, <strong>altimetry (SSH)</strong>, and <strong>SAR (roughness features)</strong>.
+            Expect Bragg-wave physics and geophysical corrections to be central.
+          </p>
+        </div>
+      </div>
+    </section>
+
+
+      <div class="callout">
+        <strong>Recommended learning workflow:</strong> For each sensor family, practice the sequence:
+        (1) name the observable → (2) state the dominant ocean physics → (3) list the main corrections → (4) identify the product and its resolution/coverage limits.
+      </div>
+
+      <footer>
+        <span class="foot-badge">OCNG — Satellite Oceanography</span>
+        <span class="muted">module: Sensors overview (Passive vs Active; high → low frequency)</span>
+      </footer>
+    </section>
+  </main>
+
+  <script>
+    // Mobile menu toggle (matches styles-light.css patterns)
+    (function(){
+      var btn = document.getElementById('menuBtn');
+      var nav = document.getElementById('nav');
+      if(!btn || !nav) return;
+
+      btn.addEventListener('click', function(){
+        var isOpen = nav.classList.toggle('open');
+        btn.setAttribute('aria-expanded', String(isOpen));
+      });
+
+      // Close menu after click (mobile UX)
+      nav.addEventListener('click', function(e){
+        if(e.target && e.target.tagName === 'A' && nav.classList.contains('open')){
+          nav.classList.remove('open');
+          btn.setAttribute('aria-expanded', 'false');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

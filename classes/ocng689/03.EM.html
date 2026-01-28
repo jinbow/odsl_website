@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Electromagnetic Spectrum & Radiation — Fundamentals for Ocean Remote Sensing</title>
 
-  <!-- Course site stylesheet (place styles.css in the same folder as this HTML file) -->
-  <link rel="stylesheet" href="styles.css" />
+  <!-- Course site stylesheet (place styles-light.css in the same folder as this HTML file) -->
+  <link rel="stylesheet" href="styles-light.css" />
 
   <!-- MathJax (for clean equations and symbols) -->
   <script>
@@ -47,9 +47,9 @@
 
     /* Make sure long equations can scroll on small screens */
     .eq {
-      border: 1px solid rgba(148,163,184,.22);
+      border: 1px solid var(--line);
       border-radius: 12px;
-      background: rgba(15,26,46,.55);
+      background: var(--card-bg);
       padding: 10px 12px;
       margin: 10px 0;
       overflow-x: auto;
@@ -61,7 +61,7 @@
       gap: 10px;
       flex-wrap: wrap;
       margin-top: 6px;
-      color: rgba(148,163,184,.95);
+      color: var(--muted);
       font-size: .88rem;
     }
     .eq .meta .tag{
@@ -82,9 +82,9 @@
       margin-top: 10px;
     }
     .def{
-      border: 1px solid rgba(148,163,184,.18);
+      border: 1px solid var(--line);
       border-radius: 14px;
-      background: rgba(148,163,184,.06);
+      background: var(--item-bg);
       padding: 12px;
       display: grid;
       gap: 6px;
@@ -94,10 +94,10 @@
       font-size: 1.0rem;
       letter-spacing: .2px;
     }
-    .def p{ margin: 0; color: rgba(229,231,235,.88); font-size: .93rem; }
+    .def p{ margin: 0; color: var(--text); font-size: .93rem; }
     .def .sym{
       font-family: var(--mono);
-      color: rgba(229,231,235,.92);
+      color: var(--text);
       font-size: .9rem;
     }
 
@@ -108,22 +108,22 @@
       overflow: hidden;
       border-radius: 12px;
       border: 1px solid var(--line);
-      background: rgba(15,26,46,.45);
+      background: var(--table-wrap-bg);
     }
     .tight-table th, .tight-table td{
       padding: 10px 12px;
-      border-top: 1px solid rgba(148,163,184,.16);
+      border-top: 1px solid var(--line);
       vertical-align: top;
       font-size: .93rem;
-      color: rgba(229,231,235,.92);
+      color: var(--text);
     }
     .tight-table thead th{
-      background: rgba(15,26,46,.92);
+      background: var(--table-head-bg);
       border-top: none;
       font-weight: 900;
       font-size: .92rem;
     }
-    .tight-table tbody tr:nth-child(odd){ background: rgba(148,163,184,.06); }
+    .tight-table tbody tr:nth-child(odd){ background: var(--table-stripe-odd); }
 
     /* TOC */
     .toc{
@@ -131,10 +131,10 @@
       gap: 8px;
       margin-top: 10px;
       padding-left: 18px;
-      color: rgba(229,231,235,.92);
+      color: var(--text);
     }
-    .toc a{ text-decoration: none; border-bottom: 1px solid rgba(148,163,184,.22); }
-    .toc a:hover{ border-bottom-color: rgba(96,165,250,.7); }
+    .toc a{ text-decoration: none; border-bottom: 1px solid var(--line); }
+    .toc a:hover{ border-bottom-color: var(--accent); }
 
     /* Mini calculators */
     .calc{
@@ -151,27 +151,27 @@
       display: grid;
       gap: 6px;
       font-size: .9rem;
-      color: rgba(229,231,235,.90);
+      color: var(--text);
     }
     .calc input, .calc select{
       padding: 10px 10px;
       border-radius: 10px;
-      border: 1px solid rgba(148,163,184,.26);
-      background: rgba(11,18,32,.55);
-      color: rgba(229,231,235,.96);
+      border: 1px solid var(--line);
+      background: var(--bg);
+      color: var(--text);
       font: inherit;
       outline: none;
     }
     .calc input:focus, .calc select:focus{
-      border-color: rgba(96,165,250,.55);
-      box-shadow: 0 0 0 2px rgba(96,165,250,.18);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px color-mix(in oklab, var(--accent) 20%, transparent);
     }
     .calc .out{
-      border: 1px solid rgba(148,163,184,.18);
+      border: 1px solid var(--line);
       border-radius: 12px;
-      background: rgba(15,26,46,.55);
+      background: var(--card-bg);
       padding: 10px 12px;
-      color: rgba(229,231,235,.92);
+      color: var(--text);
       font-size: .93rem;
     }
     .calc .out code{
@@ -184,12 +184,12 @@
       margin: 12px 0;
       padding: 10px 12px;
       border-radius: 14px;
-      border: 1px solid rgba(148,163,184,.18);
-      background: rgba(15,26,46,.45);
+      border: 1px solid var(--line);
+      background: var(--card-bg);
     }
     figcaption{
       margin-top: 8px;
-      color: rgba(148,163,184,.95);
+      color: var(--muted);
       font-size: .88rem;
     }
 
@@ -198,10 +198,15 @@
       .defgrid{ grid-template-columns: 1fr; }
       .calc .row{ grid-template-columns: 1fr; }
     }
+
+    /* Offset for fixed top menu bar */
+    body {
+      padding-top: 70px;
+    }
   </style>
 </head>
 
-<body id="top">
+<body id="top" data-theme="light">
   <a class="skip" href="#content">Skip to content</a>
 
   <header class="topbar" role="banner">
@@ -231,6 +236,8 @@
     </div>
   </header>
 
+  <div style="height: 20px;"></div> 
+
   <main id="content" class="container" role="main">
 
     <!-- =======================================================
@@ -238,7 +245,7 @@
          ======================================================= -->
     <section class="hero" aria-label="Overview">
       <div class="panel">
-        <h1>Electromagnetic spectrum and radiation: a unified toolkit for remote sensing</h1>
+        <h1>Electromagnetic spectrum and radiation: foundations of remote sensing</h1>
         <p>
           Every satellite sensor in oceanography—ocean color radiometers, thermal infrared imagers,
           microwave radiometers, scatterometers, SAR, radar altimeters—ultimately measures
@@ -248,8 +255,8 @@
         </p>
 
         <div class="cta-row" role="navigation" aria-label="Primary actions">
-          <a class="btn primary" href="#toc">Start the learning path</a>
           <a class="btn good" href="#practice">Jump to practice</a>
+          <a class="btn primary" href="#glossary">Go to glossary</a>
         </div>
 
         <div class="callout">
@@ -480,15 +487,38 @@
       <div class="eq" aria-label="Maxwell equations">
         \[
           \begin{aligned}
-            \grad \cdot \vE &= \frac{\rho}{\eps0} \\
+            \grad \cdot \vE &= \frac{\rho}{\varepsilon_0} \\
             \grad \cdot \vB &= 0 \\
             \grad \times \vE &= -\pd{\vB}{t} \\
-            \grad \times \vB &= \mu_0 \mathbf{J} + \mu_0 \eps0 \pd{\vE}{t}
+            \grad \times \vB &= \mu_0 \mathbf{J} + \mu_0 \varepsilon_0 \pd{\vE}{t}
           \end{aligned}
         \]
         <div class="meta">
           <span class="tag">Core concept</span>
           <span>Interpretation: sources (\(\rho, \mathbf{J}\)) and coupling between \(\vE\) and \(\vB\)</span>
+        </div>
+      </div>
+
+      <div class="defgrid">
+        <div class="def">
+          <h4>1. Gauss's Law for Electricity</h4>
+          <p class="sym">\(\nabla \cdot \mathbf{E} = \rho / \varepsilon_0\)</p>
+          <p>Electric charges create electric fields. The divergence (spreading out) of \(\mathbf{E}\) is proportional to the local charge density \(\rho\). Positive charges are sources; negative charges are sinks.</p>
+        </div>
+        <div class="def">
+          <h4>2. Gauss's Law for Magnetism</h4>
+          <p class="sym">\(\nabla \cdot \mathbf{B} = 0\)</p>
+          <p>There are no magnetic monopoles. Magnetic field lines always form closed loops—every field line that exits a region must also enter it. Unlike electric charges, you cannot isolate a single magnetic pole.</p>
+        </div>
+        <div class="def">
+          <h4>3. Faraday's Law of Induction</h4>
+          <p class="sym">\(\nabla \times \mathbf{E} = -\partial \mathbf{B}/\partial t\)</p>
+          <p>A changing magnetic field creates a curling electric field. This is how generators work and why EM waves can propagate: a time-varying \(\mathbf{B}\) induces \(\mathbf{E}\).</p>
+        </div>
+        <div class="def">
+          <h4>4. Ampère–Maxwell Law</h4>
+          <p class="sym">\(\nabla \times \mathbf{B} = \mu_0 \mathbf{J} + \mu_0 \varepsilon_0 \,\partial \mathbf{E}/\partial t\)</p>
+          <p>Electric currents (\(\mathbf{J}\)) and changing electric fields both create curling magnetic fields. Maxwell's addition of the \(\partial \mathbf{E}/\partial t\) term ("displacement current") completed the symmetry and predicted EM waves as shown below.</p>
         </div>
       </div>
 
@@ -524,8 +554,25 @@
         \]
         <div class="meta">
           <span class="tag">Key result</span>
-          <span>Material property enters via \(\varepsilon\) (dielectric constant)</span>
+          <span>Material property enters via \(\varepsilon\) (permittivity)</span>
         </div>
+      </div>
+
+      <div class="def" style="margin: 12px 0;">
+        <h4>Dielectric constant (relative permittivity) \(\varepsilon_r\)</h4>
+        <p>
+          The <strong>dielectric constant</strong> (or relative permittivity, \(\varepsilon_r\)) measures how easily a material polarizes in response to an applied electric field, relative to vacuum. It is defined as:
+          \[
+            \varepsilon_r = \frac{\varepsilon}{\varepsilon_0}
+          \]
+          where \(\varepsilon\) is the material's permittivity and \(\varepsilon_0 \approx 8.85 \times 10^{-12}\,\mathrm{F/m}\) is the permittivity of free space.
+        </p>
+        <p>
+          <strong>Physical meaning:</strong> A higher \(\varepsilon_r\) means the material's molecules or electrons respond more strongly to the electric field, storing more electric energy. This slows down EM wave propagation (\(v = c_0/\sqrt{\varepsilon_r}\)) and increases the refractive index (\(n = \sqrt{\varepsilon_r}\) for non-magnetic materials).
+        </p>
+        <p>
+          <strong>Remote-sensing relevance:</strong> Water has a very high dielectric constant (~80 at microwave frequencies), which is why microwave radiometers are sensitive to soil moisture, sea surface salinity, and ocean emissivity. The large contrast between water (\(\varepsilon_r \approx 80\)) and dry soil or ice (\(\varepsilon_r \approx 3\text{–}5\)) enables detection of water content.
+        </p>
       </div>
 
       <p>
@@ -535,7 +582,7 @@
           \qquad
           n = \sqrt{\varepsilon}.
         \]
-        Here \(n\) is the refractive index (for \(\mu_r \approx 1\)). A larger \(n\) means slower propagation and shorter wavelength inside the material.
+        Here \(n\) is the refractive index (for \(\mu_r \approx 1\)). A larger \(n\) means slower propagation and shorter wavelength inside the material. Water has \(n\approx 1.33\) in visible light, and much larger values (up to \(\sim 80\)) at microwave frequencies.
       </p>
 
       <h3>Energy transport: the Poynting vector and flux density</h3>
@@ -574,6 +621,7 @@
           \qquad
           E_x(z,t) = E_0\,e^{-\omega \kappa z / c_0}\,e^{i(\omega t - n\omega z/c_0)}.
         \]
+        
         <div class="meta">
           <span class="tag">Interpretation</span>
           <span>\(n\) changes phase speed; \(\kappa\) causes exponential decay</span>
@@ -658,6 +706,10 @@
           \qquad
           p_\gamma = \frac{h}{\lambda}.
         \]
+        \[
+        h \approx 6.626 \times 10^{-34}\,\mathrm{J\,s} \]
+        is Planck’s constant.
+        
         <div class="meta">
           <span class="tag">Photon relations</span>
           <span>Shorter wavelength ⇒ higher photon energy</span>
@@ -1068,7 +1120,8 @@
 
       <h3>Limiting forms of Planck’s law</h3>
       <p>
-        Define the dimensionless parameter \(x = \frac{hc_0}{\lambda k_B T}\).
+        Define the dimensionless parameter \(x = \frac{hc_0}{\lambda k_B T}\), where \(k_B\) is Boltzmann’s constant \(\approx 1.381 \times 10^{-23}\,\mathrm{J/K}\).
+        Then the two limiting cases are:
       </p>
 
       <div class="eq" aria-label="Rayleigh-Jeans approximation">
@@ -1101,9 +1154,9 @@
 
       <div class="eq" aria-label="Brightness temperature idea">
         \[
-          L_{\lambda,\text{meas}} \approx \varepsilon\,\frac{2c_0 k_B T_p}{\lambda^4}
+          L_{\lambda} \approx \frac{2c_0 k_B T_B}{\lambda^4}
           \quad\Rightarrow\quad
-          T_B \propto L_{\lambda,\text{meas}}.
+          T_B = \frac{L_{\lambda} \lambda^4}{2c_0 k_B}.
         \]
         <div class="meta">
           <span class="tag">Microwave remote sensing</span>
@@ -1347,6 +1400,14 @@
         </div>
 
         <div class="def">
+          <h4>Spectral radiance \(L_\lambda\)</h4>
+          <p>
+            Radiance per unit wavelength interval: \(L_\lambda = \mathrm{d}L/\mathrm{d}\lambda\). Unit \(\unit{W\,m^{-2}\,sr^{-1}\,\mu m^{-1}}\) (or per nm). Integrating over a spectral band gives in-band radiance. Used in ocean color and thermal IR retrievals where spectral detail matters.
+          </p>
+        </div>
+        
+
+        <div class="def">
           <h4>Radiant flux \(\Phi\)</h4>
           <p>
             Power in EM radiation: \(\Phi=\mathrm{d}Q/\mathrm{d}t\). Unit \(\unit{W}\).
@@ -1436,8 +1497,8 @@
     </section>
 
     <footer role="contentinfo">
-      <span class="foot-badge">EM spectrum & radiation — foundational module</span>
-      <span>Prepared for upper-level ocean remote sensing instruction.</span>
+      <div>OCNG 489/689 — Study the Oceans from Space</div>
+      <div class="foot-badge">EM spectrum & radiation</div>
     </footer>
   </main>
 
