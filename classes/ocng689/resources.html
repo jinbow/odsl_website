@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OCNG 489/689 — Resources</title>
+  <link rel="stylesheet" href="styles-light.css" />
+</head>
+
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="topbar" role="banner">
+    <div class="topbar-inner">
+      <div class="brand">
+        <a href="index.html">OCNG 489/689 Study the Oceans from Space</a>
+        <small>Spring 2026 • TR 9:35–10:50 • OMB 602 • Texas A&amp;M University</small>
+      </div>
+
+      <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="primaryNav">
+        Menu
+      </button>
+
+      <nav class="nav" id="primaryNav" aria-label="Primary navigation">
+        <a href="index.html">Class Home</a>
+
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="container" role="main">
+    <div class="page-head">
+      <h1>Resources (incomplete)</h1>
+    </div>
+
+    <section class="panel" aria-label="Quick links">
+      <div class="cta-row" style="margin-top:0;">
+        <a class="btn primary" href="#data">Data portals</a>
+        <a class="btn" href="#software">Software</a>
+        <a class="btn" href="#workflows">Workflows</a>
+        <a class="btn" href="#tools">Tools for Learning</a>
+      </div>
+    </section>
+
+    <div class="section-title" id="data">
+      <h2>Data portals</h2>
+    </div>
+
+    <section class="panel">
+      <div class="list">
+        <div class="item">
+          <div class="top">
+            <strong>NASA PO.DAAC (ocean remote sensing)</strong>
+            <span class="tag">Altimetry • SST • Winds • SSS</span>
+          </div>
+          <p>Suggested use: downloading, subsetting, and citing standard ocean products.</p>
+        </div>
+
+        <div class="item">
+          <div class="top">
+            <strong>Copernicus Marine Service</strong>
+            <span class="tag">CMEMS</span>
+          </div>
+          <p>Suggested use: gridded products and reanalysis context for interpretation.</p>
+        </div>
+
+        <div class="item">
+          <div class="top">
+            <strong>AVISO+ (altimetry)</strong>
+            <span class="tag">SSH • SLA • MDT</span>
+          </div>
+          <p>Suggested use: altimetry products and documentation (sea level and currents).</p>
+        </div>
+
+        <div class="item">
+          <div class="top">
+            <strong>NOAA CoastWatch / SST & ocean color resources</strong>
+            <span class="tag">SST • OC</span>
+          </div>
+          <p>Suggested use: quick-look imagery and operational product context.</p>
+        </div>
+      </div>
+
+      <div class="item">
+          <div class="top">
+            <strong>NASA Earthdata Worldview</strong>
+            <span class="tag">SST • OC • Altimetry • Winds • SSS</span>
+          </div>
+          <p>Suggested use: quick-look imagery of NASA datasets.</p>
+        </div>
+      </div>
+
+    </section>
+
+    <div class="section-title" id="software">
+      <h2>Software</h2>
+      <span>Starter stack</span>
+    </div>
+
+    <section class="panel">
+      <div class="grid">
+        <div class="card">
+          <h3>Python <span class="tag">xarray • netCDF • numpy</span></h3>
+          <p>Recommended for analysis, gridding, plotting, and reproducible workflows.</p>
+          <a class="btn" href="#">Add setup instructions (TODO)</a>
+        </div>
+        <div class="card">
+          <h3>GIS viewer <span class="tag">QGIS</span></h3>
+          <p>Helpful for quick spatial inspection, overlays, and georeferenced exports.</p>
+          <a class="btn" href="#">Add install notes (TODO)</a>
+        </div>
+        <div class="card">
+          <h3>NetCDF viewer <span class="tag">Panoply</span></h3>
+          <p>Fast “open and look” for NetCDF/HDF products and variable metadata.</p>
+          <a class="btn" href="#">Add viewer notes (TODO)</a>
+        </div>
+      </div>
+
+      <p class="callout">
+        <strong>File formats:</strong> Expect NetCDF4/HDF5 and CF conventions; you can standardize units/variable names in preprocessing.
+      </p>
+    </section>
+
+
+    <footer role="contentinfo">
+      <span>© <span id="year"></span> OCNG 489/689</span>
+      <span class="foot-badge">Last modified: <span id="lastModified">—</span></span>
+    </footer>
+  </main>
+
+  <script>
+    (function () {
+      const menuBtn = document.getElementById("menuBtn");
+      const nav = document.getElementById("primaryNav");
+      function setExpanded(isOpen){
+        menuBtn.setAttribute("aria-expanded", String(isOpen));
+        nav.classList.toggle("open", isOpen);
+      }
+      menuBtn?.addEventListener("click", () => setExpanded(!nav.classList.contains("open")));
+      nav?.addEventListener("click", (e) => {
+        const t = e.target;
+        if (t && t.tagName === "A" && nav.classList.contains("open")) setExpanded(false);
+      });
+      document.getElementById("year").textContent = new Date().getFullYear();
+      document.getElementById("lastModified").textContent = document.lastModified || "—";
+    })();
+  </script>
+</body>
+</html>
