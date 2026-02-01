@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>High Res Image Viewer</title>
+    <style>
+        /* 1. Basic Reset */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background-color: #333; /* Dark background for better contrast */
+            overflow: hidden; /* Prevent native browser scrollbars */
+        }
+
+        /* 2. Viewer Container */
+        #openseadragon-viewer {
+            width: 100%;
+            height: 100vh; /* Full viewport height */
+        }
+    </style>
+</head>
+<body>
+
+    <div id="openseadragon-viewer"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.1.0/openseadragon.min.js"></script>
+
+    <script type="text/javascript">
+        // 3. Initialize the Viewer
+        var viewer = OpenSeadragon({
+            id: "openseadragon-viewer",
+            
+            // Location of the navigation icons (zoom in, zoom out, etc.)
+            prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.1.0/images/",
+            
+            // Show navigation buttons (optional, defaults to true)
+            showNavigator:  true,
+            
+            // The Image Source
+            tileSources: {
+                type: 'image',
+                url:  'images/GB2012-09-01-01.png', // <--- REPLACE THIS WITH YOUR FILENAME
+                buildPyramid: false // simpler for single images, no tiling needed yet
+            },
+
+            // Optional: Smooth animation settings
+            animationTime: 1.2,
+            blendTime: 0.1,
+            constrainDuringPan: true,
+            // Allow deeper zoom for inspecting small-scale details
+            maxZoomPixelRatio: 5,
+            zoomPerScroll: 1.2,
+        });
+    </script>
+
+</body>
+</html>
