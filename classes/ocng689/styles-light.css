@@ -320,6 +320,7 @@ section[id], h2[id], h3[id], h4[id], div[id] {
   background: var(--panel-bg);
   box-shadow: var(--shadow);
   padding: 14px;
+  margin-bottom: 8px;
 }
 
 .btn{
@@ -724,4 +725,87 @@ footer{
 /* If user prefers reduced motion, keep it simple (no animations used here). */
 @media (prefers-reduced-motion: reduce){
   .term{ transition: none; }
+}
+
+/* Code / pre */
+code{ font-family: var(--mono); }
+pre{
+  background: color-mix(in oklab, var(--card-bg) 92%, transparent);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: var(--mono);
+}
+
+/* Inline pill label */
+.pill{
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: color-mix(in oklab, var(--accent) 10%, transparent);
+  font-family: var(--mono);
+  font-size: .80rem;
+}
+
+/* MathJax helpers */
+.math-inline{ white-space: nowrap; }
+.math-display{
+  margin: 10px 0 6px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: color-mix(in oklab, var(--card-bg) 90%, transparent);
+  overflow-x: auto;
+}
+.math-display mjx-container[display="true"]{ margin: 0; }
+
+/* 4pt separation between consecutive block elements in content areas */
+.panel p,
+.panel ul,
+.panel ol,
+.panel h3,
+.panel h4,
+.panel details,
+.panel .callout,
+.panel .table-wrap,
+.panel .section-title {
+  margin-bottom: 4pt;
+}
+.panel p:last-child,
+.panel ul:last-child,
+.panel ol:last-child,
+.panel h3:last-child,
+.panel h4:last-child,
+.panel details:last-child,
+.panel .callout:last-child,
+.panel .table-wrap:last-child {
+  margin-bottom: 0;
+}
+
+/* Always-visible term definitions: override the hover-only tooltip */
+.term::after,
+.term:hover::after,
+.term:focus::after,
+.term:active::after {
+  content: attr(data-def);
+  display: block;
+  position: static;
+  max-width: none;
+  min-width: 0;
+  background: transparent;
+  color: var(--muted);
+  border: none;
+  border-radius: 0;
+  padding: 2px 0 0;
+  box-shadow: none;
+  z-index: auto;
+  top: auto;
+  left: auto;
+  white-space: normal;
+  line-height: 1.35;
+  font-size: .80rem;
+  font-style: italic;
+  pointer-events: none;
 }

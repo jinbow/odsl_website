@@ -1,0 +1,1229 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Papers in Satellite Ocean Color Remote Sensing</title>
+  <link rel="stylesheet" href="styles-light.css">
+  <style>
+    /* Small page-specific additions to complement styles-light.css */
+    .input {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: color-mix(in oklab, var(--card-bg) 92%, transparent);
+      color: var(--text);
+      font: inherit;
+    }
+    .input::placeholder { color: color-mix(in oklab, var(--muted) 92%, transparent); }
+    .pill {
+      font-family: var(--mono);
+      font-size: .82rem;
+      padding: 3px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: color-mix(in oklab, var(--muted) 8%, transparent);
+      color: color-mix(in oklab, var(--text) 86%, transparent);
+      white-space: nowrap;
+    }
+    .muted { color: var(--muted); }
+    /* Make the big table more readable */
+    table.course td:nth-child(4) { min-width: 420px; }
+    table.course td:nth-child(6) { min-width: 420px; }
+    @media (max-width: 980px){
+      table.course td:nth-child(4),
+      table.course td:nth-child(6) { min-width: 0; }
+    }
+  </style>
+</head>
+
+<body data-theme="light" id="top">
+  <a class="skip" href="#content">Skip to content</a>
+
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <a href="#top">Ocean Color Remote Sensing</a>
+        <small>technical + scientific papers</small>
+      </div>
+
+      <button class="menu-btn" id="menuBtn" aria-label="Toggle menu">Menu</button>
+
+      <nav class="nav" id="nav">
+        <a href="#table">Master table</a>
+        <a href="#foundations">Foundations</a>
+        <a href="#atmosphere">Atmospheric correction</a>
+        <a href="#algorithms">Algorithms</a>
+        <a href="#missions">Missions/CDRs</a>
+        <a href="#applications">Science</a>
+      </nav>
+    </div>
+  </div>
+
+  <main class="container" id="content">
+    <div class="hero">
+      <div class="panel">
+        <h1>Papers in Satellite Ocean Color Remote Sensing</h1>
+
+        <div class="cta-row">
+          <a class="btn primary" href="#table">Go to master table</a>
+          <a class="btn good" href="#foundations">Browse by theme</a>
+        </div>
+        
+      </div>
+
+      <aside class="mini">
+        <h2>At-a-glance</h2>
+        <dl class="kv">
+          <div><dt>Total</dt><dd><span class="pill">51 papers</span></dd></div>
+          <div><dt>Foundations</dt><dd><span class="pill">6</span></dd></div>
+          <div><dt>Atmos. / Cal.</dt><dd><span class="pill">15</span></dd></div>
+          <div><dt>Algorithms</dt><dd><span class="pill">11</span></dd></div>
+          <div><dt>Missions / CDRs</dt><dd><span class="pill">13</span></dd></div>
+          <div><dt>Science</dt><dd><span class="pill">6</span></dd></div>
+          <div><dt>Last updated</dt><dd><span class="pill">February 04, 2026</span></dd></div>
+        </dl>
+      </aside>
+    </div>
+
+    <div class="section-title">
+      <h2>Browse by theme</h2>
+      <span>Jump to grouped lists and summaries</span>
+    </div>
+
+    <div class="grid">
+      
+    <div class="card">
+      <h3>Foundations <span class="tag">6 papers</span></h3>
+      <p>Radiative transfer, bio-optical models, and early mission foundations.</p>
+      <a class="btn primary" href="#foundations">Jump to section</a>
+    </div>
+
+
+    <div class="card">
+      <h3>Atmospheric correction and calibration <span class="tag">15 papers</span></h3>
+      <p>Atmospheric correction, vicarious calibration, and in situ protocols.</p>
+      <a class="btn primary" href="#atmosphere">Jump to section</a>
+    </div>
+
+
+    <div class="card">
+      <h3>Algorithms and validation datasets <span class="tag">11 papers</span></h3>
+      <p>Chlorophyll/IOP algorithms, optical water types, and community validation frameworks/datasets.</p>
+      <a class="btn primary" href="#algorithms">Jump to section</a>
+    </div>
+
+
+    <div class="card">
+      <h3>Missions and climate records <span class="tag">13 papers</span></h3>
+      <p>Mission overviews, cross-sensor continuity, and climate data record building.</p>
+      <a class="btn primary" href="#missions">Jump to section</a>
+    </div>
+
+
+    <div class="card">
+      <h3>Science applications enabled by ocean color <span class="tag">6 papers</span></h3>
+      <p>Biogeochemical interpretation and flagship science applications enabled by ocean color.</p>
+      <a class="btn primary" href="#applications">Jump to section</a>
+    </div>
+    </div>
+
+    <div class="section-title" id="table">
+      <h2>Master list with citation numbers</h2>
+      <span class="muted">Tip: use the filter box to search by author, year, title keywords, journal, or method</span>
+    </div>
+
+    <div class="panel">
+      <div class="item">
+        <div class="top">
+          <strong>Filter</strong>
+          <time>Matches title/authors/journal/summary</time>
+        </div>
+        <p style="margin-top:10px;">
+          <input class="input" id="filterBox" type="text" placeholder="Type to filter (e.g., 'SeaWiFS', 'atmospheric correction', 'CI', 'QAA', 'CDOM', 'PACE', 'Sentinel-3', 'OLCI')">
+        </p>
+        <p style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn" id="clearBtn" type="button">Clear</button>
+          <span class="pill" id="matchCount">51 / 51 shown</span>
+        </p>
+      </div>
+
+      <div class="table-wrap" style="margin-top:12px;">
+        <table class="course">
+          <thead>
+            <tr>
+              <th style="width:70px;">#</th>
+              <th style="width:80px;">Year</th>
+              <th style="width:220px;">Category</th>
+              <th>Reference</th>
+              <th style="width:220px;">Links</th>
+              <th>Why influential</th>
+            </tr>
+          </thead>
+          <tbody id="paperTable">
+
+      <tr id="ref1">
+        <td data-label="#" style="white-space:nowrap;"><strong>[1]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">1980</td>
+        <td data-label="Category"><span class="tag">Foundations</span></td>
+        <td data-label="Reference">Hovis, W. A., et al. (1980). &quot;Nimbus-7 Coastal Zone Color Scanner: System Description and Initial Imagery.&quot; Science 210(4465): 60–63.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.1126/science.210.4465.60" target="_blank" rel="noopener">Science (DOI)</a></td>
+        <td data-label="Why influential">First satellite mission dedicated to ocean color (CZCS); demonstrated feasibility of global ocean-color observation and set early instrument/measurement requirements.</td>
+      </tr>
+
+      <tr id="ref2">
+        <td data-label="#" style="white-space:nowrap;"><strong>[2]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">1983</td>
+        <td data-label="Category"><span class="tag">Foundations</span></td>
+        <td data-label="Reference">Gordon, H. R. &amp; Morel, A. Y. (1983). Remote Assessment of Ocean Color for Interpretation of Satellite Visible Imagery: A Review. Lecture Notes on Coastal and Estuarine Studies, Vol. 4.</td>
+        <td data-label="Links"><a class="link" href="https://agupubs.onlinelibrary.wiley.com/doi/book/10.1029/LN004" target="_blank" rel="noopener">Book/DOI landing</a><br><a class="link" href="https://link.springer.com/book/10.1007/978-1-4684-6280-7" target="_blank" rel="noopener">SpringerLink page</a></td>
+        <td data-label="Why influential">Foundational synthesis of ocean-color theory (radiative transfer, atmospheric effects, bio-optical relationships) framing the modern problem of isolating water-leaving radiance and mapping it to biogeochemical properties.</td>
+      </tr>
+
+      <tr id="ref3">
+        <td data-label="#" style="white-space:nowrap;"><strong>[3]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">1988</td>
+        <td data-label="Category"><span class="tag">Foundations</span></td>
+        <td data-label="Reference">Gordon, H. R., Brown, O. B., Evans, R. H., et al. (1988). &quot;A semianalytic radiance model of ocean color.&quot; JGR 93(D9): 10909–10924.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.1029/JD093iD09p10909" target="_blank" rel="noopener">JGR (DOI)</a></td>
+        <td data-label="Why influential">Semianalytic forward model linking reflectance to inherent optical properties and constituents; cornerstone for algorithm development and sensitivity/error studies.</td>
+      </tr>
+
+      <tr id="ref4">
+        <td data-label="#" style="white-space:nowrap;"><strong>[4]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">1988</td>
+        <td data-label="Category"><span class="tag">Foundations</span></td>
+        <td data-label="Reference">Morel, A. (1988). &quot;Optical modeling of the upper ocean in relation to its biogenous matter content (Case I waters).&quot; JGR 93(C9): 10749–10768.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.1029/JC093iC09p10749" target="_blank" rel="noopener">JGR (DOI)</a></td>
+        <td data-label="Why influential">Classic parameterization of Case-1 waters relating chlorophyll to optical properties; underpins many forward models, simulations, and open-ocean algorithm concepts.</td>
+      </tr>
+
+      <tr id="ref5">
+        <td data-label="#" style="white-space:nowrap;"><strong>[5]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">1994</td>
+        <td data-label="Category"><span class="tag">Foundations</span></td>
+        <td data-label="Reference">Mobley, C. D. (1994). Light and Water: Radiative Transfer in Natural Waters. Academic Press.</td>
+        <td data-label="Links"><a class="link" href="http://www.oceanopticsbook.info/view/references/publications" target="_blank" rel="noopener">Ocean Optics Web Book (publisher/author download)</a><br><a class="link" href="https://archive.org/details/lightwaterradiat0000mobl" target="_blank" rel="noopener">Archive.org record</a></td>
+        <td data-label="Why influential">Canonical reference for radiative transfer and optical oceanography; widely cited for definitions, notation, and modeling approaches connecting IOPs/AOPs and reflectance.</td>
+      </tr>
+
+      <tr id="ref6">
+        <td data-label="#" style="white-space:nowrap;"><strong>[6]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">2001</td>
+        <td data-label="Category"><span class="tag">Foundations</span></td>
+        <td data-label="Reference">Morel, A. &amp; Maritorena, S. (2001). &quot;Bio-optical properties of oceanic waters: A reappraisal.&quot; JGR 106(C4): 7163–7180.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.1029/2000JC000319" target="_blank" rel="noopener">JGR (DOI)</a></td>
+        <td data-label="Why influential">Updates key Case-1 bio-optical relationships using improved datasets; refines parameterizations central to semianalytic algorithms and interpretation of open-ocean reflectance.</td>
+      </tr>
+
+      <tr id="ref7">
+        <td data-label="#" style="white-space:nowrap;"><strong>[7]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">1994</td>
+        <td data-label="Category"><span class="tag">Atmospheric correction &amp; calibration</span></td>
+        <td data-label="Reference">Gordon, H. R. &amp; Wang, M. (1994). &quot;Influence of oceanic whitecaps on atmospheric correction of ocean-color sensors.&quot; Applied Optics 33(33): 7754–7763.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.1364/AO.33.007754" target="_blank" rel="noopener">Applied Optics (DOI)</a></td>
+        <td data-label="Why influential">Quantifies whitecap/foam radiance contributions and their impacts on atmospheric correction; essential for accurate retrievals under higher wind conditions.</td>
+      </tr>
+
+      <tr id="ref8">
+        <td data-label="#" style="white-space:nowrap;"><strong>[8]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">1994</td>
+        <td data-label="Category"><span class="tag">Atmospheric correction &amp; calibration</span></td>
+        <td data-label="Reference">Gordon, H. R. &amp; Wang, M. (1994). &quot;Retrieval of water-leaving radiance and aerosol optical thickness over the oceans with SeaWiFS: a preliminary algorithm.&quot; Applied Optics 33(3): 443–452.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.1364/AO.33.000443" target="_blank" rel="noopener">Applied Optics (DOI)</a></td>
+        <td data-label="Why influential">Operationally influential atmospheric-correction scheme retrieving aerosol properties and water-leaving radiance; shaped SeaWiFS processing and later mission algorithms.</td>
+      </tr>
+
+      <tr id="ref9">
+        <td data-label="#" style="white-space:nowrap;"><strong>[9]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">1997</td>
+        <td data-label="Category"><span class="tag">Atmospheric correction &amp; calibration</span></td>
+        <td data-label="Reference">Gordon, H. R. (1997). &quot;Atmospheric correction of ocean color imagery in the Earth Observing System era.&quot; JGR 102(D14): 17081–17106.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.1029/96JD02443" target="_blank" rel="noopener">JGR (DOI)</a></td>
+        <td data-label="Why influential">EOS-era synthesis of atmospheric-correction theory and error propagation (Rayleigh, aerosols, gas absorption, surface effects) into water-leaving radiance uncertainties.</td>
+      </tr>
+
+      <tr id="ref10">
+        <td data-label="#" style="white-space:nowrap;"><strong>[10]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">1999</td>
+        <td data-label="Category"><span class="tag">Atmospheric correction &amp; calibration</span></td>
+        <td data-label="Reference">Mobley, C. D. (1999). &quot;Estimation of the remote-sensing reflectance from above-surface measurements.&quot; Applied Optics 38(36): 7442–7455.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.1364/AO.38.007442" target="_blank" rel="noopener">Applied Optics (DOI)</a></td>
+        <td data-label="Why influential">Practical method to derive remote-sensing reflectance from above-water radiometry, addressing surface reflection and geometry; foundational for consistent satellite validation.</td>
+      </tr>
+
+      <tr id="ref11">
+        <td data-label="#" style="white-space:nowrap;"><strong>[11]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">2003</td>
+        <td data-label="Category"><span class="tag">Atmospheric correction &amp; calibration</span></td>
+        <td data-label="Reference">Mueller, J. L., Fargion, G. S., &amp; McClain, C. R. (eds.) (2003). Ocean Optics Protocols for Satellite Ocean Color Sensor Validation, Revision 4. NASA/TM-2003-211621/Rev4.</td>
+        <td data-label="Links"><a class="link" href="https://ntrs.nasa.gov/api/citations/20030093642/downloads/20030093642.pdf" target="_blank" rel="noopener">NASA NTRS PDF</a><br><a class="link" href="https://oceancolor.gsfc.nasa.gov/resources/docs/technical/protocols_ver4_voliii.pdf" target="_blank" rel="noopener">NASA Ocean Color protocols (example)</a></td>
+        <td data-label="Why influential">Community-standard protocols for in situ radiometry and bio-optics supporting algorithm development, calibration/validation, and uncertainty traceability.</td>
+      </tr>
+
+      <tr id="ref12">
+        <td data-label="#" style="white-space:nowrap;"><strong>[12]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">2008</td>
+        <td data-label="Category"><span class="tag">Atmospheric correction &amp; calibration</span></td>
+        <td data-label="Reference">Bailey, S. W., Hooker, S. B., Antoine, D., Franz, B. A., &amp; Werdell, P. J. (2008). &quot;Sources and assumptions for the vicarious calibration of ocean color satellite observations.&quot; Applied Optics 47(12): 2035–2045.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.1364/AO.47.002035" target="_blank" rel="noopener">Applied Optics (DOI)</a></td>
+        <td data-label="Why influential">Defines vicarious calibration concepts, assumptions, and error sources; strongly influenced operational calibration strategies for climate-quality ocean-color radiometry.</td>
+      </tr>
+
+      <tr id="ref13">
+        <td data-label="#" style="white-space:nowrap;"><strong>[13]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">2010</td>
+        <td data-label="Category"><span class="tag">Atmospheric correction &amp; calibration</span></td>
+        <td data-label="Reference">Bailey, S. W., Franz, B. A., &amp; Werdell, P. J. (2010). &quot;Estimation of near-infrared water-leaving reflectance for satellite ocean color data processing.&quot; Optics Express 18(7): 7521–7527.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.1364/OE.18.007521" target="_blank" rel="noopener">Optics Express (DOI)</a></td>
+        <td data-label="Why influential">Introduces estimation of NIR water-leaving reflectance, relaxing strict black-pixel assumptions; improves atmospheric correction in turbid/coastal waters.</td>
+      </tr>
+
+      <tr id="ref14">
+        <td data-label="#" style="white-space:nowrap;"><strong>[14]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">2011</td>
+        <td data-label="Category"><span class="tag">Atmospheric correction &amp; calibration</span></td>
+        <td data-label="Reference">Steinmetz, F., Deschamps, P.-Y., &amp; Ramon, D. (2011). &quot;Atmospheric correction in presence of sun glint: application to MERIS.&quot; Optics Express 19(10): 9783–9800.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.1364/OE.19.009783" target="_blank" rel="noopener">Optics Express (DOI)</a></td>
+        <td data-label="Why influential">Introduces the POLYMER approach (spectral matching) to retrieve water reflectance while mitigating sun glint and aerosol effects; widely adopted for MERIS/OLCI and coastal applications.</td>
+      </tr>
+
+      <tr id="ref15">
+        <td data-label="#" style="white-space:nowrap;"><strong>[15]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">2015</td>
+        <td data-label="Category"><span class="tag">Atmospheric correction &amp; calibration</span></td>
+        <td data-label="Reference">Müller, D., et al. (2015). &quot;The Ocean Colour Climate Change Initiative: I. Methodology for an assessment of atmospheric correction processors based on in-situ measurements.&quot; Remote Sensing of Environment.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.1016/j.rse.2013.11.026" target="_blank" rel="noopener">RSE (DOI)</a></td>
+        <td data-label="Why influential">Defines an objective framework (within ESA OC-CCI) to evaluate and rank atmospheric-correction processors using in situ matchups—critical for building multi-sensor climate data records.</td>
+      </tr>
+
+      <tr id="ref16">
+        <td data-label="#" style="white-space:nowrap;"><strong>[16]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">2015</td>
+        <td data-label="Category"><span class="tag">Atmospheric correction &amp; calibration</span></td>
+        <td data-label="Reference">Müller, D., et al. (2015). &quot;The Ocean Colour Climate Change Initiative: II. Spatial and temporal homogeneity of satellite data retrieval due to systematic effects in atmospheric correction processors.&quot; Remote Sensing of Environment.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.1016/j.rse.2015.01.033" target="_blank" rel="noopener">RSE (DOI)</a></td>
+        <td data-label="Why influential">Introduces diagnostics to detect across-track/temporal artefacts and systematic processor effects beyond point matchups; supports robust, homogeneous climate-quality retrievals.</td>
+      </tr>
+
+      <tr id="ref17">
+        <td data-label="#" style="white-space:nowrap;"><strong>[17]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">2017</td>
+        <td data-label="Category"><span class="tag">Atmospheric correction &amp; calibration</span></td>
+        <td data-label="Reference">Qi, L., Hu, C., Duan, H., Barnes, B. B., &amp; Ma, R. (2017). &quot;An explicit approach to derive the minimum signal-to-noise ratio requirements for ocean color sensors.&quot; JGR: Oceans.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.1002/2016JC012558" target="_blank" rel="noopener">JGR: Oceans (DOI)</a></td>
+        <td data-label="Why influential">Links sensor signal-to-noise requirements to uncertainties in derived ocean-color products; influential for instrument design trades and error budgeting.</td>
+      </tr>
+
+      <tr id="ref18">
+        <td data-label="#" style="white-space:nowrap;"><strong>[18]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">2019</td>
+        <td data-label="Category"><span class="tag">Atmospheric correction &amp; calibration</span></td>
+        <td data-label="Reference">Frouin, R., et al. (2019). &quot;Atmospheric Correction of Satellite Ocean-Color Imagery During the PACE Era.&quot; Frontiers in Earth Science 7:145.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.3389/feart.2019.00145" target="_blank" rel="noopener">Frontiers (DOI)</a></td>
+        <td data-label="Why influential">Comprehensive review of heritage and emerging atmospheric correction methods, emphasizing hyperspectral and polarimetric opportunities and challenges for the PACE era.</td>
+      </tr>
+
+      <tr id="ref19">
+        <td data-label="#" style="white-space:nowrap;"><strong>[19]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">2019</td>
+        <td data-label="Category"><span class="tag">Atmospheric correction &amp; calibration</span></td>
+        <td data-label="Reference">Vanhellemont, Q. (2019). &quot;Adaptation of the dark spectrum fitting atmospheric correction for aquatic applications of the Landsat and Sentinel-2 archives.&quot; Remote Sensing of Environment.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.1016/j.rse.2019.03.010" target="_blank" rel="noopener">RSE (DOI)</a></td>
+        <td data-label="Why influential">Presents Dark Spectrum Fitting (DSF) atmospheric correction for Landsat/Sentinel-2 over water, enabling consistent high-resolution aquatic reflectance products in challenging coastal/inland conditions.</td>
+      </tr>
+
+      <tr id="ref20">
+        <td data-label="#" style="white-space:nowrap;"><strong>[20]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">2021</td>
+        <td data-label="Category"><span class="tag">Atmospheric correction &amp; calibration</span></td>
+        <td data-label="Reference">Zibordi, G., et al. (2021). &quot;Advances in the Ocean Color Component of the Aerosol Robotic Network (AERONET-OC).&quot; Journal of Atmospheric and Oceanic Technology.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.1175/JTECH-D-20-0085.1" target="_blank" rel="noopener">JTECH (DOI)</a></td>
+        <td data-label="Why influential">Describes upgrades and best practices for AERONET-OC, a major global in situ radiometric network used for satellite ocean-color validation and vicarious calibration.</td>
+      </tr>
+
+      <tr id="ref21">
+        <td data-label="#" style="white-space:nowrap;"><strong>[21]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">2022</td>
+        <td data-label="Category"><span class="tag">Atmospheric correction &amp; calibration</span></td>
+        <td data-label="Reference">Mélin, F., Zibordi, G., &amp; Berthon, J.-F. (2022). &quot;Validation of ocean color remote sensing reflectance data at the European level: satellite matchup in coastal waters.&quot; Remote Sensing of Environment.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.1016/j.rse.2022.113153" target="_blank" rel="noopener">RSE (DOI)</a></td>
+        <td data-label="Why influential">Presents systematic European-scale validation of satellite remote-sensing reflectance in coastal waters, strengthening uncertainty characterization and matchup methodologies for modern sensors.</td>
+      </tr>
+
+      <tr id="ref22">
+        <td data-label="#" style="white-space:nowrap;"><strong>[22]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">1998</td>
+        <td data-label="Category"><span class="tag">Algorithms &amp; validation</span></td>
+        <td data-label="Reference">O&#x27;Reilly, J. E., Maritorena, S., et al. (1998). &quot;Ocean color chlorophyll algorithms for SeaWiFS.&quot; JGR 103(C11): 24937–24953.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.1029/98JC02160" target="_blank" rel="noopener">JGR (DOI)</a></td>
+        <td data-label="Why influential">Defines and evaluates SeaWiFS-era empirical band-ratio chlorophyll algorithms (OCx), which became an operational baseline and enduring benchmark.</td>
+      </tr>
+
+      <tr id="ref23">
+        <td data-label="#" style="white-space:nowrap;"><strong>[23]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">2002</td>
+        <td data-label="Category"><span class="tag">Algorithms &amp; validation</span></td>
+        <td data-label="Reference">Lee, Z., Carder, K. L., &amp; Arnone, R. A. (2002). &quot;Deriving inherent optical properties from water color: a multiband quasi-analytical algorithm for optically deep waters.&quot; Applied Optics 41(27): 5755–5772.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.1364/AO.41.005755" target="_blank" rel="noopener">Applied Optics (DOI)</a></td>
+        <td data-label="Why influential">Presents the Quasi-Analytical Algorithm (QAA) for retrieving absorption and backscattering from reflectance; a major pathway from Rrs to IOPs beyond chlorophyll.</td>
+      </tr>
+
+      <tr id="ref24">
+        <td data-label="#" style="white-space:nowrap;"><strong>[24]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">2002</td>
+        <td data-label="Category"><span class="tag">Algorithms &amp; validation</span></td>
+        <td data-label="Reference">Maritorena, S., Siegel, D. A., &amp; Peterson, A. R. (2002). &quot;Optimization of a semianalytical ocean color model for global-scale applications.&quot; Applied Optics 41(15): 2705–2714.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.1364/AO.41.002705" target="_blank" rel="noopener">Applied Optics (DOI)</a></td>
+        <td data-label="Why influential">Global semianalytic inversion (GSM) retrieving chlorophyll, CDOM+detritus absorption, and particle backscatter; widely used for multi-property retrievals and multi-sensor analyses.</td>
+      </tr>
+
+      <tr id="ref25">
+        <td data-label="#" style="white-space:nowrap;"><strong>[25]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">2005</td>
+        <td data-label="Category"><span class="tag">Algorithms &amp; validation</span></td>
+        <td data-label="Reference">Werdell, P. J. &amp; Bailey, S. W. (2005). &quot;An improved in situ bio-optical data set for ocean color algorithm development and satellite data product validation.&quot; Remote Sensing of Environment 98(1): 122–140.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.1016/j.rse.2005.07.001" target="_blank" rel="noopener">RSE (DOI)</a></td>
+        <td data-label="Why influential">Describes improved in situ bio-optical dataset (NOMAD) and QC practices; helped standardize matchup evaluation and algorithm intercomparison.</td>
+      </tr>
+
+      <tr id="ref26">
+        <td data-label="#" style="white-space:nowrap;"><strong>[26]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">2006</td>
+        <td data-label="Category"><span class="tag">Algorithms &amp; validation</span></td>
+        <td data-label="Reference">Bailey, S. W. &amp; Werdell, P. J. (2006). &quot;A multi-sensor approach for the on-orbit validation of ocean color satellite data products.&quot; Remote Sensing of Environment 102(1–2): 12–23.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.1016/j.rse.2006.01.015" target="_blank" rel="noopener">RSE (DOI)</a></td>
+        <td data-label="Why influential">Develops practical multi-sensor validation methodology (matchups, statistics, uncertainty reporting), supporting cross-mission consistency assessment.</td>
+      </tr>
+
+      <tr id="ref27">
+        <td data-label="#" style="white-space:nowrap;"><strong>[27]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">2012</td>
+        <td data-label="Category"><span class="tag">Algorithms &amp; validation</span></td>
+        <td data-label="Reference">Hu, C., Lee, Z., &amp; Franz, B. A. (2012). &quot;Chlorophyll-a algorithms for oligotrophic oceans: A novel approach based on three-band reflectance difference.&quot; JGR 117: C01011.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.1029/2011JC007395" target="_blank" rel="noopener">JGR (DOI)</a></td>
+        <td data-label="Why influential">Introduces a color-index approach optimized for very low chlorophyll conditions, reducing noise/bias in oligotrophic gyres; influenced blended operational chlorophyll products.</td>
+      </tr>
+
+      <tr id="ref28">
+        <td data-label="#" style="white-space:nowrap;"><strong>[28]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">2013</td>
+        <td data-label="Category"><span class="tag">Algorithms &amp; validation</span></td>
+        <td data-label="Reference">Werdell, P. J., et al. (2013). &quot;Generalized ocean color inversion model for retrieving marine inherent optical properties.&quot; Applied Optics 52(10): 2019–2037.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.1364/AO.52.002019" target="_blank" rel="noopener">Applied Optics (DOI)</a></td>
+        <td data-label="Why influential">Provides a modular, community testbed (GIOP) for semianalytical inversion of reflectance to inherent optical properties; supports algorithm intercomparison and product consistency.</td>
+      </tr>
+
+      <tr id="ref29">
+        <td data-label="#" style="white-space:nowrap;"><strong>[29]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">2015</td>
+        <td data-label="Category"><span class="tag">Algorithms &amp; validation</span></td>
+        <td data-label="Reference">Brewin, R. J. W., et al. (2015). &quot;The Ocean Colour Climate Change Initiative: III. A round-robin comparison on in-water bio-optical algorithms.&quot; Remote Sensing of Environment 162: 271–294.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.1016/j.rse.2013.09.016" target="_blank" rel="noopener">RSE (DOI)</a></td>
+        <td data-label="Why influential">Introduces an objective methodology to rank bio-optical algorithms (empirical and semianalytical) using NOMAD; influential for algorithm selection in climate products (OC-CCI).</td>
+      </tr>
+
+      <tr id="ref30">
+        <td data-label="#" style="white-space:nowrap;"><strong>[30]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">2016</td>
+        <td data-label="Category"><span class="tag">Algorithms &amp; validation</span></td>
+        <td data-label="Reference">Wang, M., Son, S., &amp; Harding, L. W. (2016). &quot;Retrieval of chlorophyll-a from VIIRS ocean color measurements in the open ocean: an evaluation of the Ocean Color Index algorithm.&quot; Remote Sensing of Environment.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.1016/j.rse.2016.05.001" target="_blank" rel="noopener">RSE (DOI)</a></td>
+        <td data-label="Why influential">Assesses VIIRS chlorophyll retrieval using the Ocean Color Index (CI) in oligotrophic waters, supporting continuity from MODIS-era low-Chl performance and multi-mission blending.</td>
+      </tr>
+
+      <tr id="ref31">
+        <td data-label="#" style="white-space:nowrap;"><strong>[31]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">2017</td>
+        <td data-label="Category"><span class="tag">Algorithms &amp; validation</span></td>
+        <td data-label="Reference">Jackson, T., et al. (2017). &quot;An improved optical classification scheme for the Ocean Colour Essential Climate Variable and its applications.&quot; Remote Sensing of Environment.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.1016/j.rse.2017.03.036" target="_blank" rel="noopener">RSE (DOI)</a></td>
+        <td data-label="Why influential">Presents an optical water-type classification used within OC-CCI to characterize conditions and support per-pixel uncertainty assignment and algorithm selection.</td>
+      </tr>
+
+      <tr id="ref32">
+        <td data-label="#" style="white-space:nowrap;"><strong>[32]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">2021</td>
+        <td data-label="Category"><span class="tag">Algorithms &amp; validation</span></td>
+        <td data-label="Reference">Tilstone, G. H., et al. (2021). &quot;Performance of Ocean Colour Chlorophyll a algorithms for Sentinel-3 OLCI, MODIS-Aqua and Suomi-VIIRS in open-ocean waters of the Atlantic.&quot; Remote Sensing of Environment 260: 112444.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.1016/j.rse.2021.112444" target="_blank" rel="noopener">RSE (DOI)</a></td>
+        <td data-label="Why influential">Intercompares chlorophyll algorithms across modern sensors using AMT in situ data; highlights impacts of reflectance biases and benefits of POLYMER/updated processing baselines.</td>
+      </tr>
+
+      <tr id="ref33">
+        <td data-label="#" style="white-space:nowrap;"><strong>[33]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">1998</td>
+        <td data-label="Category"><span class="tag">Missions &amp; climate records</span></td>
+        <td data-label="Reference">Esaias, W. E., Abbott, M. R., Barton, I., et al. (1998). &quot;An overview of MODIS capabilities for ocean science observations.&quot; IEEE TGRS 36(4): 1250–1265.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.1109/36.701076" target="_blank" rel="noopener">IEEE TGRS (DOI)</a></td>
+        <td data-label="Why influential">Summarizes MODIS ocean-relevant capabilities (including ocean color) and situates MODIS within broader Earth system observation, marking a transition to comprehensive multi-parameter sensors.</td>
+      </tr>
+
+      <tr id="ref34">
+        <td data-label="#" style="white-space:nowrap;"><strong>[34]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">2000</td>
+        <td data-label="Category"><span class="tag">Missions &amp; climate records</span></td>
+        <td data-label="Reference">Hooker, S. B. &amp; McClain, C. R. (2000). &quot;The calibration and validation of SeaWiFS data.&quot; Progress in Oceanography 45(3–4): 427–465.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.1016/S0079-6611(00)00012-4" target="_blank" rel="noopener">Progress in Oceanography (DOI)</a></td>
+        <td data-label="Why influential">Details SeaWiFS calibration/validation philosophy and practice that helped set standards for climate-quality ocean-color radiometry and long-term stability.</td>
+      </tr>
+
+      <tr id="ref35">
+        <td data-label="#" style="white-space:nowrap;"><strong>[35]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">2004</td>
+        <td data-label="Category"><span class="tag">Missions &amp; climate records</span></td>
+        <td data-label="Reference">McClain, C. R., Feldman, G. C., &amp; Hooker, S. B. (2004). &quot;An overview of the SeaWiFS project and strategies for producing a climate research quality global ocean bio-optical time series.&quot; Deep-Sea Research II 51(1–3): 5–42.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.1016/j.dsr2.2003.11.001" target="_blank" rel="noopener">Deep-Sea Research II (DOI)</a></td>
+        <td data-label="Why influential">Overview of SeaWiFS mission architecture and processing strategies for a climate-quality global ocean-color time series; emphasizes continuity, reprocessing, and QA.</td>
+      </tr>
+
+      <tr id="ref36">
+        <td data-label="#" style="white-space:nowrap;"><strong>[36]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">2005</td>
+        <td data-label="Category"><span class="tag">Missions &amp; climate records</span></td>
+        <td data-label="Reference">Antoine, D., Mélin, F., Morel, A., et al. (2005). &quot;Bridging ocean color observations of the 1980s and 2000s in support of long-term climatological studies.&quot; JGR 110: C06009.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.1029/2004JC002620" target="_blank" rel="noopener">JGR (DOI)</a></td>
+        <td data-label="Why influential">Addresses bridging CZCS-era and modern ocean-color records for climatology; influential treatment of cross-era consistency challenges in multi-decadal records.</td>
+      </tr>
+
+      <tr id="ref37">
+        <td data-label="#" style="white-space:nowrap;"><strong>[37]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">2009</td>
+        <td data-label="Category"><span class="tag">Missions &amp; climate records</span></td>
+        <td data-label="Reference">McClain, C. R. (2009). &quot;A decade of satellite ocean color observations.&quot; Annual Review of Marine Science 1: 19–42.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.1146/annurev.marine.010908.163650" target="_blank" rel="noopener">Annual Review (DOI)</a></td>
+        <td data-label="Why influential">High-level review of advances enabled by global ocean-color observations; clarifies challenges for trend detection and sustaining stable climate records.</td>
+      </tr>
+
+      <tr id="ref38">
+        <td data-label="#" style="white-space:nowrap;"><strong>[38]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">2012</td>
+        <td data-label="Category"><span class="tag">Missions &amp; climate records</span></td>
+        <td data-label="Reference">Donlon, C., et al. (2012). &quot;The Global Monitoring for Environment and Security (GMES) Sentinel-3 mission.&quot; Remote Sensing of Environment.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.1016/j.rse.2011.07.024" target="_blank" rel="noopener">RSE (DOI)</a></td>
+        <td data-label="Why influential">Mission overview for Copernicus Sentinel-3 (including OLCI), framing design drivers for operational ocean color and continuity of climate-quality records.</td>
+      </tr>
+
+      <tr id="ref39">
+        <td data-label="#" style="white-space:nowrap;"><strong>[39]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">2016</td>
+        <td data-label="Category"><span class="tag">Missions &amp; climate records</span></td>
+        <td data-label="Reference">Valente, A., Sathyendranath, S., Brotas, V., et al. (2016). &quot;A compilation of global bio-optical in situ data for ocean-colour satellite applications.&quot; Earth System Science Data 8(1): 235–252.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.5194/essd-8-235-2016" target="_blank" rel="noopener">ESSD (DOI)</a></td>
+        <td data-label="Why influential">Harmonized global in situ bio-optical dataset supporting validation and uncertainty assessment for multi-sensor ocean-color products, notably climate time series.</td>
+      </tr>
+
+      <tr id="ref40">
+        <td data-label="#" style="white-space:nowrap;"><strong>[40]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">2017</td>
+        <td data-label="Category"><span class="tag">Missions &amp; climate records</span></td>
+        <td data-label="Reference">Pahlevan, N., et al. (2017). &quot;Landsat 8 remote sensing reflectance (Rrs) products: evaluations and intercomparisons with SeaWiFS, MODIS, and MERIS.&quot; Remote Sensing of Environment.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.1016/j.rse.2016.12.030" target="_blank" rel="noopener">RSE (DOI)</a></td>
+        <td data-label="Why influential">Evaluates Landsat-8 OLI-derived remote-sensing reflectance and its consistency with heritage ocean-color sensors, enabling high-resolution coastal/inland applications and cross-sensor integration.</td>
+      </tr>
+
+      <tr id="ref41">
+        <td data-label="#" style="white-space:nowrap;"><strong>[41]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">2019</td>
+        <td data-label="Category"><span class="tag">Missions &amp; climate records</span></td>
+        <td data-label="Reference">Giardino, C., et al. (2019). &quot;Imaging Spectrometry of Inland and Coastal Waters: State of the Art, Achievements and Perspectives.&quot; Surveys in Geophysics 40: 401–429.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.1007/s10712-018-9476-0" target="_blank" rel="noopener">Springer (DOI)</a></td>
+        <td data-label="Why influential">Comprehensive review of hyperspectral imaging for inland/coastal waters, outlining algorithmic needs and opportunities relevant to current and upcoming imaging spectrometers.</td>
+      </tr>
+
+      <tr id="ref42">
+        <td data-label="#" style="white-space:nowrap;"><strong>[42]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">2019</td>
+        <td data-label="Category"><span class="tag">Missions &amp; climate records</span></td>
+        <td data-label="Reference">Groom, S., Sathyendranath, S., et al. (2019). &quot;Satellite Ocean Colour: Current Status and Future Perspective.&quot; Frontiers in Marine Science 6: 485.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.3389/fmars.2019.00485" target="_blank" rel="noopener">Frontiers (DOI)</a></td>
+        <td data-label="Why influential">Broad review of ocean-color status and future directions (science drivers, sensor evolution, algorithm challenges), offering a roadmap for sustaining and improving climate-quality records.</td>
+      </tr>
+
+      <tr id="ref43">
+        <td data-label="#" style="white-space:nowrap;"><strong>[43]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">2019</td>
+        <td data-label="Category"><span class="tag">Missions &amp; climate records</span></td>
+        <td data-label="Reference">Sathyendranath, S., Brewin, R. J. W., Brockmann, C., et al. (2019). &quot;An Ocean-Colour Time Series for Use in Climate Studies: The Experience of the OC-CCI.&quot; Sensors 19(19): 4285.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.3390/s19194285" target="_blank" rel="noopener">Sensors (DOI)</a></td>
+        <td data-label="Why influential">Describes multi-sensor harmonization, processing, and uncertainty considerations used to produce an ocean-color climate time series (OC-CCI), informing climate-grade record design.</td>
+      </tr>
+
+      <tr id="ref44">
+        <td data-label="#" style="white-space:nowrap;"><strong>[44]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">2019</td>
+        <td data-label="Category"><span class="tag">Missions &amp; climate records</span></td>
+        <td data-label="Reference">Valente, A., et al. (2019). &quot;A compilation of global bio-optical in situ data for ocean-colour satellite applications – version two.&quot; Earth System Science Data.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.5194/essd-11-1037-2019" target="_blank" rel="noopener">ESSD (DOI)</a></td>
+        <td data-label="Why influential">Updated version of a key global bio-optical compilation with expanded coverage and harmonization, supporting robust validation of modern multi-sensor products.</td>
+      </tr>
+
+      <tr id="ref45">
+        <td data-label="#" style="white-space:nowrap;"><strong>[45]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">2019</td>
+        <td data-label="Category"><span class="tag">Missions &amp; climate records</span></td>
+        <td data-label="Reference">Werdell, P. J., et al. (2019). &quot;The Plankton, Aerosol, Cloud, ocean Ecosystem (PACE) mission: Status, science, instruments, and anticipated data products.&quot; Bulletin of the American Meteorological Society.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.1175/BAMS-D-18-0056.1" target="_blank" rel="noopener">BAMS (DOI)</a></td>
+        <td data-label="Why influential">Describes the PACE mission and its OCI hyperspectral radiometer plus polarimeters, linking instrument capabilities to next-generation ocean color, aerosol, and ecosystem science.</td>
+      </tr>
+
+      <tr id="ref46">
+        <td data-label="#" style="white-space:nowrap;"><strong>[46]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">1997</td>
+        <td data-label="Category"><span class="tag">Science applications</span></td>
+        <td data-label="Reference">Behrenfeld, M. J. &amp; Falkowski, P. G. (1997). &quot;Photosynthetic rates derived from satellite-based chlorophyll concentration.&quot; Limnology and Oceanography 42(1): 1–20.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.4319/lo.1997.42.1.0001" target="_blank" rel="noopener">Limnology &amp; Oceanography (DOI)</a></td>
+        <td data-label="Why influential">Introduces the VGPM approach linking satellite chlorophyll/light fields to primary production; became a widely used baseline productivity model.</td>
+      </tr>
+
+      <tr id="ref47">
+        <td data-label="#" style="white-space:nowrap;"><strong>[47]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">2002</td>
+        <td data-label="Category"><span class="tag">Science applications</span></td>
+        <td data-label="Reference">Claustre, H., Morel, A., Hooker, S. B., Babin, M., &amp; Antoine, D. (2002). &quot;Is desert dust making oligotrophic waters greener?&quot; Geophysical Research Letters 29(10): 1469.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.1029/2001GL014056" target="_blank" rel="noopener">GRL (DOI)</a></td>
+        <td data-label="Why influential">Demonstrates that non-biological drivers (e.g., dust deposition) can alter apparent ocean color in oligotrophic regions, emphasizing careful attribution of satellite signals.</td>
+      </tr>
+
+      <tr id="ref48">
+        <td data-label="#" style="white-space:nowrap;"><strong>[48]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">2005</td>
+        <td data-label="Category"><span class="tag">Science applications</span></td>
+        <td data-label="Reference">Siegel, D. A., Maritorena, S., Nelson, N. B., Hansell, D. A., &amp; Lorenzi-Kayser, M. (2005). &quot;Colored dissolved organic matter and its influence on the satellite-based characterization of the ocean biosphere.&quot; Geophysical Research Letters 32: L20605.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.1029/2005GL024310" target="_blank" rel="noopener">GRL (DOI)</a></td>
+        <td data-label="Why influential">Shows CDOM can strongly influence ocean color and satellite interpretation, motivating retrieval/validation of CDOM-related optical properties and careful treatment of optical complexity.</td>
+      </tr>
+
+      <tr id="ref49">
+        <td data-label="#" style="white-space:nowrap;"><strong>[49]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">2006</td>
+        <td data-label="Category"><span class="tag">Science applications</span></td>
+        <td data-label="Reference">Behrenfeld, M. J., et al. (2006). &quot;Climate-driven trends in contemporary ocean productivity.&quot; Nature 444(7120): 752–755.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.1038/nature05317" target="_blank" rel="noopener">Nature (DOI)</a></td>
+        <td data-label="Why influential">High-impact demonstration that satellite observations can detect basin-scale variability/trends in ocean productivity and relate them to climate forcing; strengthened motivation for stable, sustained records.</td>
+      </tr>
+
+      <tr id="ref50">
+        <td data-label="#" style="white-space:nowrap;"><strong>[50]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">2008</td>
+        <td data-label="Category"><span class="tag">Science applications</span></td>
+        <td data-label="Reference">Westberry, T., Behrenfeld, M. J., Siegel, D. A., &amp; Boss, E. (2008). &quot;Carbon-based primary productivity modeling with vertically resolved photoacclimation.&quot; Global Biogeochemical Cycles 22(2): GB2024.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.1029/2007GB003078" target="_blank" rel="noopener">Global Biogeochemical Cycles (DOI)</a></td>
+        <td data-label="Why influential">Develops CbPM with photoacclimation to estimate primary productivity using carbon/physiology concepts, expanding productivity estimation beyond chlorophyll-only formulations.</td>
+      </tr>
+
+      <tr id="ref51">
+        <td data-label="#" style="white-space:nowrap;"><strong>[51]</strong></td>
+        <td data-label="Year" style="white-space:nowrap;">2019</td>
+        <td data-label="Category"><span class="tag">Science applications</span></td>
+        <td data-label="Reference">Dutkiewicz, S., et al. (2019). &quot;Ocean colour signature of climate change.&quot; Nature Communications 10: 578.</td>
+        <td data-label="Links"><a class="link" href="https://doi.org/10.1038/s41467-019-08457-x" target="_blank" rel="noopener">Nature Communications (DOI)</a></td>
+        <td data-label="Why influential">Uses an ocean ecosystem-optics model to argue that trends in remotely sensed reflectance (Rrs) may emerge earlier/clearer than trends in derived chlorophyll, highlighting the value of climate-quality Rrs records.</td>
+      </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout">
+        <strong>Citation numbers:</strong> Use the first column (e.g., <span class="pill">[12]</span>) as a stable reference ID for slides/notes.
+        You can deep-link to a paper with <span class="pill">#ref12</span>, etc.
+      </div>
+    </div>
+
+    
+  <div class="section-title" id="foundations">
+    <h2>Foundations</h2>
+    <span>6 key references</span>
+  </div>
+  <div class="list">
+
+        <div class="item" id="sec1">
+          <div class="top">
+            <strong>[1] Hovis, W. A., et al. (1980). &quot;Nimbus-7 Coastal Zone Color Scanner: System Description and Initial Imagery.&quot; Science 210(4465): 60–63.</strong>
+            <time>1980</time>
+          </div>
+          <p>First satellite mission dedicated to ocean color (CZCS); demonstrated feasibility of global ocean-color observation and set early instrument/measurement requirements.<br>
+             <a class="link" href="https://doi.org/10.1126/science.210.4465.60" target="_blank" rel="noopener">Science (DOI)</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec2">
+          <div class="top">
+            <strong>[2] Gordon, H. R. &amp; Morel, A. Y. (1983). Remote Assessment of Ocean Color for Interpretation of Satellite Visible Imagery: A Review. Lecture Notes on Coastal and Estuarine Studies, Vol. 4.</strong>
+            <time>1983</time>
+          </div>
+          <p>Foundational synthesis of ocean-color theory (radiative transfer, atmospheric effects, bio-optical relationships) framing the modern problem of isolating water-leaving radiance and mapping it to biogeochemical properties.<br>
+             <a class="link" href="https://agupubs.onlinelibrary.wiley.com/doi/book/10.1029/LN004" target="_blank" rel="noopener">Book/DOI landing</a><br><a class="link" href="https://link.springer.com/book/10.1007/978-1-4684-6280-7" target="_blank" rel="noopener">SpringerLink page</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec3">
+          <div class="top">
+            <strong>[3] Gordon, H. R., Brown, O. B., Evans, R. H., et al. (1988). &quot;A semianalytic radiance model of ocean color.&quot; JGR 93(D9): 10909–10924.</strong>
+            <time>1988</time>
+          </div>
+          <p>Semianalytic forward model linking reflectance to inherent optical properties and constituents; cornerstone for algorithm development and sensitivity/error studies.<br>
+             <a class="link" href="https://doi.org/10.1029/JD093iD09p10909" target="_blank" rel="noopener">JGR (DOI)</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec4">
+          <div class="top">
+            <strong>[4] Morel, A. (1988). &quot;Optical modeling of the upper ocean in relation to its biogenous matter content (Case I waters).&quot; JGR 93(C9): 10749–10768.</strong>
+            <time>1988</time>
+          </div>
+          <p>Classic parameterization of Case-1 waters relating chlorophyll to optical properties; underpins many forward models, simulations, and open-ocean algorithm concepts.<br>
+             <a class="link" href="https://doi.org/10.1029/JC093iC09p10749" target="_blank" rel="noopener">JGR (DOI)</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec5">
+          <div class="top">
+            <strong>[5] Mobley, C. D. (1994). Light and Water: Radiative Transfer in Natural Waters. Academic Press.</strong>
+            <time>1994</time>
+          </div>
+          <p>Canonical reference for radiative transfer and optical oceanography; widely cited for definitions, notation, and modeling approaches connecting IOPs/AOPs and reflectance.<br>
+             <a class="link" href="http://www.oceanopticsbook.info/view/references/publications" target="_blank" rel="noopener">Ocean Optics Web Book (publisher/author download)</a><br><a class="link" href="https://archive.org/details/lightwaterradiat0000mobl" target="_blank" rel="noopener">Archive.org record</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec6">
+          <div class="top">
+            <strong>[6] Morel, A. &amp; Maritorena, S. (2001). &quot;Bio-optical properties of oceanic waters: A reappraisal.&quot; JGR 106(C4): 7163–7180.</strong>
+            <time>2001</time>
+          </div>
+          <p>Updates key Case-1 bio-optical relationships using improved datasets; refines parameterizations central to semianalytic algorithms and interpretation of open-ocean reflectance.<br>
+             <a class="link" href="https://doi.org/10.1029/2000JC000319" target="_blank" rel="noopener">JGR (DOI)</a>
+          </p>
+        </div>
+  </div>
+
+
+  <div class="section-title" id="atmosphere">
+    <h2>Atmospheric correction and calibration</h2>
+    <span>15 key references</span>
+  </div>
+  <div class="list">
+
+        <div class="item" id="sec7">
+          <div class="top">
+            <strong>[7] Gordon, H. R. &amp; Wang, M. (1994). &quot;Influence of oceanic whitecaps on atmospheric correction of ocean-color sensors.&quot; Applied Optics 33(33): 7754–7763.</strong>
+            <time>1994</time>
+          </div>
+          <p>Quantifies whitecap/foam radiance contributions and their impacts on atmospheric correction; essential for accurate retrievals under higher wind conditions.<br>
+             <a class="link" href="https://doi.org/10.1364/AO.33.007754" target="_blank" rel="noopener">Applied Optics (DOI)</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec8">
+          <div class="top">
+            <strong>[8] Gordon, H. R. &amp; Wang, M. (1994). &quot;Retrieval of water-leaving radiance and aerosol optical thickness over the oceans with SeaWiFS: a preliminary algorithm.&quot; Applied Optics 33(3): 443–452.</strong>
+            <time>1994</time>
+          </div>
+          <p>Operationally influential atmospheric-correction scheme retrieving aerosol properties and water-leaving radiance; shaped SeaWiFS processing and later mission algorithms.<br>
+             <a class="link" href="https://doi.org/10.1364/AO.33.000443" target="_blank" rel="noopener">Applied Optics (DOI)</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec9">
+          <div class="top">
+            <strong>[9] Gordon, H. R. (1997). &quot;Atmospheric correction of ocean color imagery in the Earth Observing System era.&quot; JGR 102(D14): 17081–17106.</strong>
+            <time>1997</time>
+          </div>
+          <p>EOS-era synthesis of atmospheric-correction theory and error propagation (Rayleigh, aerosols, gas absorption, surface effects) into water-leaving radiance uncertainties.<br>
+             <a class="link" href="https://doi.org/10.1029/96JD02443" target="_blank" rel="noopener">JGR (DOI)</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec10">
+          <div class="top">
+            <strong>[10] Mobley, C. D. (1999). &quot;Estimation of the remote-sensing reflectance from above-surface measurements.&quot; Applied Optics 38(36): 7442–7455.</strong>
+            <time>1999</time>
+          </div>
+          <p>Practical method to derive remote-sensing reflectance from above-water radiometry, addressing surface reflection and geometry; foundational for consistent satellite validation.<br>
+             <a class="link" href="https://doi.org/10.1364/AO.38.007442" target="_blank" rel="noopener">Applied Optics (DOI)</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec11">
+          <div class="top">
+            <strong>[11] Mueller, J. L., Fargion, G. S., &amp; McClain, C. R. (eds.) (2003). Ocean Optics Protocols for Satellite Ocean Color Sensor Validation, Revision 4. NASA/TM-2003-211621/Rev4.</strong>
+            <time>2003</time>
+          </div>
+          <p>Community-standard protocols for in situ radiometry and bio-optics supporting algorithm development, calibration/validation, and uncertainty traceability.<br>
+             <a class="link" href="https://ntrs.nasa.gov/api/citations/20030093642/downloads/20030093642.pdf" target="_blank" rel="noopener">NASA NTRS PDF</a><br><a class="link" href="https://oceancolor.gsfc.nasa.gov/resources/docs/technical/protocols_ver4_voliii.pdf" target="_blank" rel="noopener">NASA Ocean Color protocols (example)</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec12">
+          <div class="top">
+            <strong>[12] Bailey, S. W., Hooker, S. B., Antoine, D., Franz, B. A., &amp; Werdell, P. J. (2008). &quot;Sources and assumptions for the vicarious calibration of ocean color satellite observations.&quot; Applied Optics 47(12): 2035–2045.</strong>
+            <time>2008</time>
+          </div>
+          <p>Defines vicarious calibration concepts, assumptions, and error sources; strongly influenced operational calibration strategies for climate-quality ocean-color radiometry.<br>
+             <a class="link" href="https://doi.org/10.1364/AO.47.002035" target="_blank" rel="noopener">Applied Optics (DOI)</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec13">
+          <div class="top">
+            <strong>[13] Bailey, S. W., Franz, B. A., &amp; Werdell, P. J. (2010). &quot;Estimation of near-infrared water-leaving reflectance for satellite ocean color data processing.&quot; Optics Express 18(7): 7521–7527.</strong>
+            <time>2010</time>
+          </div>
+          <p>Introduces estimation of NIR water-leaving reflectance, relaxing strict black-pixel assumptions; improves atmospheric correction in turbid/coastal waters.<br>
+             <a class="link" href="https://doi.org/10.1364/OE.18.007521" target="_blank" rel="noopener">Optics Express (DOI)</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec14">
+          <div class="top">
+            <strong>[14] Steinmetz, F., Deschamps, P.-Y., &amp; Ramon, D. (2011). &quot;Atmospheric correction in presence of sun glint: application to MERIS.&quot; Optics Express 19(10): 9783–9800.</strong>
+            <time>2011</time>
+          </div>
+          <p>Introduces the POLYMER approach (spectral matching) to retrieve water reflectance while mitigating sun glint and aerosol effects; widely adopted for MERIS/OLCI and coastal applications.<br>
+             <a class="link" href="https://doi.org/10.1364/OE.19.009783" target="_blank" rel="noopener">Optics Express (DOI)</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec15">
+          <div class="top">
+            <strong>[15] Müller, D., et al. (2015). &quot;The Ocean Colour Climate Change Initiative: I. Methodology for an assessment of atmospheric correction processors based on in-situ measurements.&quot; Remote Sensing of Environment.</strong>
+            <time>2015</time>
+          </div>
+          <p>Defines an objective framework (within ESA OC-CCI) to evaluate and rank atmospheric-correction processors using in situ matchups—critical for building multi-sensor climate data records.<br>
+             <a class="link" href="https://doi.org/10.1016/j.rse.2013.11.026" target="_blank" rel="noopener">RSE (DOI)</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec16">
+          <div class="top">
+            <strong>[16] Müller, D., et al. (2015). &quot;The Ocean Colour Climate Change Initiative: II. Spatial and temporal homogeneity of satellite data retrieval due to systematic effects in atmospheric correction processors.&quot; Remote Sensing of Environment.</strong>
+            <time>2015</time>
+          </div>
+          <p>Introduces diagnostics to detect across-track/temporal artefacts and systematic processor effects beyond point matchups; supports robust, homogeneous climate-quality retrievals.<br>
+             <a class="link" href="https://doi.org/10.1016/j.rse.2015.01.033" target="_blank" rel="noopener">RSE (DOI)</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec17">
+          <div class="top">
+            <strong>[17] Qi, L., Hu, C., Duan, H., Barnes, B. B., &amp; Ma, R. (2017). &quot;An explicit approach to derive the minimum signal-to-noise ratio requirements for ocean color sensors.&quot; JGR: Oceans.</strong>
+            <time>2017</time>
+          </div>
+          <p>Links sensor signal-to-noise requirements to uncertainties in derived ocean-color products; influential for instrument design trades and error budgeting.<br>
+             <a class="link" href="https://doi.org/10.1002/2016JC012558" target="_blank" rel="noopener">JGR: Oceans (DOI)</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec18">
+          <div class="top">
+            <strong>[18] Frouin, R., et al. (2019). &quot;Atmospheric Correction of Satellite Ocean-Color Imagery During the PACE Era.&quot; Frontiers in Earth Science 7:145.</strong>
+            <time>2019</time>
+          </div>
+          <p>Comprehensive review of heritage and emerging atmospheric correction methods, emphasizing hyperspectral and polarimetric opportunities and challenges for the PACE era.<br>
+             <a class="link" href="https://doi.org/10.3389/feart.2019.00145" target="_blank" rel="noopener">Frontiers (DOI)</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec19">
+          <div class="top">
+            <strong>[19] Vanhellemont, Q. (2019). &quot;Adaptation of the dark spectrum fitting atmospheric correction for aquatic applications of the Landsat and Sentinel-2 archives.&quot; Remote Sensing of Environment.</strong>
+            <time>2019</time>
+          </div>
+          <p>Presents Dark Spectrum Fitting (DSF) atmospheric correction for Landsat/Sentinel-2 over water, enabling consistent high-resolution aquatic reflectance products in challenging coastal/inland conditions.<br>
+             <a class="link" href="https://doi.org/10.1016/j.rse.2019.03.010" target="_blank" rel="noopener">RSE (DOI)</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec20">
+          <div class="top">
+            <strong>[20] Zibordi, G., et al. (2021). &quot;Advances in the Ocean Color Component of the Aerosol Robotic Network (AERONET-OC).&quot; Journal of Atmospheric and Oceanic Technology.</strong>
+            <time>2021</time>
+          </div>
+          <p>Describes upgrades and best practices for AERONET-OC, a major global in situ radiometric network used for satellite ocean-color validation and vicarious calibration.<br>
+             <a class="link" href="https://doi.org/10.1175/JTECH-D-20-0085.1" target="_blank" rel="noopener">JTECH (DOI)</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec21">
+          <div class="top">
+            <strong>[21] Mélin, F., Zibordi, G., &amp; Berthon, J.-F. (2022). &quot;Validation of ocean color remote sensing reflectance data at the European level: satellite matchup in coastal waters.&quot; Remote Sensing of Environment.</strong>
+            <time>2022</time>
+          </div>
+          <p>Presents systematic European-scale validation of satellite remote-sensing reflectance in coastal waters, strengthening uncertainty characterization and matchup methodologies for modern sensors.<br>
+             <a class="link" href="https://doi.org/10.1016/j.rse.2022.113153" target="_blank" rel="noopener">RSE (DOI)</a>
+          </p>
+        </div>
+  </div>
+
+
+  <div class="section-title" id="algorithms">
+    <h2>Algorithms and validation datasets</h2>
+    <span>11 key references</span>
+  </div>
+  <div class="list">
+
+        <div class="item" id="sec22">
+          <div class="top">
+            <strong>[22] O&#x27;Reilly, J. E., Maritorena, S., et al. (1998). &quot;Ocean color chlorophyll algorithms for SeaWiFS.&quot; JGR 103(C11): 24937–24953.</strong>
+            <time>1998</time>
+          </div>
+          <p>Defines and evaluates SeaWiFS-era empirical band-ratio chlorophyll algorithms (OCx), which became an operational baseline and enduring benchmark.<br>
+             <a class="link" href="https://doi.org/10.1029/98JC02160" target="_blank" rel="noopener">JGR (DOI)</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec23">
+          <div class="top">
+            <strong>[23] Lee, Z., Carder, K. L., &amp; Arnone, R. A. (2002). &quot;Deriving inherent optical properties from water color: a multiband quasi-analytical algorithm for optically deep waters.&quot; Applied Optics 41(27): 5755–5772.</strong>
+            <time>2002</time>
+          </div>
+          <p>Presents the Quasi-Analytical Algorithm (QAA) for retrieving absorption and backscattering from reflectance; a major pathway from Rrs to IOPs beyond chlorophyll.<br>
+             <a class="link" href="https://doi.org/10.1364/AO.41.005755" target="_blank" rel="noopener">Applied Optics (DOI)</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec24">
+          <div class="top">
+            <strong>[24] Maritorena, S., Siegel, D. A., &amp; Peterson, A. R. (2002). &quot;Optimization of a semianalytical ocean color model for global-scale applications.&quot; Applied Optics 41(15): 2705–2714.</strong>
+            <time>2002</time>
+          </div>
+          <p>Global semianalytic inversion (GSM) retrieving chlorophyll, CDOM+detritus absorption, and particle backscatter; widely used for multi-property retrievals and multi-sensor analyses.<br>
+             <a class="link" href="https://doi.org/10.1364/AO.41.002705" target="_blank" rel="noopener">Applied Optics (DOI)</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec25">
+          <div class="top">
+            <strong>[25] Werdell, P. J. &amp; Bailey, S. W. (2005). &quot;An improved in situ bio-optical data set for ocean color algorithm development and satellite data product validation.&quot; Remote Sensing of Environment 98(1): 122–140.</strong>
+            <time>2005</time>
+          </div>
+          <p>Describes improved in situ bio-optical dataset (NOMAD) and QC practices; helped standardize matchup evaluation and algorithm intercomparison.<br>
+             <a class="link" href="https://doi.org/10.1016/j.rse.2005.07.001" target="_blank" rel="noopener">RSE (DOI)</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec26">
+          <div class="top">
+            <strong>[26] Bailey, S. W. &amp; Werdell, P. J. (2006). &quot;A multi-sensor approach for the on-orbit validation of ocean color satellite data products.&quot; Remote Sensing of Environment 102(1–2): 12–23.</strong>
+            <time>2006</time>
+          </div>
+          <p>Develops practical multi-sensor validation methodology (matchups, statistics, uncertainty reporting), supporting cross-mission consistency assessment.<br>
+             <a class="link" href="https://doi.org/10.1016/j.rse.2006.01.015" target="_blank" rel="noopener">RSE (DOI)</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec27">
+          <div class="top">
+            <strong>[27] Hu, C., Lee, Z., &amp; Franz, B. A. (2012). &quot;Chlorophyll-a algorithms for oligotrophic oceans: A novel approach based on three-band reflectance difference.&quot; JGR 117: C01011.</strong>
+            <time>2012</time>
+          </div>
+          <p>Introduces a color-index approach optimized for very low chlorophyll conditions, reducing noise/bias in oligotrophic gyres; influenced blended operational chlorophyll products.<br>
+             <a class="link" href="https://doi.org/10.1029/2011JC007395" target="_blank" rel="noopener">JGR (DOI)</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec28">
+          <div class="top">
+            <strong>[28] Werdell, P. J., et al. (2013). &quot;Generalized ocean color inversion model for retrieving marine inherent optical properties.&quot; Applied Optics 52(10): 2019–2037.</strong>
+            <time>2013</time>
+          </div>
+          <p>Provides a modular, community testbed (GIOP) for semianalytical inversion of reflectance to inherent optical properties; supports algorithm intercomparison and product consistency.<br>
+             <a class="link" href="https://doi.org/10.1364/AO.52.002019" target="_blank" rel="noopener">Applied Optics (DOI)</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec29">
+          <div class="top">
+            <strong>[29] Brewin, R. J. W., et al. (2015). &quot;The Ocean Colour Climate Change Initiative: III. A round-robin comparison on in-water bio-optical algorithms.&quot; Remote Sensing of Environment 162: 271–294.</strong>
+            <time>2015</time>
+          </div>
+          <p>Introduces an objective methodology to rank bio-optical algorithms (empirical and semianalytical) using NOMAD; influential for algorithm selection in climate products (OC-CCI).<br>
+             <a class="link" href="https://doi.org/10.1016/j.rse.2013.09.016" target="_blank" rel="noopener">RSE (DOI)</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec30">
+          <div class="top">
+            <strong>[30] Wang, M., Son, S., &amp; Harding, L. W. (2016). &quot;Retrieval of chlorophyll-a from VIIRS ocean color measurements in the open ocean: an evaluation of the Ocean Color Index algorithm.&quot; Remote Sensing of Environment.</strong>
+            <time>2016</time>
+          </div>
+          <p>Assesses VIIRS chlorophyll retrieval using the Ocean Color Index (CI) in oligotrophic waters, supporting continuity from MODIS-era low-Chl performance and multi-mission blending.<br>
+             <a class="link" href="https://doi.org/10.1016/j.rse.2016.05.001" target="_blank" rel="noopener">RSE (DOI)</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec31">
+          <div class="top">
+            <strong>[31] Jackson, T., et al. (2017). &quot;An improved optical classification scheme for the Ocean Colour Essential Climate Variable and its applications.&quot; Remote Sensing of Environment.</strong>
+            <time>2017</time>
+          </div>
+          <p>Presents an optical water-type classification used within OC-CCI to characterize conditions and support per-pixel uncertainty assignment and algorithm selection.<br>
+             <a class="link" href="https://doi.org/10.1016/j.rse.2017.03.036" target="_blank" rel="noopener">RSE (DOI)</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec32">
+          <div class="top">
+            <strong>[32] Tilstone, G. H., et al. (2021). &quot;Performance of Ocean Colour Chlorophyll a algorithms for Sentinel-3 OLCI, MODIS-Aqua and Suomi-VIIRS in open-ocean waters of the Atlantic.&quot; Remote Sensing of Environment 260: 112444.</strong>
+            <time>2021</time>
+          </div>
+          <p>Intercompares chlorophyll algorithms across modern sensors using AMT in situ data; highlights impacts of reflectance biases and benefits of POLYMER/updated processing baselines.<br>
+             <a class="link" href="https://doi.org/10.1016/j.rse.2021.112444" target="_blank" rel="noopener">RSE (DOI)</a>
+          </p>
+        </div>
+  </div>
+
+
+  <div class="section-title" id="missions">
+    <h2>Missions and climate records</h2>
+    <span>13 key references</span>
+  </div>
+  <div class="list">
+
+        <div class="item" id="sec33">
+          <div class="top">
+            <strong>[33] Esaias, W. E., Abbott, M. R., Barton, I., et al. (1998). &quot;An overview of MODIS capabilities for ocean science observations.&quot; IEEE TGRS 36(4): 1250–1265.</strong>
+            <time>1998</time>
+          </div>
+          <p>Summarizes MODIS ocean-relevant capabilities (including ocean color) and situates MODIS within broader Earth system observation, marking a transition to comprehensive multi-parameter sensors.<br>
+             <a class="link" href="https://doi.org/10.1109/36.701076" target="_blank" rel="noopener">IEEE TGRS (DOI)</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec34">
+          <div class="top">
+            <strong>[34] Hooker, S. B. &amp; McClain, C. R. (2000). &quot;The calibration and validation of SeaWiFS data.&quot; Progress in Oceanography 45(3–4): 427–465.</strong>
+            <time>2000</time>
+          </div>
+          <p>Details SeaWiFS calibration/validation philosophy and practice that helped set standards for climate-quality ocean-color radiometry and long-term stability.<br>
+             <a class="link" href="https://doi.org/10.1016/S0079-6611(00)00012-4" target="_blank" rel="noopener">Progress in Oceanography (DOI)</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec35">
+          <div class="top">
+            <strong>[35] McClain, C. R., Feldman, G. C., &amp; Hooker, S. B. (2004). &quot;An overview of the SeaWiFS project and strategies for producing a climate research quality global ocean bio-optical time series.&quot; Deep-Sea Research II 51(1–3): 5–42.</strong>
+            <time>2004</time>
+          </div>
+          <p>Overview of SeaWiFS mission architecture and processing strategies for a climate-quality global ocean-color time series; emphasizes continuity, reprocessing, and QA.<br>
+             <a class="link" href="https://doi.org/10.1016/j.dsr2.2003.11.001" target="_blank" rel="noopener">Deep-Sea Research II (DOI)</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec36">
+          <div class="top">
+            <strong>[36] Antoine, D., Mélin, F., Morel, A., et al. (2005). &quot;Bridging ocean color observations of the 1980s and 2000s in support of long-term climatological studies.&quot; JGR 110: C06009.</strong>
+            <time>2005</time>
+          </div>
+          <p>Addresses bridging CZCS-era and modern ocean-color records for climatology; influential treatment of cross-era consistency challenges in multi-decadal records.<br>
+             <a class="link" href="https://doi.org/10.1029/2004JC002620" target="_blank" rel="noopener">JGR (DOI)</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec37">
+          <div class="top">
+            <strong>[37] McClain, C. R. (2009). &quot;A decade of satellite ocean color observations.&quot; Annual Review of Marine Science 1: 19–42.</strong>
+            <time>2009</time>
+          </div>
+          <p>High-level review of advances enabled by global ocean-color observations; clarifies challenges for trend detection and sustaining stable climate records.<br>
+             <a class="link" href="https://doi.org/10.1146/annurev.marine.010908.163650" target="_blank" rel="noopener">Annual Review (DOI)</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec38">
+          <div class="top">
+            <strong>[38] Donlon, C., et al. (2012). &quot;The Global Monitoring for Environment and Security (GMES) Sentinel-3 mission.&quot; Remote Sensing of Environment.</strong>
+            <time>2012</time>
+          </div>
+          <p>Mission overview for Copernicus Sentinel-3 (including OLCI), framing design drivers for operational ocean color and continuity of climate-quality records.<br>
+             <a class="link" href="https://doi.org/10.1016/j.rse.2011.07.024" target="_blank" rel="noopener">RSE (DOI)</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec39">
+          <div class="top">
+            <strong>[39] Valente, A., Sathyendranath, S., Brotas, V., et al. (2016). &quot;A compilation of global bio-optical in situ data for ocean-colour satellite applications.&quot; Earth System Science Data 8(1): 235–252.</strong>
+            <time>2016</time>
+          </div>
+          <p>Harmonized global in situ bio-optical dataset supporting validation and uncertainty assessment for multi-sensor ocean-color products, notably climate time series.<br>
+             <a class="link" href="https://doi.org/10.5194/essd-8-235-2016" target="_blank" rel="noopener">ESSD (DOI)</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec40">
+          <div class="top">
+            <strong>[40] Pahlevan, N., et al. (2017). &quot;Landsat 8 remote sensing reflectance (Rrs) products: evaluations and intercomparisons with SeaWiFS, MODIS, and MERIS.&quot; Remote Sensing of Environment.</strong>
+            <time>2017</time>
+          </div>
+          <p>Evaluates Landsat-8 OLI-derived remote-sensing reflectance and its consistency with heritage ocean-color sensors, enabling high-resolution coastal/inland applications and cross-sensor integration.<br>
+             <a class="link" href="https://doi.org/10.1016/j.rse.2016.12.030" target="_blank" rel="noopener">RSE (DOI)</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec41">
+          <div class="top">
+            <strong>[41] Giardino, C., et al. (2019). &quot;Imaging Spectrometry of Inland and Coastal Waters: State of the Art, Achievements and Perspectives.&quot; Surveys in Geophysics 40: 401–429.</strong>
+            <time>2019</time>
+          </div>
+          <p>Comprehensive review of hyperspectral imaging for inland/coastal waters, outlining algorithmic needs and opportunities relevant to current and upcoming imaging spectrometers.<br>
+             <a class="link" href="https://doi.org/10.1007/s10712-018-9476-0" target="_blank" rel="noopener">Springer (DOI)</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec42">
+          <div class="top">
+            <strong>[42] Groom, S., Sathyendranath, S., et al. (2019). &quot;Satellite Ocean Colour: Current Status and Future Perspective.&quot; Frontiers in Marine Science 6: 485.</strong>
+            <time>2019</time>
+          </div>
+          <p>Broad review of ocean-color status and future directions (science drivers, sensor evolution, algorithm challenges), offering a roadmap for sustaining and improving climate-quality records.<br>
+             <a class="link" href="https://doi.org/10.3389/fmars.2019.00485" target="_blank" rel="noopener">Frontiers (DOI)</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec43">
+          <div class="top">
+            <strong>[43] Sathyendranath, S., Brewin, R. J. W., Brockmann, C., et al. (2019). &quot;An Ocean-Colour Time Series for Use in Climate Studies: The Experience of the OC-CCI.&quot; Sensors 19(19): 4285.</strong>
+            <time>2019</time>
+          </div>
+          <p>Describes multi-sensor harmonization, processing, and uncertainty considerations used to produce an ocean-color climate time series (OC-CCI), informing climate-grade record design.<br>
+             <a class="link" href="https://doi.org/10.3390/s19194285" target="_blank" rel="noopener">Sensors (DOI)</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec44">
+          <div class="top">
+            <strong>[44] Valente, A., et al. (2019). &quot;A compilation of global bio-optical in situ data for ocean-colour satellite applications – version two.&quot; Earth System Science Data.</strong>
+            <time>2019</time>
+          </div>
+          <p>Updated version of a key global bio-optical compilation with expanded coverage and harmonization, supporting robust validation of modern multi-sensor products.<br>
+             <a class="link" href="https://doi.org/10.5194/essd-11-1037-2019" target="_blank" rel="noopener">ESSD (DOI)</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec45">
+          <div class="top">
+            <strong>[45] Werdell, P. J., et al. (2019). &quot;The Plankton, Aerosol, Cloud, ocean Ecosystem (PACE) mission: Status, science, instruments, and anticipated data products.&quot; Bulletin of the American Meteorological Society.</strong>
+            <time>2019</time>
+          </div>
+          <p>Describes the PACE mission and its OCI hyperspectral radiometer plus polarimeters, linking instrument capabilities to next-generation ocean color, aerosol, and ecosystem science.<br>
+             <a class="link" href="https://doi.org/10.1175/BAMS-D-18-0056.1" target="_blank" rel="noopener">BAMS (DOI)</a>
+          </p>
+        </div>
+  </div>
+
+
+  <div class="section-title" id="applications">
+    <h2>Science applications enabled by ocean color</h2>
+    <span>6 key references</span>
+  </div>
+  <div class="list">
+
+        <div class="item" id="sec46">
+          <div class="top">
+            <strong>[46] Behrenfeld, M. J. &amp; Falkowski, P. G. (1997). &quot;Photosynthetic rates derived from satellite-based chlorophyll concentration.&quot; Limnology and Oceanography 42(1): 1–20.</strong>
+            <time>1997</time>
+          </div>
+          <p>Introduces the VGPM approach linking satellite chlorophyll/light fields to primary production; became a widely used baseline productivity model.<br>
+             <a class="link" href="https://doi.org/10.4319/lo.1997.42.1.0001" target="_blank" rel="noopener">Limnology &amp; Oceanography (DOI)</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec47">
+          <div class="top">
+            <strong>[47] Claustre, H., Morel, A., Hooker, S. B., Babin, M., &amp; Antoine, D. (2002). &quot;Is desert dust making oligotrophic waters greener?&quot; Geophysical Research Letters 29(10): 1469.</strong>
+            <time>2002</time>
+          </div>
+          <p>Demonstrates that non-biological drivers (e.g., dust deposition) can alter apparent ocean color in oligotrophic regions, emphasizing careful attribution of satellite signals.<br>
+             <a class="link" href="https://doi.org/10.1029/2001GL014056" target="_blank" rel="noopener">GRL (DOI)</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec48">
+          <div class="top">
+            <strong>[48] Siegel, D. A., Maritorena, S., Nelson, N. B., Hansell, D. A., &amp; Lorenzi-Kayser, M. (2005). &quot;Colored dissolved organic matter and its influence on the satellite-based characterization of the ocean biosphere.&quot; Geophysical Research Letters 32: L20605.</strong>
+            <time>2005</time>
+          </div>
+          <p>Shows CDOM can strongly influence ocean color and satellite interpretation, motivating retrieval/validation of CDOM-related optical properties and careful treatment of optical complexity.<br>
+             <a class="link" href="https://doi.org/10.1029/2005GL024310" target="_blank" rel="noopener">GRL (DOI)</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec49">
+          <div class="top">
+            <strong>[49] Behrenfeld, M. J., et al. (2006). &quot;Climate-driven trends in contemporary ocean productivity.&quot; Nature 444(7120): 752–755.</strong>
+            <time>2006</time>
+          </div>
+          <p>High-impact demonstration that satellite observations can detect basin-scale variability/trends in ocean productivity and relate them to climate forcing; strengthened motivation for stable, sustained records.<br>
+             <a class="link" href="https://doi.org/10.1038/nature05317" target="_blank" rel="noopener">Nature (DOI)</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec50">
+          <div class="top">
+            <strong>[50] Westberry, T., Behrenfeld, M. J., Siegel, D. A., &amp; Boss, E. (2008). &quot;Carbon-based primary productivity modeling with vertically resolved photoacclimation.&quot; Global Biogeochemical Cycles 22(2): GB2024.</strong>
+            <time>2008</time>
+          </div>
+          <p>Develops CbPM with photoacclimation to estimate primary productivity using carbon/physiology concepts, expanding productivity estimation beyond chlorophyll-only formulations.<br>
+             <a class="link" href="https://doi.org/10.1029/2007GB003078" target="_blank" rel="noopener">Global Biogeochemical Cycles (DOI)</a>
+          </p>
+        </div>
+
+        <div class="item" id="sec51">
+          <div class="top">
+            <strong>[51] Dutkiewicz, S., et al. (2019). &quot;Ocean colour signature of climate change.&quot; Nature Communications 10: 578.</strong>
+            <time>2019</time>
+          </div>
+          <p>Uses an ocean ecosystem-optics model to argue that trends in remotely sensed reflectance (Rrs) may emerge earlier/clearer than trends in derived chlorophyll, highlighting the value of climate-quality Rrs records.<br>
+             <a class="link" href="https://doi.org/10.1038/s41467-019-08457-x" target="_blank" rel="noopener">Nature Communications (DOI)</a>
+          </p>
+        </div>
+  </div>
+
+
+    <footer>
+      <div>
+        Reading lists - Ocean Color - OCNG 489/689 (2026) - Department of Oceanography - Texas A&amp;M University <br>
+
+    </footer>
+  </main>
+
+  <script>
+    // Mobile nav toggle
+    const menuBtn = document.getElementById('menuBtn');
+    const nav = document.getElementById('nav');
+    menuBtn?.addEventListener('click', () => {
+      nav.classList.toggle('open');
+    });
+
+    // Table filtering
+    const filterBox = document.getElementById('filterBox');
+    const clearBtn = document.getElementById('clearBtn');
+    const tableBody = document.getElementById('paperTable');
+    const matchCount = document.getElementById('matchCount');
+
+    function updateFilter() {
+      const q = (filterBox.value || '').trim().toLowerCase();
+      const rows = tableBody.querySelectorAll('tr');
+      let shown = 0;
+      rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        const ok = (q === '') || text.includes(q);
+        row.style.display = ok ? '' : 'none';
+        if (ok) shown += 1;
+      });
+      matchCount.textContent = `${shown} / ${rows.length} shown`;
+    }
+
+    filterBox?.addEventListener('input', updateFilter);
+    clearBtn?.addEventListener('click', () => {
+      filterBox.value = '';
+      updateFilter();
+      filterBox.focus();
+    });
+    // Init
+    updateFilter();
+  </script>
+</body>
+</html>
