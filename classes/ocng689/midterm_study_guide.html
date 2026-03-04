@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>OCNG 489/689 Midterm Study Guide: EM Waves, Sensors & Data Levels, Optical, SST, Scatterometry, Passive Microwave (Salinity & Wind)</title>
+  <link rel="stylesheet" href="styles-light.css"/>
+
+  <!-- MathJax (TeX) for equations -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(','\\)'], ['$', '$']],
+        displayMath: [['\\[','\\]'], ['$$','$$']],
+        processEscapes: true
+      },
+      options: {
+        // Don't try to typeset inside code/pre blocks
+        skipHtmlTags: ['script','noscript','style','textarea','pre','code']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <a href="#top">OCNG 489/689</a>
+      <small>Midterm Study Guide • updated March 04, 2026</small>
+    </div>
+    <nav class="nav" id="nav">
+      <a href="#formulas">Formula sheet</a>
+      <a href="#em">EM waves</a>
+      <a href="#sensors">Sensor types & data levels</a>
+      <a href="#optical">Optical</a>
+      <a href="#ir">Infrared SST</a>
+      <a href="#mw">Microwave SST</a>
+      <a href="#scatter">Scatterometry</a>
+      <a href="#pmw">Passive MW: salinity & wind</a>
+      <a href="#compare">Key comparisons</a>
+      <a href="#practice">Practice</a>
+      <a href="#refs">References</a>
+    </nav>
+    <button class="menu-btn" aria-label="Toggle menu" onclick="document.getElementById('nav').classList.toggle('open')">Menu</button>
+  </div>
+</header>
+
+<main class="container" id="content">
+  <section class="panel" id="top">
+    
+      <h1>OCNG 489/689 Midterm Study Guide</h1>
+      <p>
+        Topics covered: <strong>EM waves & radiative transfer</strong>, <strong>sensor types + data levels</strong>,
+        <strong>optical (visible/NIR) ocean remote sensing</strong>, SST retrieval from <strong>thermal infrared</strong>
+        and <strong>passive microwave</strong>, plus <strong>active radar scatterometry</strong> (ocean surface vector winds)
+        and <strong>passive microwave applications</strong> for <strong>sea-surface salinity</strong> and <strong>winds</strong>.
+      </p>
+      <p class="callout"><strong>Important topics:</strong></p>
+      <ul>
+        <li>Write the forward model — what contributes to the TOA measurement</li>
+        <li>State assumptions/approximations (e.g., emissivity, atmosphere, rain flags)</li>
+        <li>Identify dominant error sources</li>
+        <li>Map a product to its <em>processing level</em> (L1/L2/L3/L4)</li>
+        <li>Convert \(\lambda \leftrightarrow \nu\); interpret Planck/Wien; identify atmospheric "window" regions</li>
+        <li>Distinguish and define irradiance, radiance, reflectance and emissivity</li>
+        <li>Distinguish TOA vs surface contributions</li>
+        <li>Classify active vs passive sensors; swath vs gridded products; Level 0→4 pipeline</li>
+        <li>Describe conceptual steps: IR split-window SST, MW SST regression, scatterometer wind vector inversion</li>
+        <li>Diagnose failure modes: clouds, water vapor, rain, RFI, high winds, coastal land contamination</li>
+        <li>Explain different SST definitions</li>
+      </ul>
+   
+    
+  </section>
+
+  <section id="formulas" class="panel">
+    <div class="section-title"><h2>Quick formula sheet</h2><span>Memorize meanings + units</span></div>
+    <ul>
+      <li>
+        <div class="math-display">\[ c = \lambda \nu \]</div>
+        (speed of light \(c = 3.00\times10^{8}\) m/s, \(\lambda\) = wavelength, \(\nu\) = frequency)
+      </li>
+      <li>
+        <div class="math-display">\[ E_{\mathrm{photon}} = h\nu = \frac{hc}{\lambda} \]</div>
+      </li>
+      <li>
+        <span class="term" tabindex="0" data-def="Spectral radiance of a blackbody (wavelength form). Use consistently with band response when converting to brightness temperature.">
+          Planck (wavelength form)
+        </span>:
+        <div class="math-display">\[ B_{\lambda}(T) = \frac{2hc^{2}}{\lambda^{5}}\,\frac{1}{\exp\!\left(\frac{hc}{\lambda k T}\right)-1} \]</div>
+      </li>
+      <li>
+        <span class="term" tabindex="0" data-def="Peak emission wavelength of a blackbody; for ~300 K, λ_max ≈ 10 μm (thermal IR window).">Wien</span>:
+        <div class="math-display">\[ \lambda_{\max} \approx \frac{2897\;\mu\mathrm{m\cdot K}}{T} \]</div>
+      </li>
+      <li>
+        <span class="term" tabindex="0" data-def="Valid when hν ≪ k_B T (microwave regime). Planck simplifies so that radiance is linear in T, which is why brightness temperature is a useful and nearly physical temperature in the microwave.">Rayleigh–Jeans approximation</span>
+        (\(h\nu \ll k_B T\), microwave limit):
+        <div class="math-display">\[ B_{\nu}(T) \approx \frac{2\nu^{2}k_{B}T}{c^{2}} \;\propto\; T \]</div>
+        (radiance linear in \(T\) → \(T_B \approx T_\mathrm{physical}\) in the microwave)
+      </li>
+
+      <li>
+        <span class="term" tabindex="0" data-def="Brightness temperature is the blackbody temperature that would produce the observed radiance in that band. Not necessarily equal to physical temperature if emissivity &lt; 1 or atmosphere contributes.">Brightness temperature</span>:
+        <div class="math-display">\[ T_{B} = B_{\lambda}^{-1}(L) \]</div>
+        (inverse Planck evaluated at the observed radiance \(L\))
+      </li>
+      <li>
+        <span class="term" tabindex="0" data-def="Simple single-layer form; MW forward models often look like this (surface emission + reflected downwelling atmosphere, attenuated by τ, plus upwelling atmosphere).">Radiative transfer (MW-friendly)</span>:
+        <div class="math-display">\[ T_{B} \approx \tau\left[ \varepsilon T_{s} + (1-\varepsilon)\,T_{\downarrow}\right] + T_{\uparrow} \]</div>
+      </li>
+      <li>
+        <span class="term" tabindex="0" data-def="Normalized Radar Cross Section (NRCS). Scatterometers measure σ0(θ, φ, pol) and invert a geophysical model function (GMF) to retrieve wind vectors. Often reported in dB: 10 log10(σ0).">Scatterometer observable</span>:
+        <div class="math-display">\[ \sigma^{0} = \sigma^{0}(\theta,\phi,p) \]</div>
+      </li>
+      <li>
+        <span class="term" tabindex="0" data-def="Bragg resonance: radar backscatter is strongly influenced by surface waves whose wavelength is linked to radar wavelength and incidence angle. This ties σ0 to wind-driven capillary waves.">Bragg condition (concept)</span>:
+        <div class="math-display">\[ \lambda_{\mathrm{surface}} \approx \frac{\lambda_{\mathrm{radar}}}{2\sin\theta} \]</div>
+      </li>
+      <li>
+        <span class="term" tabindex="0" data-def="At L-band (≈1.413 GHz), ocean emissivity depends on the dielectric constant of seawater, which depends strongly on salinity and temperature.">Salinity radiometry idea</span>:
+        <div class="math-display">\[ T_{B} \approx \varepsilon(\mathrm{SSS},\mathrm{SST},\theta,\mathrm{pol})\,T_{s} \]</div>
+        (plus atmosphere/roughness terms)
+      </li>
+    </ul>
+    <p class="callout"><strong>Unit discipline:</strong> keep track of m vs μm vs cm, and GHz vs THz; many exam errors are unit errors.</p>
+  </section>
+
+  <section id="em" class="panel">
+    <div class="section-title"><h2>EM waves & remote-sensing fundamentals</h2><span>Windows, absorption, and what the satellite actually “sees”</span></div>
+    <h3>Key ideas</h3>
+    <ul>
+      <li><strong>Sensors measure radiance (or backscatter), not “temperature” directly.</strong> Retrievals map measurements → geophysical variables via an algorithm + assumptions.</li>
+      <li><strong>Atmospheric windows</strong> enable surface sensing:
+        <span class="pill">visible/NIR</span> (reflected sunlight),
+        <span class="pill">thermal IR ~ 3.7–12 μm</span> (emission near Earth’s thermal peak),
+        <span class="pill">microwave cm</span> (emission/backscatter; penetrates most clouds).
+      </li>
+      <li><strong>Polarization matters</strong> in microwave: ocean emissivity/backscatter depends on H/V (or VV/HH) and incidence angle.</li>
+    </ul>
+
+    <h3>Classic exam questions</h3>
+    <ul>
+      <li>Why do IR SST products have gaps in cloudy regions?</li>
+      <li>Why do microwave products have coarser spatial resolution (λ/D diffraction)?</li>
+      <li>How do water vapor and cloud liquid water show up in thermal IR vs microwave?</li>
+    </ul>
+  </section>
+
+  <section id="sensors" class="panel">
+    <div class="section-title"><h2>Sensor types & data levels</h2><span>Know the taxonomy and the processing pipeline</span></div>
+
+    <h3>Sensor types: what distinguishes them?</h3>
+    <ul>
+      <li><strong>Passive</strong> sensors “listen” to natural radiation (solar-reflected in VIS/NIR; thermal emission in IR/MW): <em>radiometers</em>, <em>spectrometers</em>.</li>
+      <li><strong>Active</strong> sensors “illuminate” the Earth and measure the return: <em>scatterometer</em>, <em>SAR</em>, <em>altimeter</em>, <em>lidar</em>.</li>
+      <li><strong>Imaging strategy</strong> (how you map the Earth):
+        <span class="term" tabindex="0" data-def="Cross-track scanning mirror sweeps across the track (common in many radiometers).">whiskbroom</span>,
+        <span class="term" tabindex="0" data-def="Along-track detector array forms image line-by-line with no scanning mirror.">pushbroom</span>,
+        <span class="term" tabindex="0" data-def="Conically scanning antennas maintain fixed incidence angle; common for many MW radiometers and some scatterometers.">conical scan</span>.
+      </li>
+      <li><strong>Geometry</strong> matters: nadir-looking (IR radiometers), side-looking (SAR/scatterometer), multi-incidence (scatterometer beams).</li>
+    </ul>
+
+    <h3>Data processing levels (NASA convention)</h3>
+    <div class="table-wrap">
+      <table class="course" aria-label="NASA processing levels table">
+        <thead>
+          <tr>
+            <th>Level</th>
+            <th>What it is</th>
+            <th>Ocean examples you should recognize</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-label="Level"><strong>L0</strong></td>
+            <td data-label="What it is">Raw instrument packets / counts at full resolution (minimally processed)</td>
+            <td data-label="Examples">Telemetry packets; raw radar echoes; uncalibrated detector counts</td>
+          </tr>
+          <tr>
+            <td data-label="Level"><strong>L1</strong></td>
+            <td data-label="What it is">Calibrated, geolocated instrument measurements (radiances, brightness temps, backscatter)</td>
+            <td data-label="Examples">IR radiances; MW <span class="math-inline">\( T_{B} \)</span>; scatterometer <span class="math-inline">\( \sigma^{0} \)</span> swaths</td>
+          </tr>
+          <tr>
+            <td data-label="Level"><strong>L2</strong></td>
+            <td data-label="What it is">Derived geophysical variables at native measurement geometry (usually swath)</td>
+            <td data-label="Examples">Swath SST; swath SSS; wind vectors at wind vector cells (WVCs)</td>
+          </tr>
+          <tr>
+            <td data-label="Level"><strong>L3</strong></td>
+            <td data-label="What it is">Mapped/gridded products (space/time bins, typically daily/monthly)</td>
+            <td data-label="Examples">Daily 0.25° gridded winds; 7-day gridded salinity; daily gridded SST</td>
+          </tr>
+          <tr>
+            <td data-label="Level"><strong>L4</strong></td>
+            <td data-label="What it is">Analysis products (multi-sensor blended and/or model-assimilated fields)</td>
+            <td data-label="Examples">GHRSST L4 SST analyses; reanalysis winds; gap-filled SSS maps</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="callout">
+      <strong>Bridge to GHRSST:</strong> GHRSST uses “L2P” for sensor-level SST products (skin for IR, subskin for MW), and “L4” for gridded analyses/blends.
+      On an exam, you can usually map GHRSST L2P → NASA L2, GHRSST L3 → NASA L3, GHRSST L4 → NASA L4.
+    </p>
+  </section>
+
+  <section id="optical" class="panel">
+    <div class="section-title"><h2>Optical remote sensing (visible/NIR)</h2><span>Water-leaving radiance, reflectance, and atmospheric correction</span></div>
+
+    <h3>What’s measured vs what you want</h3>
+    <ul>
+      <li>Sensor measures <strong>TOA radiance</strong>; ocean-color wants <strong>water-leaving radiance</strong> <span class="math-inline">\( L_{w}(\lambda) \)</span> or <strong>remote sensing reflectance</strong> <span class="math-inline">\( R_{rs}(\lambda) \)</span>.</li>
+      <li><strong>Atmospheric correction</strong> removes Rayleigh scattering + aerosols + surface effects (whitecaps, sun glint) to isolate <span class="math-inline">\( L_{w} \)</span>.</li>
+    </ul>
+
+    <h3>Key definitions</h3>
+    <ul>
+      <li><div class="math-display">\[ R_{rs}(\lambda) = \frac{L_{w}(\lambda)}{E_{d}^{+}(\lambda)} \]</div></li>
+      <li><span class="term" tabindex="0" data-def="Inherent optical properties depend only on the medium (absorption, scattering), not on illumination geometry.">IOPs</span> vs
+          <span class="term" tabindex="0" data-def="Apparent optical properties depend on geometry (illumination/viewing), e.g., Rrs, Kd.">AOPs</span></li>
+      <li>Common pitfalls: coastal adjacency effects, bottom influence (shallow), glint masking.</li>
+    </ul>
+  </section>
+
+  <section id="ir" class="panel">
+    <div class="section-title"><h2>Infrared SST (thermal IR)</h2><span>Skin SST + split/triple-window correction</span></div>
+
+    <h3>What IR SST represents</h3>
+    <ul>
+      <li>IR radiometers (≈3.7–12 μm) measure <strong>skin SST</strong> (top O(10 μm) of the ocean). This matters for air–sea fluxes and buoy comparisons.</li>
+      <li>Main limitation: <strong>cloud opacity</strong> → data gaps and potential residual cloud-edge contamination.</li>
+    </ul>
+
+    <h3>Split-window concept (11 μm and 12 μm)</h3>
+    <ul>
+      <li>Atmospheric absorption differs between ~11 and ~12 μm (mainly water vapor). Using <span class="math-inline">\( (T_{11}-T_{12}) \)</span> corrects water vapor effects.</li>
+      <li>Generic structure:
+        <div class="math-display">\[ \mathrm{SST} = a_1 + a_2\,T_{11} + a_3\,(T_{11}-T_{12}) + a_4\,\sec(\theta)\,(T_{11}-T_{12}) \]</div> (coefficients by regression).</li>
+    </ul>
+
+    <h3>Triple-window (nighttime) reminder</h3>
+    <ul>
+      <li>Often uses 3.7 μm + 11 μm + 12 μm at night to improve atmospheric correction (3.7 μm contaminated by reflected solar during day).</li>
+    </ul>
+  </section>
+
+  <section id="mw" class="panel">
+    <div class="section-title"><h2>Microwave SST (passive MW)</h2><span>Subskin SST + wind/roughness corrections</span></div>
+
+    <h3>What MW SST represents</h3>
+    <ul>
+      <li>Microwave radiometers (often ~6–11 GHz for SST sensitivity) estimate <strong>subskin SST</strong> (upper mm scale), with much better sampling in cloudy regions (except rain).</li>
+      <li>MW SST is coarser spatially; careful coastal masks are common.</li>
+    </ul>
+
+    <h3>What influences MW brightness temperatures over ocean?</h3>
+    <ul>
+      <li><strong>Surface emission</strong>: depends on SST and <span class="term" tabindex="0" data-def="Microwave emissivity of the ocean depends on incidence angle, polarization, temperature, salinity, and roughness.">emissivity</span>.</li>
+      <li><strong>Roughness & foam</strong>: wind speed changes emissivity and polarization mixing.</li>
+      <li><strong>Atmospheric terms</strong>: water vapor and cloud liquid water emit/absorb; rain can dominate and breaks retrievals.</li>
+    </ul>
+
+    <p class="callout"><strong>Exam-friendly narrative:</strong> MW retrieval is a multi-channel separation problem: disentangle SST, wind/roughness, and atmospheric contributions using frequency/polarization diversity.</p>
+  </section>
+
+  <section id="scatter" class="panel">
+    <div class="section-title"><h2>Scatterometry key points</h2><span>Active radar for ocean surface vector winds</span></div>
+
+    <h3>What a scatterometer measures</h3>
+    <ul>
+      <li>Scatterometers are <strong>active microwave radars</strong>: they transmit pulses and measure the returned power from the sea surface.</li>
+      <li>The core observable is the <span class="term" tabindex="0" data-def="Normalized radar cross section (NRCS) σ0 is the radar backscatter per unit area, normalized to remove range dependence; typically reported in dB.">NRCS σ0</span>,
+          which depends on incidence angle, azimuth (relative to wind), and polarization.</li>
+      <li>Physical basis: <strong>wind → surface roughness</strong> (capillary + short gravity waves). Under Bragg scattering, σ0 is strongly influenced by resonant short waves whose wavelength depends on radar wavelength and incidence angle.</li>
+    </ul>
+
+    <h3>Why multiple looks are needed (wind direction)</h3>
+    <ul>
+      <li>σ0 is <strong>anisotropic</strong> with azimuth relative to wind, so measuring σ0 from multiple azimuth angles allows retrieval of wind direction (and speed).</li>
+      <li>Inversion uses a <span class="term" tabindex="0" data-def="Geophysical Model Function: empirical/semi-empirical mapping σ0 → wind vector for a given frequency/polarization/incidence. Examples: CMOD (C-band), Ku-band GMFs.">GMF</span> to find wind vectors consistent with the set of σ0 observations.</li>
+      <li>Because the inversion is not unique, retrieval produces <span class="term" tabindex="0" data-def="Directional ambiguity: multiple candidate wind directions can fit the same σ0 measurements. Ambiguity removal selects the physically consistent solution using spatial filters and/or NWP background winds (e.g., 2DVAR).">ambiguities</span> that must be removed.</li>
+    </ul>
+
+    <h3>Typical products and levels</h3>
+    <ul>
+      <li><strong>L1</strong>: calibrated σ0 swaths (sometimes per-beam).</li>
+      <li><strong>L2</strong>: wind vectors on a wind-vector-cell grid (e.g., 25 km or 12.5 km).</li>
+      <li><strong>L3</strong>: gridded daily/monthly wind fields.</li>
+    </ul>
+
+    <h3>Representative missions (know at least 2)</h3>
+    <ul>
+      <li><strong>QuikSCAT / SeaWinds</strong> (Ku-band): very wide swath; excellent coverage of ice-free oceans.</li>
+      <li><strong>ASCAT</strong> on MetOp satellites (C-band): operational winds; generally less rain-sensitive than Ku-band.</li>
+      <li>Historical/other: NSCAT, RapidScat (good to recognize by name).</li>
+    </ul>
+
+    <h3>Failure modes / error budget themes</h3>
+    <ul>
+      <li><strong>Rain contamination</strong> (especially Ku-band): changes backscatter and attenuates the radar signal → biased winds; handled by rain flags but not perfect.</li>
+      <li><strong>Low winds</strong> (&lt; ~3 m/s): weak anisotropy and low SNR.</li>
+      <li><strong>High winds</strong>: potential saturation and foam effects; direction can degrade.</li>
+      <li><strong>Coasts/sea ice</strong>: land/ice contamination and non-ocean scattering.</li>
+    </ul>
+
+    <pre><code>Scatterometer wind retrieval (conceptual workflow)
+L0 packets → L1 σ0 calibration/geolocation → GMF inversion → multiple wind ambiguities
+→ ambiguity removal (spatial consistency + NWP background; e.g., 2DVAR) → L2 winds → L3 grids</code></pre>
+  </section>
+
+  <section id="pmw" class="panel">
+    <div class="section-title"><h2>Passive microwave applications beyond SST</h2><span>Sea-surface salinity & winds</span></div>
+
+    <h3>Sea-surface salinity (SSS) from space: why L-band?</h3>
+    <ul>
+      <li>Satellite SSS is retrieved primarily using <strong>L-band radiometry</strong> near <strong>1.413 GHz</strong> (~21 cm), where ocean emissivity is sensitive to salinity via the seawater dielectric constant.</li>
+      <li>Sensitivity is small (Tb changes are subtle), so the retrieval is calibration- and correction-heavy.</li>
+    </ul>
+
+    <h4>Key corrections/complications</h4>
+    <ul>
+      <li><strong>SST dependence</strong>: dielectric constant depends on temperature and salinity, so SST is an essential ancillary.</li>
+      <li><strong>Surface roughness/wind</strong>: modifies emissivity; some missions use additional channels or an ancillary sensor to correct roughness.</li>
+      <li><span class="term" tabindex="0" data-def="Radio Frequency Interference: human-made transmissions that contaminate passive microwave measurements. Major issue at L-band even though 1.413 GHz is protected.">RFI</span> detection/mitigation is critical.</li>
+      <li><strong>Ionospheric effects</strong> (e.g., Faraday rotation) can affect polarization, particularly at L-band.</li>
+    </ul>
+
+    <h4>SSS missions to recognize</h4>
+    <ul>
+      <li><strong>SMOS</strong> (ESA): L-band interferometric radiometer (MIRAS).</li>
+      <li><strong>Aquarius</strong> (NASA/CONAE): L-band radiometers; included a scatterometer channel to help correct roughness.</li>
+      <li><strong>SMAP</strong> (NASA): L-band radiometer (salinity via dedicated algorithms; RFI mitigation is a big theme).</li>
+    </ul>
+
+    <h3>Passive microwave winds</h3>
+    <ul>
+      <li>Most passive MW radiometers retrieve <strong>wind speed</strong> (not full vector) over ocean from wind-driven changes in emissivity due to roughness/foam.</li>
+      <li>Multi-frequency + polarization diversity helps separate wind speed from atmospheric water vapor/cloud liquid water effects.</li>
+      <li><strong>WindSat</strong> is a key example of a polarimetric radiometer designed to retrieve <em>wind vectors</em> (speed + direction) from passive MW.</li>
+    </ul>
+
+    <h4>Trade-offs you can explain</h4>
+    <ul>
+      <li><strong>Higher frequencies</strong> can have stronger wind sensitivity but are more affected by rain.</li>
+      <li><strong>Lower frequencies</strong> penetrate rain better but have lower intrinsic sensitivity and coarser footprints.</li>
+      <li>Near coasts: land contamination is a major limitation for all microwave products.</li>
+    </ul>
+  </section>
+
+  <section id="compare" class="panel">
+    <div class="section-title"><h2>Key comparisons you should be able to write</h2><span>One-paragraph answers that earn points</span></div>
+
+    <h3>SST: thermal IR vs passive MW</h3>
+    <ul>
+      <li><strong>IR SST</strong>: high spatial resolution, best accuracy in clear-sky; measures <em>skin SST</em>; cloud-limited.</li>
+      <li><strong>MW SST</strong>: better sampling under clouds (except rain), coarser footprint; measures <em>subskin SST</em>; sensitive to wind/roughness.</li>
+    </ul>
+
+    <h3>Winds: scatterometer vs passive MW radiometer</h3>
+    <ul>
+      <li><strong>Scatterometer (active)</strong>: wind <em>vector</em> (speed + direction), based on σ0 anisotropy; rain can bias (especially Ku-band); generally higher spatial detail than passive MW winds.</li>
+      <li><strong>Passive MW</strong>: wind <em>speed</em> (and sometimes direction with polarimetry), based on emissivity changes due to roughness/foam; also rain-sensitive; often used for all-weather wind speed fields.</li>
+      <li><strong>In situ</strong> (buoys): point measurements; comparisons require careful collocation and height/neutral-stability conventions (10 m winds).</li>
+    </ul>
+  </section>
+
+  <section id="practice" class="panel">
+    <div class="section-title"><h2>Practice questions</h2><span></span></div>
+
+    <h3>A. Quick calculations / sanity checks</h3>
+    <ol>
+      <li>Compute ν for λ = 11 μm (thermal IR window). State units clearly.</li>
+      <li>Using Wien’s law, estimate λ<sub>max</sub> for T = 290–300 K. Why does this matter for IR SST band choice?</li>
+      <li>Given a microwave frequency of 6.9 GHz, compute λ. Explain (qualitatively) why the footprint is large.</li>
+    </ol>
+
+    <h3>B. Concepts: forward model thinking</h3>
+    <ol start="4">
+      <li>Write the one-layer MW brightness temperature expression and label surface emission, reflected downwelling atmosphere, and upwelling atmosphere.</li>
+      <li>Explain why split-window SST uses (T11 − T12). What does a larger difference often imply?</li>
+      <li>For ocean color: why is TOA radiance over ocean dominated by the atmosphere? What is “atmospheric correction” removing?</li>
+    </ol>
+
+    <h3>C. Sensor types + data levels</h3>
+    <ol start="7">
+      <li>Classify each as active or passive: scatterometer, IR radiometer, microwave radiometer, SAR, lidar, altimeter.</li>
+      <li>Decide the processing level (L0–L4): (i) calibrated σ0 swaths, (ii) swath SST, (iii) daily gridded 0.25° winds, (iv) multi-sensor blended SST analysis.</li>
+      <li>What extra processing step separates L1 → L2 for scatterometry? (Hint: inversion using a GMF + ambiguity removal.)</li>
+    </ol>
+
+    <h3>D. Scatterometry</h3>
+    <ol start="10">
+      <li>Define σ0 and list the three geometry/polarization variables it depends on (θ, φ, p). Why do we need multiple azimuth views?</li>
+      <li>Explain what a GMF is. Why does the inversion produce multiple wind-direction ambiguities?</li>
+      <li>Name two major error sources in scatterometer winds and describe how products usually flag them.</li>
+    </ol>
+
+    <h3>E. Passive microwave salinity & winds</h3>
+    <ol start="13">
+      <li>Why is L-band (~1.413 GHz) used for sea-surface salinity from space? What makes the retrieval hard?</li>
+      <li>List at least three corrections needed for SSS retrieval (e.g., SST dependence, wind/roughness, RFI, ionosphere).</li>
+      <li>Explain the physical reason wind speed can be retrieved from passive microwave brightness temperatures over ocean.</li>
+    </ol>
+  </section>
+
+  <section id="refs" class="panel">
+    <div class="section-title"><h2>References and reputable starting points</h2><span>Use for deeper review</span></div>
+    <ul>
+      <li><strong>Data levels:</strong> NASA Earthdata “Data Processing Levels” page.</li>
+      <li><strong>IR SST algorithms:</strong> Walton et al. (1998) nonlinear SST; VIIRS SST ATBD (split/triple-window).</li>
+      <li><strong>MW SST:</strong> NOAA AMSR2 Ocean EDR ATBD (SST + wind/roughness + atmosphere separation).</li>
+      <li><strong>Scatterometry:</strong> PO.DAAC QuikSCAT mission overview; OSI SAF/KNMI ASCAT wind product manuals (processing + quality flags); Hoffman & Leidner (2005) overview of QuikSCAT winds.</li>
+      <li><strong>Passive MW winds:</strong> Wentz (1997) SSM/I ocean algorithm; WindSat documentation (polarimetric wind vectors).</li>
+      <li><strong>SSS from space:</strong> Reviews/overviews on SMOS/Aquarius/SMAP L-band salinity radiometry; mission handbooks + product guides; discussions of RFI mitigation.</li>
+      <li><strong>Definitions:</strong> GHRSST SST definitions (skin/subskin/foundation) and product levels.</li>
+    </ul>
+  </section>
+
+  <footer>
+    <div class="foot-badge">OCNG 689 • Study guide</div>
+    <div>Made for quick review + exam preparation</div>
+  </footer>
+
+</main>
+</body>
+</html>
