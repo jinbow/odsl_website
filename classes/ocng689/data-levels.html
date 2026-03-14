@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Data Levels in Remote Sensing Oceanography</title>
+
+  <!-- Course site stylesheet -->
+  <link rel="stylesheet" href="styles-light.css" />
+
+  <!-- MathJax (for equations if needed) -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)'], ['$', '$']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+
+<body id="top">
+  <a class="skip" href="#content">Skip to content</a>
+
+  <header class="topbar" role="banner">
+    <div class="topbar-inner">
+      <div class="brand" aria-label="Page title">
+        <a href="#top">Data Levels &amp; Distribution Centers</a>
+        <small>Satellite oceanography data processing hierarchy</small>
+      </div>
+
+      <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="nav">
+        Menu
+      </button>
+
+      <nav class="nav" id="nav" aria-label="Section navigation">
+        <a href="#section-2-5" class="active">Data Levels</a>
+        <a href="#section-2-5-1">Level 0</a>
+        <a href="#section-2-5-2">Level 1</a>
+        <a href="#section-2-5-3">Level 2</a>
+        <a href="#section-2-5-4">Level 3/4</a>
+        <a href="#section-2-6">Data Centers</a>
+        <a href="index.html">Class Home</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="content" class="container" role="main">
+
+    <!-- 2.5 -->
+    <section class="panel" id="section-2-5">
+      <div class="section-title">
+        <h2>Data Levels in Satellite Oceanography</h2>
+        <span>From raw to analysis-ready</span>
+      </div>
+
+      <p>
+        Satellite measurements are processed through standardized levels to support consistent data stewardship and user interpretation. The central question
+        each level answers is: <em>how far is this dataset from the original measurement?</em>
+      </p>
+
+      <div class="table-wrap" role="region" aria-label="Data processing levels table">
+        <table class="course">
+          <caption>Common satellite data processing levels (oceanography examples)</caption>
+          <thead>
+            <tr>
+              <th scope="col">Level</th>
+              <th scope="col">Name</th>
+              <th scope="col">Typical contents</th>
+              <th scope="col">Common use</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td data-label="Level">0</td>
+              <td data-label="Name"><strong>Raw data</strong></td>
+              <td data-label="Typical contents">Reconstructed instrument packets/counts with minimal processing.</td>
+              <td data-label="Common use">Archival baseline; reprocessing; engineering validation.</td>
+            </tr>
+            <tr>
+              <td data-label="Level">1</td>
+              <td data-label="Name"><strong>Calibrated &amp; geolocated</strong></td>
+              <td data-label="Typical contents">Radiances/brightness temperatures/backscatter; navigation applied.</td>
+              <td data-label="Common use">Algorithm development; quality assessment; retrieval inputs.</td>
+            </tr>
+            <tr>
+              <td data-label="Level">2</td>
+              <td data-label="Name"><strong>Geophysical products</strong></td>
+              <td data-label="Typical contents">SST, chlorophyll, wind vectors, SSH along tracks/swaths; QC flags.</td>
+              <td data-label="Common use">Process studies; validation; high-fidelity local analyses.</td>
+            </tr>
+            <tr>
+              <td data-label="Level">3</td>
+              <td data-label="Name"><strong>Gridded composites</strong></td>
+              <td data-label="Typical contents">Mapped fields on a standard grid (daily/weekly/monthly).</td>
+              <td data-label="Common use">Climatologies; mapping; broad-scale comparisons.</td>
+            </tr>
+            <tr>
+              <td data-label="Level">4</td>
+              <td data-label="Name"><strong>Analyzed / model-integrated</strong></td>
+              <td data-label="Typical contents">Gap-free analyses (often multi-sensor) and/or assimilated products.</td>
+              <td data-label="Common use">Model forcing/validation; operational products; consistent fields.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 id="section-2-5-1">2.5.1 Level 0: Raw Data</h3>
+      <p>
+        Level 0 is reconstructed, unprocessed instrument data at full resolution. It is not “science-ready” and often requires mission-specific metadata and tools,
+        but it is essential for preserving the closest representation of what the instrument measured.
+      </p>      <div class="callout">
+        <strong>Examples:</strong>
+        <ul>
+          <li><strong>MODIS Level 0:</strong> Raw digital counts from all 36 spectral bands before any calibration</li>
+          <li><strong>Jason-3 Level 0:</strong> Altimeter waveform samples and telemetry packets</li>
+          <li><strong>Sentinel-1 Level 0:</strong> Raw SAR echo data (I/Q samples) before focusing</li>
+        </ul>
+      </div>
+      <h3 id="section-2-5-2">2.5.2 Level 1: Calibrated and Geolocated Data</h3>
+      <p>
+        Level 1 data are radiometrically calibrated and (typically) geolocated. Examples include calibrated radiances, brightness temperatures, radar backscatter,
+        or altimeter waveforms/ranges with navigation information.
+      </p>
+      <div class="callout">
+        <strong>Examples:</strong>
+        <ul>
+          <li><strong>MODIS L1B:</strong> Top-of-atmosphere radiances (W m⁻² sr⁻¹ μm⁻¹) with geolocation for each pixel</li>
+          <li><strong>AMSR2 L1R:</strong> Brightness temperatures (K) at multiple microwave frequencies</li>
+          <li><strong>Sentinel-3 OLCI L1:</strong> Calibrated radiances in 21 spectral bands with per-pixel lat/lon</li>
+          <li><strong>Jason-3 L1:</strong> Retracked altimeter range, sigma0, and significant wave height per along-track point</li>
+        </ul>
+      </div>
+
+      <h3 id="section-2-5-3">2.5.3 Level 2: Geophysical Products</h3>
+      <p>
+        Level 2 products provide derived geophysical variables at the measurement resolution and sampling geometry (e.g., along-track or swath). Atmospheric corrections,
+        auxiliary meteorology, geophysical models (e.g., tides), and quality flags are often incorporated at this stage.
+      </p>
+      <div class="callout">
+        <strong>Examples:</strong>
+        <ul>
+          <li><strong>MODIS L2 SST:</strong> Sea surface temperature (°C) at 1 km resolution, swath geometry, with quality flags</li>
+          <li><strong>MODIS L2 OC:</strong> Chlorophyll-a concentration (mg m⁻³), remote sensing reflectance Rrs(λ) at native resolution</li>
+          <li><strong>ASCAT L2:</strong> Ocean surface wind vectors (speed and direction) along the scatterometer swath</li>
+          <li><strong>Jason-3 L2:</strong> Sea surface height anomaly (SSHA), geostrophic currents along the ground track</li>
+          <li><strong>SMAP L2:</strong> Sea surface salinity (PSU) at ~40 km resolution in swath coordinates</li>
+        </ul>
+      </div>
+
+      <h3 id="section-2-5-4">2.5.4 Higher Levels: Gridded and Analyzed Data</h3>
+      <p>
+        Level 3 maps Level 2 variables onto consistent grids, often as space–time composites. Level 4 adds analysis methods and/or model constraints (including data assimilation)
+        to produce gap-free fields. These levels are convenient for mapping and modeling but can be farther from the instrument measurement and may incorporate smoothing or model structure.
+      </p>
+      <div class="callout">
+        <strong>Level 3 Examples:</strong>
+        <ul>
+          <li><strong>MODIS L3 SST:</strong> Daily/8-day/monthly SST composites on a 4 km global grid</li>
+          <li><strong>MODIS L3 CHL:</strong> Chlorophyll-a mapped to 4 km or 9 km grids (daily, 8-day, monthly)</li>
+          <li><strong>CCMP Winds:</strong> 6-hourly gridded ocean winds from multiple satellites on 0.25° grid</li>
+          <li><strong>AVISO SSHA:</strong> Along-track altimetry mapped to regular grids (weekly or monthly)</li>
+        </ul>
+      </div>
+      <div class="callout">
+        <strong>Level 4 Examples:</strong>
+        <ul>
+          <li><strong>GHRSST MUR SST:</strong> Daily gap-free 1 km SST analysis blending multiple IR and MW sensors</li>
+          <li><strong>AVISO DUACS:</strong> Multi-mission altimeter gridded sea level anomaly (merged Jason, Sentinel-6, etc.)</li>
+          <li><strong>GLORYS:</strong> Global ocean reanalysis with satellite altimetry, SST, and sea ice assimilated into a model</li>
+          <li><strong>ECCO:</strong> MIT GCM-based state estimate constrained by satellite and in situ observations</li>
+        </ul>
+      </div>
+      <p>
+        Level 3 maps Level 2 variables onto consistent grids, often as space–time composites. Level 4 adds analysis methods and/or model constraints (including data assimilation)
+        to produce gap-free fields. These levels are convenient for mapping and modeling but can be farther from the instrument measurement and may incorporate smoothing or model structure.
+      </p>
+
+      <div class="callout">
+        <strong>Interpretation caution:</strong> Higher levels are easier to use, but they may blend sensors, fill gaps, and impose assumptions.
+        If you need “closest-to-observation” constraints (e.g., algorithm validation), start from Level 1/2 when feasible.
+      </div>
+    </section>
+
+    <div class="hr" role="separator" aria-hidden="true"></div>
+
+    <!-- 2.6 -->
+    <section class="panel" id="section-2-6">
+      <div class="section-title">
+        <h2>2.6 Major Data Distribution Centers for Satellite Oceanography</h2>
+        <span>Where you actually get the data</span>
+      </div>
+
+      <p>
+        Professional practice in satellite oceanography includes knowing where authoritative datasets are archived and how to evaluate product maturity,
+        processing level, latency, and documentation quality.
+      </p>
+
+      <h3 id="section-2-6-1">2.6.1 NASA Earthdata</h3>
+      <p>
+        <a href="https://earthdata.nasa.gov/" target="_blank" rel="noopener">NASA Earthdata</a> provides discovery and access to NASA Earth observation holdings, supported by discipline-specific Distributed Active Archive Centers (DAACs).
+        Oceanography-relevant DAACs include <a href="https://podaac.jpl.nasa.gov/" target="_blank" rel="noopener">PO.DAAC</a> (physical oceanography) and <a href="https://oceancolor.gsfc.nasa.gov/" target="_blank" rel="noopener">OB.DAAC</a> (ocean biology/ocean color). Common workflows include portal download, APIs,
+        and increasingly cloud-optimized analysis.
+      </p>
+
+      <h3 id="section-2-6-2">2.6.2 NOAA CoastWatch</h3>
+      <p>
+        <a href="https://coastwatch.noaa.gov/" target="_blank" rel="noopener">NOAA CoastWatch</a> provides near-real-time and operational ocean products, including SST and ocean color, often organized by latency and product family.
+        This is particularly useful for applications requiring rapid delivery (e.g., hazards, operational monitoring).
+      </p>
+
+      <h3 id="section-2-6-3">2.6.3 ESA Copernicus Hub</h3>
+      <p>
+        Copernicus Sentinel mission data are distributed through the <a href="https://dataspace.copernicus.eu/" target="_blank" rel="noopener">Copernicus Data Space Ecosystem</a>. For many users, the practical workflow is:
+        search → select product level and timeliness → download or access via API → process in Python using netCDF/GeoTIFF/SAFE formats.
+      </p>
+
+      <h3 id="section-2-6-4">2.6.4 Other Centers</h3>
+      <p>Additional important centers for ocean remote sensing include <a href="https://gportal.jaxa.jp/" target="_blank" rel="noopener">JAXA G-Portal</a> and <a href="https://www.aviso.altimetry.fr/" target="_blank" rel="noopener">CNES AVISO+</a> (altimetry services), among others.</p>
+
+      <div class="callout">
+        <strong>Practical note (Python):</strong> Most satellite ocean products are distributed as netCDF/HDF (or mission-specific packaging).
+        Core skills include reading metadata, applying quality flags, handling projections/geolocation, and tracking processing level and version.
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-foot" role="contentinfo">
+    <div class="foot-inner">
+      <p>&copy; 2026 OCNG 489/689 — Observing the Oceans from Space</p>
+      <p>Department of Oceanography, Texas A&amp;M University</p>
+    </div>
+  </footer>
+
+  <script>
+    // Responsive nav toggle
+    const menuBtn = document.getElementById('menuBtn');
+    const nav = document.getElementById('nav');
+    if (menuBtn && nav) {
+      menuBtn.addEventListener('click', () => {
+        const expanded = menuBtn.getAttribute('aria-expanded') === 'true';
+        menuBtn.setAttribute('aria-expanded', !expanded);
+        nav.classList.toggle('open');
+      });
+    }
+
+    // Highlight active nav link on scroll
+    const sections = document.querySelectorAll('section[id], h3[id]');
+    const navLinks = document.querySelectorAll('.nav a[href^="#"]');
+    
+    function updateActiveNav() {
+      let current = '';
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        if (scrollY >= sectionTop - 100) {
+          current = section.getAttribute('id');
+        }
+      });
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + current) {
+          link.classList.add('active');
+        }
+      });
+    }
+    window.addEventListener('scroll', updateActiveNav);
+  </script>
+</body>
+</html>

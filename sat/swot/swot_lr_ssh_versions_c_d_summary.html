@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SWOT L2_LR_SSH Version C and D Summary</title>
+  <style>
+/* styles.css - Minimalist book-feel */
+:root {
+    --ink: #1b1a17;
+    --muted: #5b5b56;
+    --paper: #f9f7f3;
+    --paper-2: #ffffff;
+    --line: #e6e0d6;
+    --accent: #2f4d63;
+    --accent-2: #7f2f2f;
+    --block: #f1ede6;
+    --code: #f4f3ef;
+    --shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+    color: var(--ink);
+    background: var(--paper);
+    line-height: 1.7;
+    letter-spacing: 0.1px;
+}
+
+header {
+    background: linear-gradient(180deg, var(--paper-2), var(--paper));
+    border-bottom: 1px solid var(--line);
+    padding: 2.5rem 1.25rem 1.5rem;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: clamp(1.8rem, 2.5vw, 2.6rem);
+    letter-spacing: 0.5px;
+}
+
+header p {
+    margin: 0.4rem 0 0;
+    color: var(--muted);
+}
+
+.kicker {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.75rem;
+    color: var(--muted);
+}
+
+.sub {
+    font-size: 0.9rem;
+    color: var(--muted);
+}
+
+nav {
+    background: var(--paper-2);
+    border-bottom: 1px solid var(--line);
+    padding: 0.8rem 1.25rem;
+}
+
+nav .nav-inner {
+    max-width: 1040px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+    align-items: center;
+    justify-content: space-between;
+}
+
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+nav a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+.module-picker {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+    font-size: 0.9rem;
+    color: var(--muted);
+}
+
+.module-select {
+    appearance: none;
+    padding: 0.45rem 2.2rem 0.45rem 0.75rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--paper-2);
+    color: var(--ink);
+    font-weight: 600;
+    font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+    background-image: linear-gradient(45deg, transparent 50%, var(--accent) 50%),
+        linear-gradient(135deg, var(--accent) 50%, transparent 50%);
+    background-position: calc(100% - 18px) 55%, calc(100% - 12px) 55%;
+    background-size: 6px 6px, 6px 6px;
+    background-repeat: no-repeat;
+}
+
+main {
+    max-width: 1040px;
+    margin: 2rem auto 3rem;
+    padding: 0 1.5rem;
+}
+
+h1,
+h2,
+h3,
+h4 {
+    color: var(--accent-2);
+    line-height: 1.25;
+}
+
+h2 {
+    margin-top: 2rem;
+    border-left: 4px solid var(--accent-2);
+    padding-left: 0.6rem;
+}
+
+h3 {
+    margin-top: 1.6rem;
+}
+
+section {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 1.25rem 1.4rem;
+    box-shadow: var(--shadow);
+}
+
+pre {
+    background: var(--code);
+    border: 1px solid var(--line);
+    padding: 1rem;
+    overflow-x: auto;
+    font-family: "SFMono-Regular", Menlo, Consolas, monospace;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    border-radius: 10px;
+}
+
+code {
+    font-family: "SFMono-Regular", Menlo, Consolas, monospace;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.25rem 0;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+table th {
+    text-align: left;
+    font-weight: 700;
+    padding: 0.7rem 0.8rem;
+    background: var(--block);
+}
+
+table td {
+    border-top: 1px solid var(--line);
+    padding: 0.7rem 0.8rem;
+    vertical-align: top;
+}
+
+.note {
+    background: var(--block);
+    border-left: 4px solid var(--accent);
+    padding: 1rem 1.2rem;
+    margin: 1.5rem 0;
+    border-radius: 10px;
+}
+
+.navigation {
+    margin: 2.5rem 0 1rem;
+    text-align: center;
+    font-weight: 600;
+}
+
+.navigation a {
+    color: var(--accent);
+    text-decoration: none;
+}
+
+footer {
+    background: var(--paper-2);
+    border-top: 1px solid var(--line);
+    text-align: center;
+    padding: 1rem;
+    margin-top: 3rem;
+    font-size: 0.9rem;
+    color: var(--muted);
+}
+
+/* Metadata reference layout */
+.grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+@media (min-width: 980px) {
+    .grid {
+        grid-template-columns: 1.15fr 0.85fr;
+    }
+}
+
+.card {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 1rem 1.1rem;
+    box-shadow: var(--shadow);
+}
+
+.card h2 {
+    margin-top: 0;
+    border-left: 4px solid var(--accent-2);
+    padding-left: 0.6rem;
+}
+
+.meta {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 0.5rem 1rem;
+    font-size: 0.95rem;
+}
+
+.meta .k {
+    color: var(--muted);
+}
+
+.chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.8rem;
+}
+
+.chip {
+    background: var(--block);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.3rem 0.75rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+    text-decoration: none;
+}
+
+details {
+    border-top: 1px solid var(--line);
+    padding-top: 0.8rem;
+    margin-top: 0.8rem;
+}
+
+summary {
+    cursor: pointer;
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.tbl {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    margin: 0.6rem 0 0;
+}
+
+.tbl th,
+.tbl td {
+    border-bottom: 1px solid var(--line);
+    padding: 0.5rem 0.4rem;
+    vertical-align: top;
+}
+
+.tbl th {
+    color: var(--muted);
+    font-weight: 600;
+    background: transparent;
+    text-align: left;
+}
+
+.mono {
+    font-family: "SFMono-Regular", Menlo, Consolas, monospace;
+}
+
+.small {
+    font-size: 0.85rem;
+    color: var(--muted);
+}
+
+.pill {
+    display: inline-block;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.15rem 0.6rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+    background: var(--block);
+}
+
+.flags {
+    margin: 0.6rem 0 0;
+    padding: 0.8rem;
+    background: var(--code);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+}
+
+.flags ul {
+    margin: 0;
+    padding-left: 1.1rem;
+}
+
+.flags li {
+    margin: 0.25rem 0;
+}
+
+.section-note {
+    margin: 0.4rem 0 0;
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+
+.anchor {
+    color: inherit;
+    text-decoration: none;
+}
+
+.anchor:hover {
+    text-decoration: underline;
+}
+
+  .hero-meta { margin-top: 0.8rem; font-size: 0.95rem; color: var(--muted); }
+  .pillset { display:flex; flex-wrap:wrap; gap:0.5rem; justify-content:center; margin-top:0.8rem; }
+  .compare { font-size: 0.95rem; }
+  .good { color:#245c35; font-weight:700; }
+  .warn { color:#8a5a00; font-weight:700; }
+  .smallcaps { text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.78rem; color: var(--muted); }
+  .cols { display:grid; grid-template-columns:1fr; gap:1rem; }
+  @media (min-width: 900px) { .cols { grid-template-columns:1fr 1fr; } }
+  .mono-block { background: var(--code); border: 1px solid var(--line); border-radius: 10px; padding: 0.8rem 1rem; font-family: "SFMono-Regular", Menlo, Consolas, monospace; font-size: 0.9rem; }
+  ul.compact { margin-top:0.4rem; margin-bottom:0.4rem; }
+  .source { color: var(--muted); font-size:0.88rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="kicker">SWOT • KaRIn • L2_LR_SSH</div>
+    <h1>Version C and Version D LR SSH Products</h1>
+    <p>A compact summary of the SWOT Level-2 KaRIn Low Rate Sea Surface Height product release history, coverage, and key differences.</p>
+    <div class="pillset">
+      <span class="pill">Granule: single pass</span>
+      <span class="pill">Files per granule: 4</span>
+      <span class="pill">Nominal latency: &lt; 45 days</span>
+      <span class="pill">Main product: L2_LR_SSH</span>
+    </div>
+    <div class="hero-meta">SWOT L2_LR_SSH product description and the Version C / D KaRIn release notes.</div>
+  </header>
+
+  <nav>
+    <div class="nav-inner">
+      <ul>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#coverage">Time coverage</a></li>
+        <li><a href="#crid">CRIDs</a></li>
+        <li><a href="#files">Files</a></li>
+        <li><a href="#changes">C vs D changes</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <section id="overview">
+      <h2>Overview</h2>
+      <p>The <code>L2_LR_SSH</code> product is SWOT’s KaRIn low-rate sea-surface-height product for oceanography. It provides sea surface height (SSH), sea surface height anomaly (SSHA), significant wave height, sigma0, wind speed, uncertainties, quality flags, and supporting geophysical and correction information. Each granule spans one spacecraft pass and is distributed as four NetCDF files.</p>
+      <p> This is a summary of the product documents <a href="https://archive.podaac.earthdata.nasa.gov/podaac-ops-cumulus-docs/web-misc/swot_mission_docs/releases/SWOT_VersionC_KaRIn_Products_Release_Note_20241014.pdf">Version C</a> and <a href="https://archive.podaac.earthdata.nasa.gov/podaac-ops-cumulus-docs/web-misc/swot_mission_docs/releases/SWOT_VersionD_KaRIn_Products_Release_Note_20251219.pdf">Version D</a> on PODAAC.</p>
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Version C</th>
+            <th>Version D</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Major release meaning</td>
+            <td>First public Version C KaRIn generation, later updated with PIC2 forward processing.</td>
+            <td>Next major KaRIn generation with updated calibrations, algorithms, and reprocessing.</td>
+          </tr>
+          <tr>
+            <td>Recommended choice</td>
+            <td>Use the highest available C product for dates before D exists.</td>
+            <td><span class="good">Preferred whenever available</span>.</td>
+          </tr>
+          <tr>
+            <td>Reprocessing scope</td>
+            <td>PGC0 only for early mission subset.</td>
+            <td>PGD0 reprocessing from calibration-phase start through 2025-04-27.</td>
+          </tr>
+          <tr>
+            <td>Forward processing</td>
+            <td>PIC0 then PIC2.</td>
+            <td>PID0 from 2025-04-28 onward.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="coverage">
+      <h2>Version information and time coverage</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Version family</th>
+            <th>CRID</th>
+            <th>Processing type</th>
+            <th>Time coverage stated in release notes</th>
+            <th>Orbit / cycle notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Version C</td>
+            <td><code>PGC0</code></td>
+            <td>Reprocessed</td>
+            <td>2023-03-30 to 2024-01-25</td>
+            <td>Calibration cycles 475–578 and science cycles 1–9</td>
+          </tr>
+          <tr>
+            <td>Version C</td>
+            <td><code>PIC0</code></td>
+            <td>Forward</td>
+            <td>2024-01-25 to 2024-10-15</td>
+            <td>Science cycle 10 to part of cycle 22</td>
+          </tr>
+          <tr>
+            <td>Version C</td>
+            <td><code>PIC2</code></td>
+            <td>Forward</td>
+            <td>2024-10-16 to 2025-04-27</td>
+            <td>Part of science cycle 22 through end of cycle 31; no <code>PGC2</code> products</td>
+          </tr>
+          <tr>
+            <td>Version D</td>
+            <td><code>PGD0</code></td>
+            <td>Reprocessed</td>
+            <td>2023-03-30 to 2025-04-27</td>
+            <td>Calibration cycles 475–578 and science cycles 1–31</td>
+          </tr>
+          <tr>
+            <td>Version D</td>
+            <td><code>PID0</code></td>
+            <td>Forward</td>
+            <td>2025-04-28 onward</td>
+            <td>Approximately science cycle 32 onward</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="note">
+        Where both forward and reprocessed products exist for the same time, the release notes advise using the reprocessed product: <code>PGC0</code> over <code>PIC0</code>, and <code>PGD0</code> over <code>PID0</code>.
+      </div>
+    </section>
+
+    <section id="crid">
+      <h2>How to read the CRID</h2>
+      <div class="cols">
+        <div class="card">
+          <h2>CRID pattern</h2>
+          <div class="mono-block">P [I or G] [C or D] [minor]</div>
+          <ul class="compact">
+            <li><strong>P</strong>: fixed prefix</li>
+            <li><strong>I</strong>: forward-processed</li>
+            <li><strong>G</strong>: reprocessed</li>
+            <li><strong>C</strong> or <strong>D</strong>: major version</li>
+            <li>Final character: minor release code</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h2>Examples</h2>
+          <ul class="compact">
+            <li><code>PIC0</code>: Version C forward product</li>
+            <li><code>PGC0</code>: Version C reprocessed product</li>
+            <li><code>PIC2</code>: updated Version C forward product with resolved issues</li>
+            <li><code>PID0</code>: Version D forward product</li>
+            <li><code>PGD0</code>: Version D reprocessed product</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="files">
+      <h2>L2_LR_SSH file set</h2>
+      <p>Each pass-sized granule is distributed as four NetCDF files. The first three are on a geographically fixed 2 km swath-aligned grid; the fourth is on the native unsmoothed grid.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>File</th>
+            <th>Main purpose</th>
+            <th>Sampling</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>Basic</code></td>
+            <td>Core SSH / SSHA and quality information</td>
+            <td>2 km fixed swath-aligned grid</td>
+          </tr>
+          <tr>
+            <td><code>WindWave</code></td>
+            <td>SWH, sigma0, wind speed, and model wave/wind context</td>
+            <td>2 km fixed swath-aligned grid</td>
+          </tr>
+          <tr>
+            <td><code>Expert</code></td>
+            <td>Superset of Basic + WindWave with detailed corrections and ancillary fields</td>
+            <td>2 km fixed swath-aligned grid</td>
+          </tr>
+          <tr>
+            <td><code>Unsmoothed</code></td>
+            <td>Near-native SSH / sigma0 fields on the center-beam native grid</td>
+            <td>~250 m posting, ~500 m resolution</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>The product latency stated in the product description is less than 3 days from data collection.</p>
+    </section>
+
+    <section id="changes">
+      <h2>Most important Version D changes relative to Version C</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Change</th>
+            <th>Main LR SSH implication</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>KaRIn height calibration refinement</td>
+            <td>Short-wavelength SSH changes on the order of a few millimeters</td>
+          </tr>
+          <tr>
+            <td>Range-Doppler coupling correction</td>
+            <td>Fixes pass-scale height variations of order centimeters</td>
+          </tr>
+          <tr>
+            <td>Radiometer calibration update</td>
+            <td>Reduces left-right relative bias to below about 0.2 mm</td>
+          </tr>
+          <tr>
+            <td>Crossover processing update</td>
+            <td>Improved crossover correction performance and flagging</td>
+          </tr>
+          <tr>
+            <td>Geoid bug fix</td>
+            <td>Fixes reported geoid errors of order 10 cm</td>
+          </tr>
+          <tr>
+            <td>MSS / MDT / tide model updates</td>
+            <td>Uses newer MSS, MDT, and FES2022b tide models</td>
+          </tr>
+          <tr>
+            <td>SSHA update</td>
+            <td>Non-equilibrium long-period ocean tide is applied</td>
+          </tr>
+          <tr>
+            <td>New variables in L2_LR_SSH</td>
+            <td>SSHA added at unsmoothed posting; mitigation Doppler added; spacecraft event flag added to Expert</td>
+          </tr>
+          <tr>
+            <td>LR over-land processing improvements</td>
+            <td>Fewer height artifacts over land</td>
+          </tr>
+          <tr>
+            <td>LR volumetric correlation processing</td>
+            <td>Improved KaRIn significant wave height retrievals</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Practical use guidance</h2>
+      <div class="note">
+        For a continuous LR SSH time series, use <strong>Version D</strong> whenever it exists. For dates before the Version D reprocessing/final coverage, fall back to the highest available Version C product. A practical sequence is: <code>PGD0</code> → <code>PID0</code> → <code>PIC2</code> → <code>PGC0</code>/<code>PIC0</code>.
+      </div>
+      <p class="source">Primary sources used: SWOT Version C release note (2024-10-14), SWOT Version D release note (2025-12-19), SWOT L2_LR_SSH Product Description Document Revision C (2025-02-24), and SWOT User Handbook Revision A (2025-03-04).</p>
+    </section>
+  </main>
+
+  <footer>
+    Generated summary for SWOT LR SSH Version C and D products.
+  </footer>
+</body>
+</html>

@@ -1,0 +1,1370 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Radiance-to-Variable Pipeline Builder</title>
+  <link rel="stylesheet" href="styles-light.css" />
+  <style>
+    /* Page-specific additions (keeps provided style.css as the main theme) */
+
+    .two-col{
+      display: grid;
+      grid-template-columns: 1fr 1.25fr;
+      gap: 12px;
+      align-items: start;
+    }
+    @media (max-width: 980px){
+      .two-col{ grid-template-columns: 1fr; }
+    }
+
+    .toolbar{
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .controls{
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    label.inline{
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: rgba(148,163,184,.06);
+      color: rgba(229,231,235,.92);
+      font-size: .92rem;
+      user-select: none;
+    }
+
+    select{
+      font: inherit;
+      color: rgba(229,231,235,.96);
+      background: rgba(15,26,46,.55);
+      border: 1px solid rgba(148,163,184,.22);
+      border-radius: 10px;
+      padding: 9px 10px;
+      outline: none;
+    }
+
+    .dnd-zone{
+      border: 1px dashed rgba(148,163,184,.35);
+      border-radius: 14px;
+      background: rgba(15,26,46,.35);
+      padding: 12px;
+      min-height: 84px;
+    }
+    .dnd-zone.dragover{
+      border-color: rgba(96,165,250,.7);
+      background: rgba(96,165,250,.10);
+    }
+
+    .pool{
+      display: grid;
+      gap: 10px;
+    }
+
+    .step-card{
+      cursor: grab;
+      user-select: none;
+    }
+    .step-card:active{ cursor: grabbing; }
+
+    .step-card .meta{
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-top: 6px;
+    }
+
+    .step-card .small{
+      font-size: .88rem;
+      color: var(--muted);
+    }
+
+    .step-actions{
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .pipeline{
+      display: grid;
+      gap: 10px;
+    }
+
+    .slot{
+      border: 1px solid rgba(148,163,184,.18);
+      border-radius: 14px;
+      background: rgba(148,163,184,.04);
+      overflow: hidden;
+    }
+
+    .slot-head{
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(148,163,184,.14);
+      background: rgba(15,26,46,.55);
+    }
+
+    .slot-head strong{ letter-spacing: .2px; }
+
+    .slot-body{
+      padding: 10px 12px;
+      min-height: 74px;
+    }
+
+    .placeholder{
+      color: rgba(148,163,184,.95);
+      font-size: .92rem;
+    }
+
+    .slot.bad{
+      border-color: rgba(251,191,36,.35);
+      background: rgba(251,191,36,.06);
+    }
+
+    .slot.good{
+      border-color: rgba(52,211,153,.28);
+      background: rgba(52,211,153,.06);
+    }
+
+    .meter{
+      height: 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,.22);
+      background: rgba(148,163,184,.08);
+      overflow: hidden;
+    }
+    .meter > div{
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, rgba(96,165,250,.75), rgba(52,211,153,.65));
+      transition: width .25s ease;
+    }
+
+    .kbd{
+      font-family: var(--mono);
+      font-size: .82rem;
+      padding: 2px 6px;
+      border-radius: 8px;
+      border: 1px solid rgba(148,163,184,.22);
+      background: rgba(148,163,184,.08);
+      color: rgba(229,231,235,.92);
+      white-space: nowrap;
+    }
+
+    .info-grid{
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+    @media (max-width: 980px){
+      .info-grid{ grid-template-columns: 1fr; }
+    }
+
+    .mono{ font-family: var(--mono); }
+
+    .muted{ color: var(--muted); }
+
+    .callout.small{
+      font-size: .9rem;
+    }
+
+    .pill{
+      font-family: var(--mono);
+      font-size: .78rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,.22);
+      background: rgba(148,163,184,.08);
+      color: rgba(229,231,235,.92);
+      white-space: nowrap;
+    }
+
+    .pill.warn{ border-color: rgba(251,191,36,.35); background: rgba(251,191,36,.10); }
+    .pill.good{ border-color: rgba(52,211,153,.28); background: rgba(52,211,153,.10); }
+
+    .modal-backdrop{
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      z-index: 60;
+    }
+    .modal-backdrop.open{ display: flex; }
+
+    .modal{
+      width: min(920px, 100%);
+      max-height: 86vh;
+      overflow: auto;
+    }
+
+    .modal .top{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .modal h2{ margin: 0; font-size: 1.1rem; }
+
+    .modal p{ color: var(--muted); }
+
+    .modal .cols{
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 10px;
+    }
+    @media (max-width: 840px){
+      .modal .cols{ grid-template-columns: 1fr; }
+    }
+
+    .modal .box{
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(15,26,46,.45);
+      padding: 12px;
+    }
+
+    .modal .box h3{ margin: 0 0 6px; font-size: 1rem; }
+
+    .sr{
+      position:absolute;
+      width:1px;
+      height:1px;
+      padding:0;
+      margin:-1px;
+      overflow:hidden;
+      clip:rect(0,0,0,0);
+      white-space:nowrap;
+      border:0;
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <div class="topbar" role="banner">
+    <div class="topbar-inner">
+      <div class="brand">
+        <a href="#">Satellite Oceanography • Interactive Lab</a>
+        <small>Radiance-to-Variable processing pipeline (drag-and-drop)</small>
+      </div>
+      <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="nav">Menu</button>
+      <nav class="nav" id="nav" aria-label="Primary">
+        <a href="#builder" class="active">Pipeline Builder</a>
+        <a href="#feedback">Feedback</a>
+        <a href="#concepts">Concepts</a>
+      </nav>
+    </div>
+  </div>
+
+  <main class="container" id="main" role="main">
+    <header class="page-head" id="builder">
+      <div class="breadcrumbs"><a href="#">Home</a> <span aria-hidden="true">›</span> <span>Radiance-to-Variable Builder</span></div>
+      <h1>“Radiance-to-Variable” Pipeline Builder</h1>
+      <p>
+        Build a standard satellite oceanography processing chain by dragging steps into the pipeline slots.
+        You’ll get immediate feedback on <span class="mono">what breaks</span> (and why) when a step is skipped or placed out of order.
+      </p>
+      <div class="callout small">
+        <strong>Tip:</strong> Drag with the mouse/touch. For a non-drag fallback, use <span class="kbd">Add → next slot</span> on each card.
+      </div>
+    </header>
+
+    <section class="panel" aria-labelledby="controlsTitle">
+      <div class="section-title">
+        <h2 id="controlsTitle">Controls</h2>
+        <span class="muted">Scenario-aware feedback • Works offline</span>
+      </div>
+
+      <div class="toolbar">
+        <div class="controls">
+          <label class="inline" for="scenario">
+            Scenario
+            <select id="scenario" aria-label="Choose scenario">
+              <option value="generic">General (generic)</option>
+              <option value="ocean_color">Ocean color (visible)</option>
+              <option value="sst_ir">SST (thermal IR)</option>
+              <option value="scatterometer">Scatterometer winds (microwave)</option>
+              <option value="altimetry">Radar altimetry (SSH)</option>
+            </select>
+          </label>
+
+          <label class="inline" title="Shows the next recommended step based on the canonical order">
+            <input type="checkbox" id="hints" checked />
+            Hints
+          </label>
+
+          <label class="inline" title="If on, missing-step consequences are shown immediately in the feedback panel">
+            <input type="checkbox" id="instant" checked />
+            Instant feedback
+          </label>
+        </div>
+
+        <div class="controls">
+          <button class="btn" id="shuffleBtn" type="button">Shuffle pool</button>
+          <button class="btn" id="resetBtn" type="button">Reset</button>
+          <button class="btn primary" id="checkBtn" type="button">Check pipeline</button>
+          <button class="btn good" id="showAnswerBtn" type="button">Show correct</button>
+        </div>
+      </div>
+
+      <div style="margin-top:12px; display:grid; gap:10px;">
+        <div>
+          <div class="muted" style="display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+            <span><strong>Pipeline quality</strong> (structure + ordering)</span>
+            <span class="mono" id="scoreText">0%</span>
+          </div>
+          <div class="meter" aria-label="Pipeline quality meter"><div id="meterFill"></div></div>
+          <div class="callout small" id="nextHint" style="display:none;"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="two-col" aria-label="Pipeline builder workspace" style="margin-top:12px;">
+
+      <!-- Left: step pool -->
+      <section class="panel" aria-labelledby="poolTitle">
+        <div class="section-title">
+          <h2 id="poolTitle">Step pool</h2>
+          <span class="muted">Drag a step into a slot</span>
+        </div>
+
+        <div class="dnd-zone" id="poolZone" aria-label="Step pool drop zone">
+          <div class="pool" id="pool"></div>
+        </div>
+
+        <div class="callout small">
+          <strong>Remove a step:</strong> drag it back to the pool.
+        </div>
+      </section>
+
+      <!-- Right: pipeline slots -->
+      <section class="panel" aria-labelledby="pipelineTitle">
+        <div class="section-title">
+          <h2 id="pipelineTitle">Your pipeline</h2>
+          <span class="muted">7 slots • order matters</span>
+        </div>
+
+        <div class="pipeline" id="pipeline" aria-label="Pipeline slots"></div>
+
+        <div class="callout small">
+          <strong>Ordering rule:</strong> each step depends on outputs from earlier steps. The checker flags missing prerequisites.
+        </div>
+      </section>
+
+    </section>
+
+    <section class="panel" id="feedback" style="margin-top:12px;" aria-labelledby="feedbackTitle">
+      <div class="section-title">
+        <h2 id="feedbackTitle">Feedback</h2>
+        <span class="muted">What breaks if you skip or mis-order steps</span>
+      </div>
+
+      <div class="info-grid">
+        <div>
+          <div class="section-title" style="margin-top:0;">
+            <h2 style="font-size:1rem;">Status summary</h2>
+            <span class="muted" id="statusSubtitle">Update as you build</span>
+          </div>
+          <div class="list" id="statusList"></div>
+        </div>
+
+        <div>
+          <div class="section-title" style="margin-top:0;">
+            <h2 style="font-size:1rem;">Consequences & next actions</h2>
+            <span class="muted">Scenario-specific where relevant</span>
+          </div>
+          <div class="list" id="adviceList"></div>
+        </div>
+      </div>
+
+      <div class="callout small" style="margin-top:12px;">
+        <strong>Interpretation note:</strong> this is a conceptual pipeline. Real missions can reorder or parallelize some operations,
+        but the dependency structure (what must be known/removed before retrieval) is the core idea.
+      </div>
+    </section>
+
+    <section class="panel" id="concepts" style="margin-top:12px;" aria-labelledby="conceptsTitle">
+      <div class="section-title">
+        <h2 id="conceptsTitle">Key concepts in this pipeline</h2>
+        <span class="muted">Quick reference</span>
+      </div>
+
+      <div class="grid" style="grid-template-columns: repeat(3, minmax(0, 1fr));">
+        <div class="card">
+          <h3>Data levels <span class="tag">L0 → L4</span></h3>
+          <p>
+            The pipeline is often summarized as a move from raw instrument records to corrected, retrieved, and mapped products.
+            Many groups use <span class="mono">L0/L1/L2/L3/L4</span> to communicate how processed a dataset is.
+          </p>
+          <button class="btn" id="openLevels" type="button">View mapping</button>
+        </div>
+
+        <div class="card">
+          <h3>Dependencies <span class="tag">prerequisites</span></h3>
+          <p>
+            You can’t retrieve a geophysical variable without first knowing where you measured, what units you’re in,
+            and which unwanted signals you must remove (e.g., atmosphere).
+          </p>
+          <button class="btn" id="openDeps" type="button">View dependencies</button>
+        </div>
+
+        <div class="card">
+          <h3>Uncertainty propagation <span class="tag">bias vs noise</span></h3>
+          <p>
+            Skipped steps often introduce <span class="mono">systematic bias</span> (hard to average away), while later steps often add
+            <span class="mono">sampling uncertainty</span> (depends on coverage, compositing, and smoothing).
+          </p>
+          <button class="btn" id="openUnc" type="button">Examples</button>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div>Built for interactive learning in satellite oceanography.</div>
+      <div class="foot-badge">Offline • No external libraries</div>
+    </footer>
+  </main>
+
+  <!-- Modal -->
+  <div class="modal-backdrop" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="panel modal">
+      <div class="top">
+        <h2 id="modalTitle">Details</h2>
+        <button class="btn" id="closeModal" type="button">Close</button>
+      </div>
+      <p id="modalSubtitle" class="muted"></p>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <script>
+    // ---------- Data ----------
+    const steps = [
+      {
+        id: 'signal',
+        title: 'Radiance / Backscatter (raw signal)',
+        level: 'L0/L1A',
+        kind: 'measurement',
+        summary: 'Instrument-recorded signal (DN/echo power) representing radiance or backscatter.',
+        prereq: [],
+        skip: {
+          generic: 'No physically meaningful input exists for downstream processing. All later steps become undefined.',
+          ocean_color: 'Without measured TOA radiance, you cannot estimate water-leaving reflectance or ocean color products.',
+          sst_ir: 'Without measured radiance, brightness temperature and SST retrieval are impossible.',
+          scatterometer: 'Without measured backscatter, you cannot solve for wind speed/direction (GMF inversion).',
+          altimetry: 'Without measured echoes, you cannot estimate range, SSH, or waveform parameters.'
+        },
+        whyOrder: 'This is the starting point: everything else transforms or corrects this signal.'
+      },
+      {
+        id: 'cal',
+        title: 'Calibration',
+        level: 'L1B',
+        kind: 'preprocess',
+        summary: 'Convert raw instrument counts to physical units and correct instrument effects (gain, drift, antenna pattern).',
+        prereq: ['signal'],
+        skip: {
+          generic: 'Bias/drift and wrong units contaminate everything downstream. Cross-sensor comparisons and trends become unreliable.',
+          ocean_color: 'Small calibration biases can yield large chlorophyll errors; striping/banding artifacts often appear in maps.',
+          sst_ir: 'Uncalibrated radiance produces biased brightness temperature and systematic SST errors.',
+          scatterometer: 'Backscatter errors map directly into wind bias; direction ambiguities become harder to resolve.',
+          altimetry: 'Small instrument biases can translate into centimeter-level SSH errors and spurious sea-level trends.'
+        },
+        whyOrder: 'You need stable, physical units before you can apply physics-based corrections and retrievals.'
+      },
+      {
+        id: 'geo',
+        title: 'Geolocation',
+        level: 'L1B/L1C',
+        kind: 'geometry',
+        summary: 'Assign each sample accurate latitude/longitude/time using orbit, attitude, timing, and geometry models.',
+        prereq: ['signal','cal'],
+        skip: {
+          generic: 'Pixels are mapped to the wrong place/time, corrupting gradients, coastlines, and in situ matchups.',
+          ocean_color: 'Land–water mixing and coastal adjacency errors increase; features (fronts/blooms) appear shifted.',
+          sst_ir: 'Coastal SST fronts smear or shift; validation matchups become misleading due to location/time mismatch.',
+          scatterometer: 'Wind vectors map to wrong locations; storm structure and fronts become distorted.',
+          altimetry: 'Along-track data are mis-positioned; coastal/ice-edge contamination increases; trackline comparisons fail.'
+        },
+        whyOrder: 'You must know *where* and *when* you measured before correcting the atmosphere or validating products.'
+      },
+      {
+        id: 'atm',
+        title: 'Atmospheric correction',
+        level: 'L2',
+        kind: 'correction',
+        summary: 'Remove/mitigate atmospheric effects (scattering, absorption, emission; rain/cloud impacts) to isolate the geophysical signal.',
+        prereq: ['signal','cal','geo'],
+        skip: {
+          generic: 'The atmosphere can dominate the measured signal; retrievals become biased or physically inconsistent.',
+          ocean_color: 'TOA radiance is often dominated by atmosphere; skipping correction can produce severe chlorophyll/CDOM/sediment errors.',
+          sst_ir: 'Water vapor and clouds bias brightness temperatures; you will see large warm/cold SST errors and cloud-edge artifacts.',
+          scatterometer: 'Rain and atmospheric attenuation/emission bias backscatter; wind speed/direction retrieval becomes unreliable.',
+          altimetry: 'Uncorrected wet/dry troposphere and ionosphere introduce cm-level range errors; sea-level variability/trends become contaminated.'
+        },
+        whyOrder: 'Retrieval algorithms assume the input corresponds to the surface (or near-surface) signal, not the atmospheric path.'
+      },
+      {
+        id: 'retr',
+        title: 'Retrieval algorithm',
+        level: 'L2',
+        kind: 'inversion',
+        summary: 'Convert corrected signal into a geophysical variable (e.g., SST, Chl-a, SSS, winds, SSH) using an algorithm/GMF/inversion.',
+        prereq: ['cal','geo','atm'],
+        skip: {
+          generic: 'You stop at corrected radiances/backscatter. No geophysical variable exists to interpret scientifically.',
+          ocean_color: 'You may have water-leaving reflectance but no Chl-a/IOP estimate; ecological interpretation is limited.',
+          sst_ir: 'You may have brightness temperature but no SST estimate (and no standardized uncertainty/QC flags).',
+          scatterometer: 'You have backscatter but no wind vector solution; applications like storms/fronts are blocked.',
+          altimetry: 'You may have waveforms, but without range/SSHA retrieval you cannot analyze mesoscale circulation or sea level.'
+        },
+        whyOrder: 'Retrieval uses corrected, geolocated inputs; otherwise it inverts the wrong quantity.'
+      },
+      {
+        id: 'grid',
+        title: 'Gridding / Mapping',
+        level: 'L3',
+        kind: 'mapping',
+        summary: 'Resample swath/track retrievals onto a regular grid; composite/average; apply QC and consistent spatial support.',
+        prereq: ['retr'],
+        skip: {
+          generic: 'Swath/track data are harder to compare across time/space; sampling gaps and orbit tracks can be misinterpreted as ocean signals.',
+          ocean_color: 'Daily composites/climatologies become difficult; cloud gaps dominate interpretation; mapping is essential for many analyses.',
+          sst_ir: 'Without compositing, cloud-driven gaps bias statistics; front detection over time is unstable.',
+          scatterometer: 'Vector winds remain along swaths; synoptic storm analyses and air–sea flux products become difficult.',
+          altimetry: 'Along-track SSH cannot easily yield 2-D fields; mesoscale eddies and geostrophic currents require mapping.'
+        },
+        whyOrder: 'Gridding combines many retrievals. If you grid too early, you may mix uncorrected signals and smear physics.'
+      },
+      {
+        id: 'l34',
+        title: 'L3/L4 Product (QA, metadata, gap filling)',
+        level: 'L3/L4',
+        kind: 'product',
+        summary: 'Publish analysis-ready products (L3) and/or gap-filled/fused fields (L4) with metadata, masks, and uncertainties.',
+        prereq: ['grid'],
+        skip: {
+          generic: 'Users must work directly with swaths or ad-hoc grids, often repeating steps inconsistently and misusing products.',
+          ocean_color: 'Without consistent L3/L4 conventions, comparisons across sensors/years become fragile and reproducibility suffers.',
+          sst_ir: 'Without standardized L3/L4, trend/climatology work is error-prone and sensitive to gap handling.',
+          scatterometer: 'Flux and reanalysis applications typically require stable gridded products with uncertainty/QC.',
+          altimetry: 'Many applications use mapped SSHA (L4) to compute currents/eddies; skipping this can block downstream ocean dynamics analyses.'
+        },
+        whyOrder: 'This is where you make the dataset analysis-ready: consistent, documented, and suitable for time/space comparisons.'
+      }
+    ];
+
+    const correctOrder = ['signal','cal','geo','atm','retr','grid','l34'];
+
+    const scenarioMeta = {
+      generic: {
+        label: 'General remote sensing',
+        note: 'Uses broadly applicable consequences and dependencies.'
+      },
+      ocean_color: {
+        label: 'Ocean color (visible)',
+        note: 'Atmospheric correction is typically the dominant risk if skipped.'
+      },
+      sst_ir: {
+        label: 'SST (thermal IR)',
+        note: 'Cloud screening + water vapor effects often dominate.'
+      },
+      scatterometer: {
+        label: 'Scatterometer winds',
+        note: 'Geophysical model functions and rain contamination are key.'
+      },
+      altimetry: {
+        label: 'Radar altimetry (SSH)',
+        note: 'Propagation and geophysical corrections matter at cm-level.'
+      }
+    };
+
+    // ---------- Helpers ----------
+    const $ = (sel, el=document) => el.querySelector(sel);
+    const $$ = (sel, el=document) => Array.from(el.querySelectorAll(sel));
+
+    const cssEscape = (window.CSS && typeof CSS.escape === 'function')
+      ? CSS.escape
+      : (s) => String(s).replace(/[^a-zA-Z0-9_-]/g, '\\$&');
+
+    function escapeHtml(str){
+      return str.replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+    }
+
+    function getScenario(){
+      return $('#scenario').value;
+    }
+
+    function consequence(stepId, scenario){
+      const s = steps.find(x => x.id === stepId);
+      if(!s) return '';
+      return (s.skip && (s.skip[scenario] || s.skip.generic)) || '';
+    }
+
+    function stepById(id){
+      return steps.find(s => s.id === id);
+    }
+
+    function pipelineState(){
+      const slots = $$('#pipeline .slot');
+      return slots.map(slot => {
+        const card = slot.querySelector('.step-card');
+        return card ? card.dataset.stepId : null;
+      });
+    }
+
+    function inPipeline(stepId){
+      return pipelineState().includes(stepId);
+    }
+
+    function firstEmptySlotIndex(){
+      const p = pipelineState();
+      return p.findIndex(x => x === null);
+    }
+
+    function scorePipeline(p){
+      // Score rewards correct position and penalizes missing prerequisites.
+      // 100% = exact correct order.
+      let points = 0;
+      const max = correctOrder.length;
+
+      // Position correctness
+      for(let i=0;i<max;i++){
+        if(p[i] === correctOrder[i]) points += 1;
+      }
+
+      // Convert to base percent
+      let base = Math.round((points / max) * 100);
+
+      // Penalty: each violated prerequisite reduces score a bit
+      let penalty = 0;
+      const placed = new Set(p.filter(Boolean));
+      for(let i=0;i<p.length;i++){
+        const stepId = p[i];
+        if(!stepId) continue;
+        const prereq = stepById(stepId).prereq || [];
+        // prerequisite is satisfied if it appears anywhere earlier in pipeline
+        for(const pre of prereq){
+          const j = p.indexOf(pre);
+          if(j === -1 || j > i){
+            penalty += 4; // modest penalty per missing prerequisite
+          }
+        }
+      }
+
+      const finalScore = Math.max(0, Math.min(100, base - penalty));
+      return finalScore;
+    }
+
+    function setMeter(val){
+      $('#scoreText').textContent = `${val}%`;
+      $('#meterFill').style.width = `${val}%`;
+    }
+
+    function setNavActiveFromHash(){
+      const hash = window.location.hash || '#builder';
+      $$('#nav a').forEach(a => a.classList.remove('active'));
+      const active = $(`#nav a[href="${hash}"]`);
+      if(active) active.classList.add('active');
+    }
+
+    // ---------- Rendering ----------
+    function stepCard(step){
+      const el = document.createElement('div');
+      el.className = 'card step-card';
+      el.draggable = true;
+      el.dataset.stepId = step.id;
+      el.setAttribute('role','group');
+      el.setAttribute('aria-label', `${step.title} step`);
+
+      el.innerHTML = `
+        <h3>
+          ${escapeHtml(step.title)}
+          <span class="tag">${escapeHtml(step.level)}</span>
+        </h3>
+        <p>${escapeHtml(step.summary)}</p>
+        <div class="meta">
+          <span class="pill">${escapeHtml(step.kind)}</span>
+          <span class="pill" title="Prerequisites">needs: ${escapeHtml((step.prereq || []).length ? step.prereq.join(', ') : 'none')}</span>
+        </div>
+        <div class="step-actions">
+          <button class="btn" type="button" data-action="add">Add → next slot</button>
+          <button class="btn" type="button" data-action="info">Details</button>
+        </div>
+      `;
+
+      // Drag events
+      el.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('text/plain', step.id);
+        e.dataTransfer.effectAllowed = 'move';
+        el.classList.add('dragging');
+      });
+      el.addEventListener('dragend', () => {
+        el.classList.remove('dragging');
+      });
+
+      // Click actions
+      el.addEventListener('click', (e) => {
+        const btn = e.target.closest('button');
+        if(!btn) return;
+        const action = btn.dataset.action;
+        if(action === 'add'){
+          addToNextSlot(step.id);
+        }else if(action === 'info'){
+          openStepModal(step.id);
+        }
+      });
+
+      // Allow click on card header for details
+      el.addEventListener('dblclick', () => openStepModal(step.id));
+
+      return el;
+    }
+
+    function renderPool(order = steps.map(s => s.id)){
+      const pool = $('#pool');
+      pool.innerHTML = '';
+      for(const id of order){
+        const s = stepById(id);
+        pool.appendChild(stepCard(s));
+      }
+    }
+
+    function renderSlots(){
+      const pipe = $('#pipeline');
+      pipe.innerHTML = '';
+      for(let i=0;i<correctOrder.length;i++){
+        const slot = document.createElement('div');
+        slot.className = 'slot';
+        slot.dataset.index = String(i);
+
+        slot.innerHTML = `
+          <div class="slot-head">
+            <strong>Slot ${i+1}</strong>
+            <span class="muted mono">${i===0 ? 'start' : ''}</span>
+          </div>
+          <div class="slot-body dnd-zone" aria-label="Pipeline slot ${i+1}" data-drop="slot">
+            <div class="placeholder">Drop a step here</div>
+          </div>
+        `;
+
+        // Slot drop zone
+        const body = slot.querySelector('.slot-body');
+        enableDropZone(body);
+
+        pipe.appendChild(slot);
+      }
+    }
+
+    function enableDropZone(zone){
+      zone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        zone.classList.add('dragover');
+        e.dataTransfer.dropEffect = 'move';
+      });
+      zone.addEventListener('dragleave', () => {
+        zone.classList.remove('dragover');
+      });
+      zone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        zone.classList.remove('dragover');
+        const stepId = e.dataTransfer.getData('text/plain');
+        if(!stepId) return;
+        placeStepIntoZone(stepId, zone);
+      });
+    }
+
+    function attachDropZones(){
+      enableDropZone($('#poolZone'));
+    }
+
+    function findCard(stepId){
+      return document.querySelector(`.step-card[data-step-id="${cssEscape(stepId)}"]`);
+    }
+
+    function zoneType(zone){
+      if(zone.id === 'poolZone') return 'pool';
+      if(zone.dataset.drop === 'slot') return 'slot';
+      return 'unknown';
+    }
+
+    function clearPlaceholder(zone){
+      const ph = zone.querySelector('.placeholder');
+      if(ph) ph.remove();
+    }
+
+    function ensurePlaceholder(zone, msg='Drop a step here'){
+      const hasCard = zone.querySelector('.step-card');
+      if(hasCard) return;
+      if(!zone) return;
+      if(zone.querySelector('.placeholder')) return;
+      const ph = document.createElement('div');
+      ph.className = 'placeholder';
+      ph.textContent = msg;
+      zone.appendChild(ph);
+    }
+
+    function placeStepIntoZone(stepId, targetZone){
+      const card = findCard(stepId);
+      if(!card) return;
+
+      const targetKind = zoneType(targetZone);
+      const sourceZone = card.closest('.slot-body, #poolZone');
+      const sourceKind = sourceZone ? zoneType(sourceZone) : 'unknown';
+
+      // If target is a slot and already has a card, swap or move-out
+      if(targetKind === 'slot'){
+        const existing = targetZone.querySelector('.step-card');
+        if(existing && existing !== card){
+          // swap: if card came from another slot, swap the two cards
+          if(sourceKind === 'slot'){
+            sourceZone.appendChild(existing);
+            clearPlaceholder(sourceZone);
+          }else{
+            // card came from pool; push existing back to pool
+            $('#pool').appendChild(existing);
+          }
+        }
+        // Place into target
+        clearPlaceholder(targetZone);
+        targetZone.appendChild(card);
+      }
+
+      // If target is pool: append to pool list
+      if(targetKind === 'pool'){
+        $('#pool').appendChild(card);
+      }
+
+      // After move: restore placeholder in source slot if now empty
+      if(sourceKind === 'slot'){
+        ensurePlaceholder(sourceZone);
+      }
+
+      // Update feedback
+      updateAll(true);
+    }
+
+    function addToNextSlot(stepId){
+      const idx = firstEmptySlotIndex();
+      if(idx === -1){
+        // If full, place into first slot (swap)
+        const zone = $(`#pipeline .slot[data-index="0"] .slot-body`);
+        placeStepIntoZone(stepId, zone);
+        return;
+      }
+      const zone = $(`#pipeline .slot[data-index="${idx}"] .slot-body`);
+      placeStepIntoZone(stepId, zone);
+    }
+
+    function reset(){
+      renderSlots();
+      renderPool();
+      attachDropZones();
+      updateAll(true);
+    }
+
+    function shufflePool(){
+      // Only shuffle cards currently in the pool (do not move pipeline cards)
+      const poolCards = $$('#pool .step-card').map(el => el.dataset.stepId);
+      for(let i=poolCards.length-1;i>0;i--){
+        const j = Math.floor(Math.random() * (i+1));
+        [poolCards[i], poolCards[j]] = [poolCards[j], poolCards[i]];
+      }
+      const pool = $('#pool');
+      pool.innerHTML = '';
+      for(const id of poolCards){
+        pool.appendChild(findCard(id));
+      }
+    }
+
+    function showCorrect(){
+      // Move everything into correct slots
+      for(let i=0;i<correctOrder.length;i++){
+        const id = correctOrder[i];
+        const zone = $(`#pipeline .slot[data-index="${i}"] .slot-body`);
+        placeStepIntoZone(id, zone);
+      }
+      // Any remaining in pool stay
+      updateAll(false);
+    }
+
+    // ---------- Feedback engine ----------
+
+    function updateHint(p){
+      const hintsOn = $('#hints').checked;
+      const hintEl = $('#nextHint');
+      if(!hintsOn){
+        hintEl.style.display = 'none';
+        return;
+      }
+      const idx = firstEmptySlotIndex();
+      if(idx === -1){
+        hintEl.style.display = 'block';
+        hintEl.innerHTML = `<strong>Hint:</strong> Pipeline is full. Click <span class="mono">Check pipeline</span> to validate ordering.`;
+        return;
+      }
+      const expected = stepById(correctOrder[idx]);
+      hintEl.style.display = 'block';
+      hintEl.innerHTML = `<strong>Hint:</strong> Next recommended step for <span class="mono">Slot ${idx+1}</span> is <span class="mono">${escapeHtml(expected.title)}</span>.`;
+    }
+
+    function markSlots(p){
+      const slots = $$('#pipeline .slot');
+      for(let i=0;i<slots.length;i++){
+        const slot = slots[i];
+        slot.classList.remove('good','bad');
+        const got = p[i];
+        if(!got) continue;
+        if(got === correctOrder[i]){
+          slot.classList.add('good');
+        }else{
+          slot.classList.add('bad');
+        }
+      }
+    }
+
+    function buildStatus(p, scenario){
+      const status = [];
+      const placed = p.filter(Boolean);
+      const missing = correctOrder.filter(id => !placed.includes(id));
+
+      // For each canonical step, describe its state
+      for(let i=0;i<correctOrder.length;i++){
+        const id = correctOrder[i];
+        const s = stepById(id);
+        const where = p.indexOf(id);
+        if(where === -1){
+          status.push({
+            type: 'missing',
+            title: `${s.title} is missing`,
+            detail: consequence(id, scenario),
+            badge: 'missing',
+            badgeClass: 'warn'
+          });
+        }else if(where === i){
+          const prereq = s.prereq || [];
+          const issues = [];
+          for(const pre of prereq){
+            const j = p.indexOf(pre);
+            if(j === -1){
+              issues.push(`missing prerequisite: ${stepById(pre).title}`);
+            }else if(j > where){
+              issues.push(`prerequisite appears later: ${stepById(pre).title}`);
+            }
+          }
+          status.push({
+            type: 'ok',
+            title: `${s.title} is in the right place (Slot ${i+1})`,
+            detail: issues.length ? `Placed in the canonical slot, but dependency issue detected: ${issues.join('; ')}.` : `Good: prerequisites occur earlier in this pipeline order.`,
+            badge: issues.length ? 'check deps' : 'ok',
+            badgeClass: issues.length ? 'warn' : 'good'
+          });
+        }else{
+          status.push({
+            type: 'misordered',
+            title: `${s.title} is in Slot ${where+1} (expected Slot ${i+1})`,
+            detail: s.whyOrder,
+            badge: 'mis-ordered',
+            badgeClass: 'warn'
+          });
+        }
+      }
+
+      // Also check prerequisite violations in the *current* pipeline
+      const prereqIssues = [];
+      for(let i=0;i<p.length;i++){
+        const id = p[i];
+        if(!id) continue;
+        const s = stepById(id);
+        for(const pre of (s.prereq || [])){
+          const j = p.indexOf(pre);
+          if(j === -1){
+            prereqIssues.push({
+              id,
+              pre,
+              where: i,
+              kind: 'missing'
+            });
+          }else if(j > i){
+            prereqIssues.push({
+              id,
+              pre,
+              where: i,
+              kind: 'after'
+            });
+          }
+        }
+      }
+
+      return { status, missing, prereqIssues };
+    }
+
+    function renderStatusList(statusItems){
+      const list = $('#statusList');
+      list.innerHTML = '';
+      for(const it of statusItems){
+        const row = document.createElement('div');
+        row.className = 'item';
+        row.innerHTML = `
+          <div class="top">
+            <strong>${escapeHtml(it.title)}</strong>
+            <span class="pill ${it.badgeClass}">${escapeHtml(it.badge)}</span>
+          </div>
+          <p>${escapeHtml(it.detail)}</p>
+        `;
+        list.appendChild(row);
+      }
+    }
+
+    function renderAdvice({missing, prereqIssues}, scenario, forceShowAll=false){
+      const list = $('#adviceList');
+      list.innerHTML = '';
+
+      const instantOn = $('#instant').checked;
+      const shouldShow = forceShowAll || instantOn;
+
+      // Guidance header
+      const sc = scenarioMeta[scenario];
+      const head = document.createElement('div');
+      head.className = 'item';
+      head.innerHTML = `
+        <div class="top">
+          <strong>Scenario: ${escapeHtml(sc.label)}</strong>
+          <time>${escapeHtml(sc.note)}</time>
+        </div>
+        <p>Use this as a “what breaks” checklist when processing L0/L1 → L2 → L3/L4 satellite oceanography products.</p>
+      `;
+      list.appendChild(head);
+
+      if(!shouldShow){
+        const row = document.createElement('div');
+        row.className = 'item';
+        row.innerHTML = `
+          <div class="top">
+            <strong>Instant feedback is off</strong>
+            <span class="pill">toggle</span>
+          </div>
+          <p>Turn on <span class="mono">Instant feedback</span> or click <span class="mono">Check pipeline</span> to display missing-step consequences.</p>
+        `;
+        list.appendChild(row);
+        return;
+      }
+
+      if(missing.length === 0 && prereqIssues.length === 0){
+        const ok = document.createElement('div');
+        ok.className = 'item';
+        ok.innerHTML = `
+          <div class="top">
+            <strong>No missing steps or prerequisite violations detected</strong>
+            <span class="pill good">clean</span>
+          </div>
+          <p>Now confirm the <span class="mono">exact order</span> matches the canonical chain (green slots). If you’re analyzing a real mission product, also verify mission-specific corrections and QC flags.</p>
+        `;
+        list.appendChild(ok);
+        return;
+      }
+
+      // Missing steps: show consequences
+      for(const id of missing){
+        const s = stepById(id);
+        const row = document.createElement('div');
+        row.className = 'item';
+        row.innerHTML = `
+          <div class="top">
+            <strong>Skipped step: ${escapeHtml(s.title)}</strong>
+            <span class="pill warn">introduced error</span>
+          </div>
+          <p>${escapeHtml(consequence(id, scenario))}</p>
+        `;
+        list.appendChild(row);
+      }
+
+      // Prerequisite issues: order-specific warnings
+      if(prereqIssues.length){
+        const row = document.createElement('div');
+        row.className = 'item';
+        const bullets = prereqIssues.map(x => {
+          const s = stepById(x.id);
+          const pre = stepById(x.pre);
+          const why = x.kind === 'missing'
+            ? `Prerequisite <span class="mono">${escapeHtml(pre.title)}</span> is missing.`
+            : `Prerequisite <span class="mono">${escapeHtml(pre.title)}</span> appears later in the pipeline.`;
+          return `<li><span class="mono">${escapeHtml(s.title)}</span> in Slot ${x.where+1}: ${why}</li>`;
+        }).join('');
+
+        row.innerHTML = `
+          <div class="top">
+            <strong>Dependency violations</strong>
+            <span class="pill warn">order matters</span>
+          </div>
+          <p>These indicate steps that rely on earlier outputs (units, geometry, or corrections) that your pipeline does not provide.</p>
+          <ul>${bullets}</ul>
+        `;
+        list.appendChild(row);
+      }
+
+      // Next actions
+      const next = document.createElement('div');
+      next.className = 'item';
+      next.innerHTML = `
+        <div class="top">
+          <strong>Next actions</strong>
+          <span class="pill">do this</span>
+        </div>
+        <p>
+          1) Fill any empty slots with the missing steps. 2) Reorder so each step’s prerequisites occur earlier.
+          3) Click <span class="mono">Check pipeline</span> again to confirm you’ve eliminated “introduced error” items.
+        </p>
+      `;
+      list.appendChild(next);
+    }
+
+    function updateAll(live=false){
+      const scenario = getScenario();
+      const p = pipelineState();
+      const sc = scorePipeline(p);
+      setMeter(sc);
+      updateHint(p);
+      markSlots(p);
+
+      const {status, missing, prereqIssues} = buildStatus(p, scenario);
+      renderStatusList(status);
+
+      // If live updates: show advice only if instant feedback enabled
+      renderAdvice({missing, prereqIssues}, scenario, !live);
+
+      // Subtitle
+      $('#statusSubtitle').textContent = live
+        ? 'Updates automatically as you drag/drop'
+        : 'Results after running “Check pipeline”';
+    }
+
+    // ---------- Modal content ----------
+
+    function openModal(title, subtitle, bodyHtml){
+      $('#modalTitle').textContent = title;
+      $('#modalSubtitle').textContent = subtitle || '';
+      $('#modalBody').innerHTML = bodyHtml;
+      $('#modal').classList.add('open');
+      $('#closeModal').focus();
+    }
+
+    function closeModal(){
+      $('#modal').classList.remove('open');
+    }
+
+    function openStepModal(stepId){
+      const s = stepById(stepId);
+      const scenario = getScenario();
+      const prereqTitles = (s.prereq || []).map(id => stepById(id).title);
+
+      const body = `
+        <div class="cols">
+          <div class="box">
+            <h3>What this step does</h3>
+            <p>${escapeHtml(s.summary)}</p>
+            <p><span class="pill">Typical level: ${escapeHtml(s.level)}</span></p>
+            <p class="muted">Prerequisites: ${escapeHtml(prereqTitles.length ? prereqTitles.join(' → ') : 'none')}</p>
+          </div>
+          <div class="box">
+            <h3>If you skip it…</h3>
+            <p>${escapeHtml(consequence(stepId, scenario))}</p>
+            <p class="muted">Scenario: ${escapeHtml(scenarioMeta[scenario].label)}</p>
+          </div>
+        </div>
+        <div class="box" style="margin-top:12px;">
+          <h3>Why order matters</h3>
+          <p>${escapeHtml(s.whyOrder)}</p>
+        </div>
+      `;
+
+      openModal(s.title, 'Step details and skip consequences', body);
+    }
+
+    function openLevelsModal(){
+      const rows = steps.map(s => {
+        return `<tr>
+          <td data-label="Pipeline step"><span class="mono">${escapeHtml(s.title)}</span></td>
+          <td data-label="Typical level"><span class="tag">${escapeHtml(s.level)}</span></td>
+          <td data-label="Meaning" class="muted">${escapeHtml(s.summary)}</td>
+        </tr>`;
+      }).join('');
+
+      const body = `
+        <div class="table-wrap">
+          <table class="course" aria-label="Data level mapping">
+            <caption>Typical mapping from pipeline step to common data levels</caption>
+            <thead>
+              <tr>
+                <th>Pipeline step</th>
+                <th>Typical level</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rows}
+            </tbody>
+          </table>
+        </div>
+        <div class="callout small">
+          <strong>Reminder:</strong> data-level conventions vary by agency/mission. The key learning goal is the progression from raw signal to analysis-ready fields.
+        </div>
+      `;
+
+      openModal('Data levels (L0 → L4)', 'How processing stages relate to common product levels', body);
+    }
+
+    function openDepsModal(){
+      const items = steps.map(s => {
+        const prereq = (s.prereq || []).map(id => stepById(id).title);
+        return `
+          <div class="item">
+            <div class="top">
+              <strong>${escapeHtml(s.title)}</strong>
+              <span class="pill">needs ${escapeHtml(prereq.length ? prereq.length : 0)}</span>
+            </div>
+            <p class="muted">Prerequisites: ${escapeHtml(prereq.length ? prereq.join(' → ') : 'none')}</p>
+          </div>
+        `;
+      }).join('');
+
+      const body = `
+        <div class="list">${items}</div>
+        <div class="callout small">
+          <strong>How to use:</strong> if a prerequisite appears later in your pipeline, the checker flags a dependency violation.
+        </div>
+      `;
+
+      openModal('Dependencies', 'Each step expects inputs produced by earlier steps', body);
+    }
+
+    function openUncModal(){
+      const body = `
+        <div class="cols">
+          <div class="box">
+            <h3>Systematic bias (hard to average away)</h3>
+            <ul>
+              <li><span class="mono">Calibration</span> skipped → biased units/drift → wrong trends.</li>
+              <li><span class="mono">Atmospheric correction</span> skipped → atmosphere contaminates surface signal.</li>
+              <li><span class="mono">Wrong retrieval algorithm</span> → persistent regional bias.</li>
+            </ul>
+          </div>
+          <div class="box">
+            <h3>Sampling uncertainty (depends on coverage)</h3>
+            <ul>
+              <li><span class="mono">No gridding/compositing</span> → orbit-track artifacts, gaps, aliasing.</li>
+              <li><span class="mono">Over-smoothing in gridding</span> → loss of fronts/eddies.</li>
+              <li><span class="mono">L4 gap filling</span> → model assumptions influence extremes.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="callout small">
+          <strong>Takeaway:</strong> earlier steps often set bias; later steps often shape usability and sampling characteristics.
+        </div>
+      `;
+
+      openModal('Uncertainty propagation', 'Bias vs sampling effects across the pipeline', body);
+    }
+
+    // ---------- Event wiring ----------
+
+    function checkPipeline(){
+      // Force full advice rendering and stronger messages
+      updateAll(false);
+
+      // If perfect, give a short “success” modal
+      const p = pipelineState();
+      const perfect = correctOrder.every((id, i) => p[i] === id);
+      if(perfect){
+        openModal(
+          'Pipeline validated',
+          'You built the canonical Radiance-to-Variable chain',
+          `<div class="box">
+            <h3>What this means</h3>
+            <p>
+              Your pipeline respects the dependency structure from raw instrument signal to analysis-ready geophysical products.
+              In practice, always confirm mission-specific corrections and quality flags.
+            </p>
+            <p class="muted">Try breaking the pipeline (e.g., remove Atmospheric correction) and observe the scenario-specific consequences.</p>
+          </div>`
+        );
+      }
+    }
+
+    function initNav(){
+      const btn = $('#menuBtn');
+      btn.addEventListener('click', () => {
+        const nav = $('#nav');
+        const isOpen = nav.classList.toggle('open');
+        btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      });
+
+      window.addEventListener('hashchange', setNavActiveFromHash);
+      setNavActiveFromHash();
+    }
+
+    function initModal(){
+      $('#closeModal').addEventListener('click', closeModal);
+      $('#modal').addEventListener('click', (e) => {
+        if(e.target.id === 'modal') closeModal();
+      });
+      window.addEventListener('keydown', (e) => {
+        if(e.key === 'Escape' && $('#modal').classList.contains('open')) closeModal();
+      });
+    }
+
+    function init(){
+      initNav();
+      initModal();
+
+      renderSlots();
+      renderPool();
+      attachDropZones();
+
+      // Controls
+      $('#resetBtn').addEventListener('click', reset);
+      $('#shuffleBtn').addEventListener('click', () => { shufflePool(); updateAll(true); });
+      $('#showAnswerBtn').addEventListener('click', showCorrect);
+      $('#checkBtn').addEventListener('click', checkPipeline);
+
+      $('#scenario').addEventListener('change', () => updateAll(true));
+      $('#hints').addEventListener('change', () => updateAll(true));
+      $('#instant').addEventListener('change', () => updateAll(true));
+
+      // Concept modals
+      $('#openLevels').addEventListener('click', openLevelsModal);
+      $('#openDeps').addEventListener('click', openDepsModal);
+      $('#openUnc').addEventListener('click', openUncModal);
+
+      // Initial
+      updateAll(true);
+    }
+
+    init();
+  </script>
+</body>
+</html>

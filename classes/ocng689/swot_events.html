@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SWOT Satellite & Data Events – Complete Interactive Timeline (2023–2025)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  body { font-family: system-ui, sans-serif; background:#0d1117; color:#e6edf3; margin:0; padding:20px; line-height:1.6; }
+  h1 { text-align:center; color:#58a6ff; margin-bottom:8px; }
+  .subtitle { text-align:center; color:#8b949e; font-size:16px; margin-bottom:30px; }
+  .filters { text-align:center; margin:25px 0; }
+  button { margin:6px; padding:10px 18px; border:none; border-radius:8px; background:#21262d; color:#f0f6fc; cursor:pointer; font-size:14px; }
+  button.active { background:#1f6feb; }
+  .timeline { max-width:1200px; margin:0 auto; }
+  .event {
+    display:flex; align-items:center; margin:14px 0; padding:16px; background:#161b22; border-radius:10px;
+    border-left:7px solid; transition:all 0.3s; position:relative; cursor:pointer;
+  }
+  .event:hover { transform:translateX(10px); box-shadow:0 10px 30px rgba(0,0,0,0.6); }
+  .date { width:155px; font-weight:bold; color:#58a6ff; font-size:15px; flex-shrink:0; }
+  .cycle { width:130px; text-align:center; font-size:14px; color:#39d353; background:#1a1a1a; padding:4px 8px; border-radius:6px; }
+  .dot { width:18px; height:18px; border-radius:50%; margin:0 20px; flex-shrink:0; box-shadow:0 0 12px rgba(0,0,0,0.7); }
+  .info { flex:1; }
+  .title { font-weight:bold; font-size:16px; margin:0; }
+  .desc { font-size:14.5px; color:#cdd9e5; margin:6px 0 0; }
+  .tooltip {
+    position:absolute; left:100%; top:50%; transform:translateY(-50%); margin-left:18px;
+    background:#0d1117; border:1px solid #30363d; padding:14px; border-radius:10px; width:420px;
+    box-shadow:0 12px 40px rgba(0,0,0,0.8); z-index:100; display:none; font-size:14px; line-height:1.5;
+  }
+  .tooltip.show { display:block; }
+  @media (max-width:950px) {
+    .event { flex-direction:column; text-align:center; }
+    .date,.cycle { width:auto; margin-bottom:10px; }
+    .dot { margin:12px auto; }
+    .tooltip { position:relative; left:auto; top:auto; transform:none; margin:15px 0 0; width:auto; }
+  }
+  .legend { display:flex; flex-wrap:wrap; justify-content:center; gap:22px; margin:35px 0; font-size:15px; }
+  .legend span { display:flex; align-items:center; gap:10px; }
+  footer { text-align:center; margin:70px 0 30px; color:#6e7681; font-size:13px; }
+</style>
+</head>
+<body>
+
+<h1>SWOT Satellite & Data Events – Complete Timeline</h1>
+<p class="subtitle">Every documented event • January 2023 – November 2025 • 180+ entries</p>
+
+<div class="filters">
+  <button data-filter="all" class="active">All Events</button>
+  <button data-filter="maneuver">Maneuvers</button>
+  <button data-filter="anomaly">Anomalies / No Data</button>
+  <button data-filter="panel">Solar Panel</button>
+  <button data-filter="yaw">Yaw Flip</button>
+  <button data-filter="calib">Calibration / Mask</button>
+  <button data-filter="gyro">Gyro / SEU</button>
+</div>
+
+<div class="legend">
+  <span><div class="dot" style="background:#58a6ff"></div>Maneuver / Yaw Flip</span>
+  <span><div class="dot" style="background:#ff6b6b"></div>Major Anomaly / No Data</span>
+  <span><div class="dot" style="background:#ffa657"></div>Solar Panel Rotation</span>
+  <span><div class="dot" style="background:#39d353"></div>Calibration / Mask Change</span>
+  <span><div class="dot" style="background:#8b949e"></div>Gyro / SEU / Other</span>
+</div>
+
+<div class="timeline" id="timeline"></div>
+
+<footer>Complete interactive timeline by Grok • Last updated 2025-11-25</footer>
+
+<script>
+// All 180+ events — every single one from your list
+const rawEvents = [
+"2023-01-15T09:26:12,2023-01-15T09:26:12,400,28,400,28,Satellite flying backward.",
+"2023-01-15T09:26:12,2023-01-15T09:26:12,400,28,400,28,Solar panel orientation of 12 degrees.",
+"2023-01-19T06:50:00,2023-01-19T06:50:00,404,26,404,26,KaRIn HPA+ On",
+"2023-01-20T12:59:14,2023-01-20T13:03:44,406,6,406,6,Solar panel rotation to 30 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2023-01-22T20:50:16,2023-01-22T21:27:32,408,15,408,16,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2023-01-22T21:15:00,2023-01-23T14:12:00,408,16,409,8,KaRIn HPA+ Off for collision avoidance maneuver",
+"2023-01-23T00:14:37,2023-01-23T00:51:54,408,19,408,20,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2023-01-24T09:00:23,2023-01-24T09:30:23,410,2,410,2,Gyro calibration. Degraded KaRIn data expected for few hours after.",
+"2023-01-25T00:19:43,2023-01-25T09:19:09,410,20,411,2,Gyro calibration. Degraded KaRIn data expected for few hours after.",
+"2023-01-25T08:51:00,2023-03-09T15:38:00,411,2,454,17,No KaRIn data. HPA anomaly.",
+"2023-01-27T04:40:20,2023-01-27T05:17:24,412,25,412,26,Satellite maneuver.",
+"2023-01-31T00:33:06,2023-01-31T01:10:21,416,21,416,22,Satellite maneuver.",
+"2023-01-31T06:30:44,2023-01-31T07:07:58,416,28,417,1,Satellite maneuver.",
+"2023-02-08T00:17:45,2023-02-08T00:54:46,424,22,424,23,Satellite maneuver.",
+"2023-02-08T07:06:30,2023-02-08T07:43:31,425,2,425,3,Satellite maneuver.",
+"2023-02-09T23:57:45,2023-02-10T00:34:46,426,22,426,23,Satellite maneuver.",
+"2023-02-10T06:46:30,2023-02-10T07:23:31,427,2,427,3,Satellite maneuver.",
+"2023-02-14T01:07:46,2023-02-14T01:44:48,430,24,430,25,Satellite maneuver.",
+"2023-02-14T06:14:20,2023-02-14T06:51:22,431,2,431,3,Satellite maneuver.",
+"2023-02-17T05:40:47,2023-02-17T06:17:53,434,2,434,3,Satellite maneuver.",
+"2023-03-09T15:38:00,2023-03-09T15:38:00,454,17,454,17,KaRIn HPA- On",
+"2023-03-10T06:38:29,2023-03-10T07:15:36,455,7,455,8,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2023-03-17T03:26:43,2023-03-17T03:31:13,462,5,462,5,Solar panel rotation to 12 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2023-03-24T05:54:57,2023-03-24T06:32:01,469,9,469,10,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2023-03-25T08:59:55,2023-03-25T09:04:25,470,13,470,13,Solar panel rotation to 0 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2023-03-27T20:37:02,2023-03-27T20:59:37,472,27,472,27,Satellite yaw flip to fly forward. Degraded KaRIn data expected for few hours after.",
+"2023-03-30T07:50:14,2023-03-30T08:27:27,475,12,475,13,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2023-03-30T18:03:20,2023-03-30T18:40:33,475,24,475,25,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2023-03-30T19:05:00,2023-03-30T19:05:00,475,25,475,25,Start of calibration phase. KaRIn completes commissioning activities.",
+"2023-03-30T21:50:46,2023-03-30T21:55:16,476,1,476,1,Solar panel rotation to 12 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2023-03-31T18:46:00,2023-04-01T15:43:00,476,25,477,22,No instrument data. Solid State Recorder single event upset.",
+"2023-04-05T19:20:18,2023-04-05T19:57:22,481,27,481,28,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2023-04-05T20:16:13,2023-04-05T20:16:13,481,28,481,28,Activate v04c at launch calibration orbit high-rate mask.",
+"2023-04-07T13:17:13,2023-04-07T13:17:13,483,20,483,20,Activate v07 nominal calibration orbit high-rate mask.",
+"2023-04-07T18:54:40,2023-04-07T18:59:10,483,27,483,27,Solar panel rotation to 30 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2023-04-13T10:15:30,2023-04-13T10:45:30,489,18,489,18,Gyro calibration. Degraded KaRIn data expected for few hours after.",
+"2023-04-13T10:17:07,2023-04-13T10:42:07,489,18,489,18,Poseidon calibration maneuver.",
+"2023-04-21T19:59:08,2023-04-21T20:36:11,498,2,498,3,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2023-05-05T19:22:53,2023-05-05T19:59:55,512,4,512,5,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2023-05-13T20:31:41,2023-05-13T21:08:44,520,7,520,8,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2023-05-13T23:56:04,2023-05-14T00:33:06,520,11,520,12,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2023-05-17T20:55:30,2023-05-17T21:32:34,524,8,524,9,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2023-05-19T14:16:00,2023-05-22T11:14:00,526,1,528,26,No instrument data. Solid State Recorder single event upset.",
+"2023-06-02T02:45:06,2023-06-02T03:22:09,539,18,539,19,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2023-06-03T19:28:31,2023-06-03T19:33:01,541,10,541,10,Solar panel rotation to 12 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2023-06-12T12:57:42,2023-06-12T13:02:12,550,4,550,4,Solar panel rotation to 0 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2023-06-15T07:23:52,2023-06-15T07:45:57,552,26,552,26,Satellite yaw flip to fly backward. Degraded KaRIn data expected for few hours after.",
+"2023-06-16T19:24:42,2023-06-16T20:01:46,554,12,554,13,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2023-06-18T01:49:13,2023-06-18T01:53:43,555,20,555,20,Solar panel rotation to 12 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2023-06-27T05:34:31,2023-06-27T05:39:01,564,26,564,26,Solar panel rotation to 30 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2023-06-28T08:06:26,2023-06-28T10:59:10,566,1,566,4,No instrument data. Solid State Recorder single event upset.",
+"2023-06-30T18:37:01,2023-06-30T19:14:04,568,14,568,14,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2023-07-04T06:16:11,2023-07-04T15:15:37,571,28,572,11,Gyro calibration. Degraded KaRIn data expected for few hours after.",
+"2023-07-11T00:00:13,2023-07-11T00:00:13,578,22,578,22,No high-rate data during transition to Science orbit.",
+"2023-07-11T02:39:52,2023-07-11T02:39:52,578,25,578,25,Start transition from calibration orbit to science orbit.",
+"2023-07-11T02:39:53,2023-07-11T03:32:44,578,25,578,25,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2023-07-11T05:13:27,2023-07-11T06:06:17,578,25,578,25,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2023-07-13T02:12:39,2023-07-13T03:04:54,578,25,578,25,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2023-07-13T04:46:40,2023-07-13T05:38:57,578,25,578,25,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2023-07-17T18:10:02,2023-07-17T18:48:33,578,25,578,25,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2023-07-17T20:44:22,2023-07-17T21:22:53,578,25,578,25,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2023-07-21T02:58:57,2023-07-21T03:36:13,0,581,0,582,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2023-07-21T05:33:44,2023-07-21T05:33:44,0,584,0,584,Start science orbit.",
+"2023-07-21T05:33:44,2023-07-26T11:37:56,0,584,1,148,Suspicious or no KaRIn data. KaRIn instrument not configured for science orbit (URHere).",
+"2023-07-26T11:37:56,2023-07-26T11:37:56,1,148,1,148,Activate v05 nominal northern hemisphere summer high-rate mask.",
+"2023-08-11T13:51:54,2023-08-11T13:51:54,2,14,2,14,Emergency significantly reduced high rate mask for high priority calibration sites only, due to wildfires affecting Inuvik ground station.",
+"2023-08-15T09:15:24,2023-08-15T09:19:54,2,121,2,121,Solar panel rotation to 12 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2023-08-21T12:01:36,2023-08-21T12:01:36,2,292,2,292,Activate v06b off-nominal high-rate mask. 44% of nominal coverage due to wildfires affecting Inuvik ground station.",
+"2023-08-24T19:39:13,2023-08-24T19:43:43,2,385,2,385,Solar panel rotation to 0 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2023-08-25T20:43:57,2023-08-25T21:20:59,2,414,2,415,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2023-08-25T21:35:34,2023-08-25T21:35:34,2,415,2,415,Activate v06c off-nominal high-rate mask. 44% of nominal coverage due to wildfires affecting Inuvik ground station.",
+"2023-08-27T11:07:23,2023-08-27T11:29:52,2,459,2,459,Satellite yaw flip to fly forward. Degraded KaRIn data expected for few hours after.",
+"2023-08-30T12:52:07,2023-08-30T12:56:37,2,545,2,545,Solar panel rotation to 12 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2023-09-08T09:05:00,2023-09-08T12:22:00,3,208,3,212,No Poseidon data. DEM upload.",
+"2023-09-08T12:59:49,2023-09-08T13:04:19,3,213,3,213,Solar panel rotation to 30 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2023-09-14T23:59:31,2023-09-14T23:59:31,3,393,3,393,Activate v05 nominal northern hemisphere summer high-rate mask.",
+"2023-09-21T22:13:00,2023-09-27T10:18:53,4,3,4,157,No instrument data. Spacecraft impacted by SEU.",
+"2023-10-06T17:13:26,2023-10-06T17:50:30,4,417,4,418,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2023-10-27T14:06:10,2023-10-27T14:43:12,5,417,5,418,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2023-11-02T15:56:04,2023-11-02T16:00:34,6,4,6,4,Solar panel rotation to 12 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2023-11-11T05:43:32,2023-11-11T05:48:02,6,244,6,244,Solar panel rotation to 0 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2023-11-13T19:28:23,2023-11-13T19:50:14,6,316,6,316,Satellite yaw flip to fly backward. Degraded KaRIn data expected for few hours after.",
+"2023-11-16T12:38:04,2023-11-16T12:42:34,6,392,6,392,Solar panel rotation to 12 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2023-11-17T10:54:05,2023-11-17T11:31:07,6,418,6,418,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2023-11-24T23:00:43,2023-11-24T23:05:13,7,44,7,44,Solar panel rotation to 30 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2023-11-30T23:58:35,2023-11-30T23:58:35,7,213,7,213,Activate v05 nominal northern hemisphere winter high-rate mask.",
+"2023-12-15T21:28:44,2023-12-15T22:05:47,8,46,8,46,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2023-12-23T02:48:25,2023-12-23T03:25:39,8,248,8,248,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2023-12-23T02:49:00,2023-12-28T15:02:00,8,248,8,402,Suspicious or no KaRIn data. Anomaly with onboard ephemeris after collision avoidance maneuver.",
+"2023-12-23T09:40:01,2023-12-23T10:17:15,8,256,8,256,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2024-01-12T21:00:52,2024-01-12T21:37:55,9,245,9,245,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2024-01-19T09:04:56,2024-01-19T09:09:26,9,427,9,427,Solar panel rotation to 12 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2024-01-27T17:42:51,2024-01-27T17:47:21,10,77,10,77,Solar panel rotation to 0 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2024-01-30T07:27:39,2024-01-30T07:50:26,10,149,10,149,Satellite yaw flip to fly forward. Degraded KaRIn data expected for few hours after.",
+"2024-02-02T00:37:24,2024-02-02T00:41:54,10,225,10,225,Solar panel rotation to 12 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2024-02-05T13:45:00,2024-02-05T15:47:00,10,324,10,326,Corrupted KaRIn data. Likely due to SEU.",
+"2024-02-09T17:50:40,2024-02-09T18:27:43,10,441,10,442,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2024-02-10T11:00:51,2024-02-10T11:05:21,10,461,10,461,Solar panel rotation to 30 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2024-02-29T23:57:46,2024-02-29T23:57:46,11,424,11,424,Activate v05 nominal northern hemisphere summer high-rate mask.",
+"2024-03-15T21:10:32,2024-03-15T21:47:35,12,256,12,257,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2024-03-19T14:12:28,2024-03-19T14:12:28,12,360,12,360,Activate v06c off-nominal high-rate mask. 44% of nominal coverage due to cut internet cables affecting Hartebeesthoek downlink station.",
+"2024-03-21T13:12:11,2024-03-21T13:12:11,12,415,12,415,Activate v07 off-nominal high-rate mask. 76% of nominal coverage due to cut internet cables affecting Hartebeesthoek downlink station.",
+"2024-04-05T08:48:44,2024-04-05T08:53:24,13,246,13,246,Solar panel rotation to 12 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2024-04-05T17:40:48,2024-04-05T18:17:51,13,256,13,257,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2024-04-14T05:28:48,2024-04-14T05:33:28,13,494,13,494,Solar panel rotation to 0 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2024-04-17T02:05:41,2024-04-17T02:27:40,13,574,13,574,Satellite yaw flip to fly backward. Degraded KaRIn data expected for few hours after.",
+"2024-04-19T14:07:09,2024-04-19T14:07:09,14,60,14,60,Activate v07b off-nominal high-rate mask. 76% of nominal coverage due to cut internet cables affecting Hartebeesthoek downlink station.",
+"2024-04-19T22:41:42,2024-04-19T22:46:22,14,70,14,70,Solar panel rotation to 12 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2024-04-29T05:41:30,2024-04-29T05:46:10,14,330,14,330,Solar panel rotation to 30 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2024-04-30T13:39:09,2024-04-30T13:39:09,14,367,14,367,Activate v05 nominal northern hemisphere summer high-rate mask.",
+"2024-05-03T21:14:17,2024-05-03T21:51:21,14,460,14,461,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2024-05-04T12:40:02,2024-05-04T21:43:01,14,478,14,488,Gyro calibration. Degraded KaRIn data expected for few hours after.",
+"2024-05-24T19:26:13,2024-05-24T20:03:17,15,462,15,462,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2024-06-07T08:21:55,2024-06-07T08:59:17,16,257,16,257,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2024-06-07T17:47:45,2024-06-07T18:25:06,16,268,16,268,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2024-06-17T03:16:33,2024-06-17T03:21:13,16,530,16,531,Solar panel rotation to 12 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2024-06-26T13:39:55,2024-06-26T13:44:35,17,211,17,211,Solar panel rotation to 0 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2024-06-29T10:16:38,2024-06-29T10:38:58,17,291,17,291,Satellite yaw flip to fly forward. Degraded KaRIn data expected for few hours after.",
+"2024-07-02T05:09:28,2024-07-02T05:14:08,17,369,17,369,Solar panel rotation to 12 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2024-07-05T19:02:56,2024-07-05T19:40:00,17,469,17,469,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2024-07-11T01:50:16,2024-07-11T01:54:56,18,33,18,33,Solar panel rotation to 30 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2024-08-02T20:45:31,2024-08-02T21:22:34,19,86,19,87,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2024-08-20T15:16:17,2024-08-20T15:16:17,19,584,19,584,Activate v07b off-nominal high-rate mask. 76% of nominal coverage due to equipment issues at Hartebeesthoek downlink station.",
+"2024-08-23T20:50:00,2024-08-23T21:27:04,20,90,20,91,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2024-09-04T13:31:29,2024-09-04T13:31:29,20,418,20,418,Activate v08 off-nominal high-rate mask. 90% of nominal coverage due to equipment issues at Hartebeesthoek downlink station.",
+"2024-09-06T23:51:30,2024-09-06T23:56:10,20,486,20,486,Solar panel rotation to 12 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2024-09-09T13:41:33,2024-09-09T13:41:33,20,558,20,558,Activate v05 nominal northern hemisphere summer high-rate mask.",
+"2024-09-13T20:45:28,2024-09-13T21:22:33,21,94,21,95,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2024-09-15T10:12:17,2024-09-15T10:16:57,21,138,21,138,Solar panel rotation to 0 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2024-09-17T23:57:00,2024-09-18T00:18:56,21,210,21,210,Satellite yaw flip to fly backward. Degraded KaRIn data expected for few hours after.",
+"2024-09-20T15:23:44,2024-09-20T15:28:24,21,284,21,284,Solar panel rotation to 12 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2024-09-29T00:03:33,2024-09-29T00:08:13,21,518,21,518,Solar panel rotation to 30 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2024-10-04T10:25:57,2024-10-04T19:28:56,22,86,22,96,Gyro calibration. Degraded KaRIn data expected for few hours after.",
+"2024-10-11T13:51:14,2024-10-11T14:28:18,22,286,22,286,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2024-11-01T07:00:01,2024-11-01T07:37:06,23,281,23,282,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2024-11-15T18:49:49,2024-11-15T19:26:52,24,103,24,104,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2024-11-23T00:00:00,2024-11-23T00:00:00,24,305,24,305,Activate v09 northern hemisphere winter high-rate mask.",
+"2024-11-25T18:37:34,2024-11-25T18:42:14,24,383,24,383,Solar panel rotation to 12 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2024-12-03T16:59:06,2024-12-03T17:03:46,25,21,25,21,Solar panel rotation to 0 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2024-12-06T04:56:38,2024-12-06T05:33:41,25,91,25,91,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2024-12-06T10:09:59,2024-12-06T10:32:45,25,97,25,97,Satellite yaw flip to fly forward. Degraded KaRIn data expected for few hours after.",
+"2024-12-09T05:02:56,2024-12-09T05:07:36,25,175,25,175,Solar panel rotation to 12 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2024-12-18T06:53:45,2024-12-18T06:58:25,25,429,25,429,Solar panel rotation to 30 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2024-12-20T21:40:50,2024-12-20T22:17:52,25,502,25,503,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2024-12-29T14:06:36,2024-12-29T14:43:42,26,161,26,162,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2024-12-29T17:32:23,2024-12-29T18:09:29,26,165,26,166,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2025-01-10T21:40:49,2025-01-13T11:16:22,26,506,26,578,Suspicious or no KaRIn data. Error with onboard ephemeris after maneuver.",
+"2025-01-10T21:40:49,2025-01-10T22:17:52,26,506,26,507,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2025-02-03T11:18:35,2025-02-03T11:23:15,27,582,27,582,Solar panel rotation to 12 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2025-02-07T20:29:40,2025-02-07T21:06:44,28,120,28,121,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2025-02-12T18:16:41,2025-02-12T18:21:21,28,258,28,258,Solar panel rotation to 0 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2025-02-15T14:53:36,2025-02-15T15:15:28,28,338,28,338,Satellite yaw flip to fly backward. Degraded KaRIn data expected for few hours after.",
+"2025-02-18T09:46:41,2025-02-18T09:51:21,28,416,28,416,Solar panel rotation to 12 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2025-02-27T04:45:35,2025-02-27T04:50:15,29,78,29,78,Solar panel rotation to 30 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2025-02-27T13:16:31,2025-02-27T13:16:31,29,88,29,88,Activate v09 nominal northern hemisphere summer high-rate mask.",
+"2025-03-02T06:59:22,2025-03-02T07:36:28,29,164,29,165,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2025-03-02T10:25:09,2025-03-02T11:02:15,29,168,29,169,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2025-03-07T20:29:11,2025-03-07T21:06:15,29,320,29,321,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2025-03-09T12:19:55,2025-03-09T12:57:14,29,366,29,367,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2025-03-09T15:45:42,2025-03-09T16:23:01,29,370,29,371,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2025-04-04T03:12:39,2025-04-04T03:49:43,30,499,30,500,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2025-04-05T20:01:27,2025-04-05T20:01:27,30,547,30,547,Activate v10 nominal northern hemisphere summer high-rate mask with addition of small area in Mediterranean Sea.",
+"2025-04-23T23:09:34,2025-04-23T23:14:14,31,471,31,471,Solar panel rotation to 12 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2025-04-24T14:01:33,2025-04-24T14:01:33,31,488,31,488,Activate v10b nominal northern hemisphere summer high-rate mask with addition of two small areas in Mediterranean Sea.",
+"2025-05-02T12:56:53,2025-05-02T13:01:33,32,127,32,127,Solar panel rotation to 0 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2025-05-05T04:24:36,2025-05-05T04:47:00,32,201,32,201,Satellite yaw flip to fly forward. Degraded KaRIn data expected for few hours after.",
+"2025-05-07T21:34:16,2025-05-07T21:38:56,32,277,32,277,Solar panel rotation to 12 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2025-05-09T18:29:22,2025-05-09T19:06:25,32,329,32,330,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2025-05-16T09:39:45,2025-05-16T09:44:25,32,515,32,515,Solar panel rotation to 30 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2025-06-20T11:38:11,2025-06-20T12:15:50,34,329,34,329,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2025-06-20T15:55:23,2025-06-20T16:33:00,34,334,34,334,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2025-07-12T09:27:32,2025-07-12T09:32:12,35,358,35,358,Solar panel rotation to 12 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2025-07-21T00:57:08,2025-07-21T01:01:48,36,16,36,16,Solar panel rotation to 0 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2025-07-23T16:24:52,2025-07-23T16:46:55,36,90,36,90,Satellite yaw flip to fly backward. Degraded KaRIn data expected for few hours after.",
+"2025-07-26T11:17:33,2025-07-26T11:22:13,36,168,36,168,Solar panel rotation to 12 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2025-08-04T06:15:42,2025-08-04T06:20:22,36,414,36,414,Solar panel rotation to 30 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2025-08-08T02:48:50,2025-08-08T03:25:53,36,522,36,522,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2025-08-10T13:14:13,2025-08-10T22:17:11,37,6,37,16,Gyro calibration. Degraded KaRIn data expected for few hours after.",
+"2025-09-19T21:32:44,2025-09-19T22:09:47,38,551,38,552,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2025-09-27T17:44:07,2025-09-27T17:48:47,39,187,39,187,Solar panel rotation to 12 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2025-10-06T16:07:13,2025-10-06T16:11:53,39,437,39,437,Solar panel rotation to 0 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2025-10-09T12:44:07,2025-10-09T13:06:47,39,517,39,517,Satellite yaw flip to fly forward. Degraded KaRIn data expected for few hours after.",
+"2025-10-10T19:46:27,2025-10-10T20:23:30,39,553,39,554,Satellite maneuver. Degraded KaRIn data expected for few hours after.",
+"2025-10-12T07:37:14,2025-10-12T07:41:54,40,11,40,11,Solar panel rotation to 12 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2025-10-21T11:11:14,2025-10-21T11:15:54,40,267,40,267,Solar panel rotation to 30 degrees. Degraded KaRIn data expected for 15 minutes after.",
+"2025-10-31T12:19:25,2025-10-31T12:19:25,40,548,40,548,Activate v11S modified northern hemisphere winter high-rate mask.",
+"2025-11-14T14:43:55,2025-11-14T15:20:58,41,359,41,359,Satellite maneuver. Degraded KaRIn data expected for few hours after."
+].forEach(line => {
+  const [start, end, sc, sp, ec, ep, desc] = line.split(',');
+  const date = start.split('T')[0];
+  const timeStart = start.split('T')[1]?.slice(0,5) || '';
+  const timeEnd = end !== start ? end.split('T')[1]?.slice(0,5) : '';
+  const timeStr = timeStart && timeEnd && timeStart !== timeEnd ? timeStart + '–' + timeEnd : timeStart;
+  const cycleStr = sc === ec ? `Cycle ${sc} Pass ${sp}` : `Cycle ${sc} P${sp} → ${ec} P${ep}`;
+  
+  const type = desc.includes('maneuver') || desc.includes('yaw flip') ? 'maneuver' :
+               desc.includes('No ') || desc.includes('Suspicious') || desc.includes('anomaly') || desc.includes('SEU') ? 'anomaly' :
+               desc.includes('Solar panel') ? 'panel' :
+               desc.includes('Activate') || desc.includes('mask') || desc.includes('calibration phase') ? 'calib' :
+               desc.includes('Gyro') ? 'gyro' : 'other';
+  
+  const color = type === 'anomaly' ? '#ff6b6b' :
+                type === 'maneuver' ? '#58a6ff' :
+                type === 'panel' ? '#ffa657' :
+                type === 'calib' ? '#39d353' : '#8b949e';
+
+  const div = document.createElement('div');
+  div.className = 'event';
+  div.dataset.filter = type;
+  div.style.borderLeftColor = color;
+  div.innerHTML = `
+    <div class="date">${date}<br><small>${timeStr}</small></div>
+    <div class="dot" style="background:${color}"></div>
+    <div class="cycle">${cycleStr}</div>
+    <div class="info">
+      <div class="title">${desc.split('.')[0]}</div>
+      <div class="desc">${desc}</div>
+    </div>
+    <div class="tooltip"><strong>Period:</strong> ${start} → ${end}<br><strong>Cycle/Pass:</strong> ${sc} ${sp} → ${ec} ${ep}<br><br>${desc}</div>
+  `;
+  div.onclick = () => div.querySelector('.tooltip').classList.toggle('show');
+  document.getElementById('timeline').appendChild(div);
+});
+
+// Filter buttons
+document.querySelectorAll('.filters button').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('.filters button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.filter;
+    document.querySelectorAll('.event').forEach(e => {
+      e.style.display = (f === 'all' || e.dataset.filter === f) ? 'flex' : 'none';
+    });
+  };
+});
+</script>
+</body>
+</html>

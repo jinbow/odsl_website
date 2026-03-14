@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Earth J2 (Oblateness) Orbit Visualizer</title>
+
+  <!-- Plotly (CDN) -->
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+
+  <style>
+    body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+    #container { display: flex; height: 100vh; }
+    #controls {
+      width: 360px;
+      padding: 14px 16px;
+      border-right: 1px solid #ddd;
+      overflow: auto;
+      box-sizing: border-box;
+    }
+    #plots { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+    #orbitPlot { flex: 2; min-height: 0; }
+    #ratesPlot { flex: 1; min-height: 0; }
+
+    h2 { margin: 0 0 8px 0; }
+    label { display: block; margin-top: 10px; font-weight: 600; }
+    input[type="number"], select { width: 100%; padding: 6px; box-sizing: border-box; }
+    .small { font-size: 0.92em; color: #444; line-height: 1.35; }
+    .kpi {
+      background: #f7f7f7;
+      border: 1px solid #e3e3e3;
+      padding: 10px;
+      border-radius: 6px;
+      margin-top: 10px;
+    }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
+    hr { border: none; border-top: 1px solid #eee; margin: 12px 0; }
+    .checkbox { margin-top: 10px; display: flex; gap: 8px; align-items: center; }
+    .checkbox input { transform: translateY(1px); }
+  </style>
+</head>
+
+<body>
+<div id="container">
+  <div id="controls">
+    <h2>Earth J2 Orbit Visualizer</h2>
+
+    <div class="small">
+      Visualizes <strong>oblateness (J2)</strong> secular effects:
+      <strong>Ω</strong> nodal precession and <strong>ω</strong> apsidal rotation.
+      Geometry is plotted in <strong>ECI (inertial)</strong>.
+      Units: km, degrees, days.
+    </div>
+
+    <label>Altitude (km)</label>
+    <input id="alt" type="number" min="200" max="40000" step="10" value="500"/>
+
+    <label>Eccentricity e</label>
+    <input id="ecc" type="number" min="0" max="0.8" step="0.001" value="0.001"/>
+
+    <label>Inclination i (deg)</label>
+    <input id="inc" type="number" min="0" max="180" step="0.1" value="97.4"/>
+
+    <label>RAAN Ω₀ (deg)</label>
+    <input id="raan" type="number" min="0" max="360" step="0.1" value="0"/>
+
+    <label>Argument of perigee ω₀ (deg)</label>
+    <input id="aop" type="number" min="0" max="360" step="0.1" value="0"/>
+
+    <label>Duration (days)</label>
+    <input id="days" type="number" min="0.1" max="365" step="0.5" value="30"/>
+
+    <label>Intermediate snapshots</label>
+    <select id="snapshots">
+      <option value="0">None (only day 0 and final)</option>
+      <option value="5">~Weekly (5 snapshots)</option>
+      <option value="10">10 snapshots</option>
+      <option value="30">Daily (30 snapshots)</option>
+    </select>
+
+    <div class="checkbox">
+      <input id="oblate" type="checkbox" checked />
+      <label for="oblate" style="margin:0; font-weight:600;">Render Earth as oblate spheroid (WGS‑84)</label>
+    </div>
+
+    <div class="checkbox">
+      <input id="showUnpert" type="checkbox" checked />
+      <label for="showUnpert" style="margin:0; font-weight:600;">Show two-body reference orbit</label>
+    </div>
+
+    <div class="kpi" id="kpiBox"></div>
+
+    <hr />
+    <div class="small">
+      Model details:
+      <ul>
+        <li>Uses standard first-order <strong>secular J2 rates</strong> for Ω and ω.</li>
+        <li>Orbit lines are <strong>instantaneous Keplerian</strong> orbits at selected epochs (Ω(t), ω(t)).</li>
+        <li>Good for visualizing precession; not a high-fidelity force model / resonance analysis.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="plots">
+    <div id="orbitPlot"></div>
+    <div id="ratesPlot"></div>
+  </div>
+</div>
+
+<script>
+(() => {
+  // Earth constants (km, s)
+  const mu = 398600.4418;              // km^3/s^2
+  const Re = 6378.137;                 // km (WGS-84 equatorial radius)
+  const Rp = 6356.7523142;             // km (WGS-84 polar radius)
+  const J2 = 1.08262668e-3;
+  const day = 86400.0;
+
+  const deg2rad = d => d * Math.PI / 180.0;
+  const rad2deg = r => r * 180.0 / Math.PI;
+  const wrap360 = deg => ((deg % 360) + 360) % 360;
+
+  function j2Rates(a, e, incRad) {
+    // Standard secular (averaged) J2 drift rates
+    // p = a(1-e^2), n = sqrt(mu/a^3)
+    const p = a * (1 - e*e);
+    const n = Math.sqrt(mu / (a*a*a));          // rad/s
+    const factor = J2 * (Re*Re) / (p*p);
+
+    const dOdt = -1.5 * factor * n * Math.cos(incRad);               // rad/s
+    const dwdt =  0.75 * factor * n * (5*Math.cos(incRad)**2 - 1);   // rad/s
+
+    // Optional: common secular correction to mean anomaly rate (approx)
+    const dMdt =  n + 0.75 * factor * n * Math.sqrt(1 - e*e) * (3*Math.cos(incRad)**2 - 1);
+
+    return { n, p, dOdt, dwdt, dMdt };
+  }
+
+  function orbitCurveECI(a, e, incRad, raanRad, aopRad, nPts=360) {
+    // One Keplerian orbit (0..2π true anomaly) converted to ECI.
+    // Using u = ω + ν (argument of latitude).
+    const p = a * (1 - e*e);
+    const x = [], y = [], z = [];
+    const ci = Math.cos(incRad), si = Math.sin(incRad);
+    const cO = Math.cos(raanRad), sO = Math.sin(raanRad);
+
+    for (let k = 0; k <= nPts; k++) {
+      const nu = 2*Math.PI * k / nPts;
+      const r = p / (1 + e*Math.cos(nu));
+      const u = aopRad + nu;
+      const cu = Math.cos(u), su = Math.sin(u);
+
+      const X = r*(cO*cu - sO*su*ci);
+      const Y = r*(sO*cu + cO*su*ci);
+      const Z = r*(su*si);
+
+      x.push(X); y.push(Y); z.push(Z);
+    }
+    return { x, y, z };
+  }
+
+  function makeEarthMesh(oblate=true) {
+    // Surface mesh for Earth: sphere or oblate spheroid
+    const a = Re;                 // equatorial radius
+    const c = oblate ? Rp : Re;   // polar radius (sphere if not oblate)
+    const nLat = 40, nLon = 80;
+
+    const xs = [], ys = [], zs = [];
+    for (let i = 0; i <= nLat; i++) {
+      const lat = -Math.PI/2 + Math.PI*i/nLat;
+      const clat = Math.cos(lat), slat = Math.sin(lat);
+
+      const rowX = [], rowY = [], rowZ = [];
+      for (let j = 0; j <= nLon; j++) {
+        const lon = 2*Math.PI*j/nLon;
+        const clon = Math.cos(lon), slon = Math.sin(lon);
+
+        rowX.push(a*clat*clon);
+        rowY.push(a*clat*slon);
+        rowZ.push(c*slat);
+      }
+      xs.push(rowX); ys.push(rowY); zs.push(rowZ);
+    }
+    return { xs, ys, zs };
+  }
+
+  function build() {
+    // Inputs
+    const alt = parseFloat(document.getElementById('alt').value);
+    const e = Math.max(0, Math.min(0.99, parseFloat(document.getElementById('ecc').value)));
+    const incDeg = parseFloat(document.getElementById('inc').value);
+    const raanDeg0 = parseFloat(document.getElementById('raan').value);
+    const aopDeg0 = parseFloat(document.getElementById('aop').value);
+    const days = Math.max(0.0, parseFloat(document.getElementById('days').value));
+    const nSnaps = parseInt(document.getElementById('snapshots').value, 10);
+    const oblate = document.getElementById('oblate').checked;
+    const showUnpert = document.getElementById('showUnpert').checked;
+
+    // Derived
+    const a = Re + alt;
+    const incRad = deg2rad(incDeg);
+    const raanRad0 = deg2rad(raanDeg0);
+    const aopRad0  = deg2rad(aopDeg0);
+    const tEnd = days * day;
+
+    const { n, p, dOdt, dwdt, dMdt } = j2Rates(a, e, incRad);
+    const T = 2*Math.PI / n;         // seconds
+    const revPerDay = day / T;
+
+    // KPI box
+    const dO_deg_day = rad2deg(dOdt) * day;
+    const dw_deg_day = rad2deg(dwdt) * day;
+    const dM_deg_day = rad2deg(dMdt) * day;
+
+    document.getElementById('kpiBox').innerHTML = `
+      <div><strong>Derived quantities</strong></div>
+      <div class="small">
+        <div><code>a</code> = ${a.toFixed(3)} km &nbsp;&nbsp; <code>p</code> = ${p.toFixed(3)} km</div>
+        <div><code>n</code> = ${n.toExponential(6)} rad/s &nbsp;&rarr;&nbsp; ${revPerDay.toFixed(3)} rev/day</div>
+        <div><code>dΩ/dt</code> = ${dO_deg_day.toFixed(4)} deg/day</div>
+        <div><code>dω/dt</code> = ${dw_deg_day.toFixed(4)} deg/day</div>
+        <div><code>dM/dt</code> ≈ ${dM_deg_day.toFixed(4)} deg/day (incl. common J2 secular term)</div>
+      </div>
+    `;
+
+    // Epochs for snapshots
+    let epochs = [0, tEnd];
+    if (nSnaps > 0 && tEnd > 0) {
+      epochs = [];
+      for (let k = 0; k <= nSnaps; k++) {
+        epochs.push(tEnd * k / nSnaps);
+      }
+    }
+
+    // Earth surface
+    const earth = makeEarthMesh(oblate);
+
+    // 3D traces
+    const traces3D = [
+      {
+        type: 'surface',
+        x: earth.xs, y: earth.ys, z: earth.zs,
+        opacity: 0.5,
+        showscale: false,
+        hoverinfo: 'skip',
+        name: oblate ? 'Earth (oblate)' : 'Earth (sphere)'
+      }
+    ];
+
+    // Two-body reference orbit at epoch 0
+    if (showUnpert) {
+      const c0 = orbitCurveECI(a, e, incRad, raanRad0, aopRad0, 360);
+      traces3D.push({
+        type: 'scatter3d',
+        mode: 'lines',
+        x: c0.x, y: c0.y, z: c0.z,
+        line: { width: 6 },
+        name: 'Two-body (no J2), epoch 0'
+      });
+    }
+
+    // J2 snapshots (instantaneous orbits with Ω(t), ω(t))
+    for (let k = 0; k < epochs.length; k++) {
+      const t = epochs[k];
+      const raan = raanRad0 + dOdt * t;
+      const aop  = aopRad0  + dwdt * t;
+
+      const c = orbitCurveECI(a, e, incRad, raan, aop, 360);
+
+      const isEdge = (k === 0 || k === epochs.length - 1);
+      traces3D.push({
+        type: 'scatter3d',
+        mode: 'lines',
+        x: c.x, y: c.y, z: c.z,
+        line: { width: isEdge ? 6 : 2 },
+        opacity: isEdge ? 1.0 : 0.35,
+        name:
+          (k === 0) ? 'J2-perturbed, epoch 0' :
+          (k === epochs.length - 1) ? `J2-perturbed, day ${days}` :
+          `J2 snapshot, day ${(t/day).toFixed(1)}`
+      });
+    }
+
+    const maxRange = a * (1 + e) * 1.2;
+    const layout3D = {
+      margin: { l: 0, r: 0, t: 36, b: 0 },
+      title: 'Orbit geometry in ECI (inertial)',
+      scene: {
+        xaxis: { title: 'X (km)', range: [-maxRange, maxRange] },
+        yaxis: { title: 'Y (km)', range: [-maxRange, maxRange] },
+        zaxis: { title: 'Z (km)', range: [-maxRange, maxRange] },
+        aspectmode: 'data'
+      },
+      legend: { orientation: 'h' }
+    };
+
+    Plotly.react('orbitPlot', traces3D, layout3D, { responsive: true });
+
+    // Time histories (wrapped)
+    const nPtsTime = Math.max(40, Math.min(600, Math.round(days * 12)));
+    const tArr = [];
+    const OmJ2 = [], omJ2 = [], Om0 = [], om0 = [];
+
+    for (let i = 0; i <= nPtsTime; i++) {
+      const t = tEnd * i / nPtsTime;
+      const d = t / day;
+      tArr.push(d);
+
+      const Om = rad2deg(raanRad0 + dOdt * t);
+      const om = rad2deg(aopRad0  + dwdt * t);
+
+      OmJ2.push(wrap360(Om));
+      omJ2.push(wrap360(om));
+      Om0.push(wrap360(raanDeg0));
+      om0.push(wrap360(aopDeg0));
+    }
+
+    const traces2D = [
+      { x: tArr, y: OmJ2, type: 'scatter', mode: 'lines', name: 'Ω(t) with J2' },
+      { x: tArr, y: omJ2, type: 'scatter', mode: 'lines', name: 'ω(t) with J2' }
+    ];
+
+    if (showUnpert) {
+      traces2D.push({ x: tArr, y: Om0, type: 'scatter', mode: 'lines', line: { dash: 'dot' }, name: 'Ω(t) two-body' });
+      traces2D.push({ x: tArr, y: om0, type: 'scatter', mode: 'lines', line: { dash: 'dot' }, name: 'ω(t) two-body' });
+    }
+
+    const layout2D = {
+      margin: { l: 60, r: 20, t: 36, b: 50 },
+      title: 'Secular element drift from oblateness (J2)',
+      xaxis: { title: 'Time (days)' },
+      yaxis: { title: 'Angle (deg, wrapped to 0–360)' },
+      legend: { orientation: 'h' }
+    };
+
+    Plotly.react('ratesPlot', traces2D, layout2D, { responsive: true });
+  }
+
+  // Hook up UI events
+  const ids = ['alt','ecc','inc','raan','aop','days','snapshots','oblate','showUnpert'];
+  ids.forEach(id => document.getElementById(id).addEventListener('input', build));
+
+  window.addEventListener('resize', () => {
+    Plotly.Plots.resize(document.getElementById('orbitPlot'));
+    Plotly.Plots.resize(document.getElementById('ratesPlot'));
+  });
+
+  build();
+})();
+</script>
+</body>
+</html>

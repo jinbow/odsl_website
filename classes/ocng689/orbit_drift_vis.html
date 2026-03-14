@@ -1,0 +1,1138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Orbit Drift from Earth Oblateness (J2) — Interactive Visualizer</title>
+
+  <!-- Use the provided stylesheet -->
+  <link rel="stylesheet" href="styles-light.css" />
+
+  <style>
+    /* Layout: full-screen, 2 panels */
+    html, body { height: 100%; }
+    body { margin: 0; }
+
+    .vis-root{
+      height: 100vh;
+      width: 100vw;
+      padding: 12px;
+    }
+    .vis-grid{
+      height: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      min-height: 0;
+    }
+
+    .vis-panel.panel{
+      padding: 0;
+      position: relative;
+      overflow: hidden;
+      min-height: 0;
+    }
+
+    .canvas-host{
+      position: absolute;
+      inset: 0;
+    }
+    canvas{
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* overlays: rely on .panel look but with absolute positioning */
+    .overlay.panel{
+      position: absolute;
+      z-index: 10;
+      background: rgba(11,18,32,.78);
+      backdrop-filter: blur(10px);
+      padding: 12px;
+    }
+
+    #controls{
+      top: 12px; left: 12px;
+      width: 380px;
+      max-width: calc(100% - 24px);
+      max-height: calc(100% - 24px);
+      overflow: auto;
+    }
+    #info{
+      left: 12px;
+      bottom: 12px;
+      width: 380px;
+      max-width: calc(100% - 24px);
+    }
+    #legend{
+      top: 12px; right: 12px;
+      width: 250px;
+      max-width: calc(100% - 24px);
+    }
+    #mapTitle{
+      top: 12px; left: 50%;
+      transform: translateX(-50%);
+      font-weight: 900;
+      letter-spacing: .2px;
+    }
+    #status{
+      right: 12px;
+      bottom: 12px;
+      width: 420px;
+      max-width: calc(100% - 24px);
+      display: none;
+      border-left: 3px solid rgba(251,191,36,.7);
+    }
+
+    h3, h4 { margin: 0 0 8px 0; letter-spacing: .2px; }
+    h3 { font-size: 1.0rem; }
+    h4 { font-size: .95rem; color: rgba(229,231,235,.95); }
+
+    .ctrl label{
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+      margin: 8px 0;
+      font-size: .92rem;
+      color: rgba(229,231,235,.92);
+    }
+    .rhs{
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+    input[type="range"]{ width: 180px; }
+
+    .value{
+      font-family: var(--mono);
+      font-size: .82rem;
+      color: var(--warn);
+      min-width: 84px;
+      text-align: right;
+    }
+
+    .check{
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin: 8px 0;
+      font-size: .92rem;
+      color: rgba(229,231,235,.92);
+    }
+
+    .btnrow{
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .param{
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 4px 0;
+      font-size: .88rem;
+      color: rgba(229,231,235,.90);
+    }
+    .param span{
+      font-family: var(--mono);
+      color: rgba(229,231,235,.92);
+    }
+    .hl1{ color: #ff6b6b; font-weight: 800; }
+    .hl2{ color: #34d399; font-weight: 800; }
+
+    .legend-item{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 6px 0;
+      font-size: .9rem;
+      color: rgba(229,231,235,.9);
+    }
+    .swatch{
+      width: 18px;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(229,231,235,.5);
+      border: 1px solid rgba(148,163,184,.22);
+    }
+    .dot{
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: cyan;
+      border: 1px solid rgba(229,231,235,.8);
+    }
+
+    .hint{
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: .90rem;
+    }
+    .hint strong{ color: rgba(229,231,235,.92); }
+
+    /* Mobile */
+    @media (max-width: 980px){
+      .vis-grid{
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr;
+      }
+      #legend{ display: none; }
+    }
+  </style>
+</head>
+
+<body>
+  <a class="skip" href="#controls">Skip to controls</a>
+
+  <noscript>
+    <div class="container">
+      <div class="panel" style="margin-top:18px;">
+        <h2 style="margin:0 0 10px 0;">JavaScript is disabled</h2>
+        <p style="margin:0; color: var(--muted);">
+          This orbit drift visualization requires JavaScript. Enable JavaScript or open the file in a browser that allows scripts.
+          If you are embedding into Canvas, note that Canvas often blocks scripts in pages.
+        </p>
+      </div>
+    </div>
+  </noscript>
+
+  <main class="vis-root">
+    <div class="vis-grid">
+
+      <!-- Left: orbit view -->
+      <section class="panel vis-panel" aria-label="3D orbit drift view">
+        <div class="canvas-host">
+          <canvas id="orbitCanvas"></canvas>
+        </div>
+
+        <div id="controls" class="panel overlay ctrl" tabindex="-1">
+          <h3>Orbit Drift (J2) Controls</h3>
+
+          <label>
+            Inclination (i)
+            <span class="rhs">
+              <input type="range" id="incl" min="0" max="180" value="98" step="1" />
+              <span class="value" id="inclVal">98°</span>
+            </span>
+          </label>
+
+          <label>
+            Semi-major axis (a)
+            <span class="rhs">
+              <input type="range" id="sma" min="6578" max="42164" value="7078" step="10" />
+              <span class="value" id="smaVal">7078 km</span>
+            </span>
+          </label>
+
+          <label>
+            Eccentricity (e)
+            <span class="rhs">
+              <input type="range" id="ecc" min="0" max="0.7" value="0.001" step="0.001" />
+              <span class="value" id="eccVal">0.001</span>
+            </span>
+          </label>
+
+          <label>
+            Time speed
+            <span class="rhs">
+              <input type="range" id="speed" min="1" max="50000" value="5000" step="500" />
+              <span class="value" id="speedVal">5000×</span>
+            </span>
+          </label>
+
+          <label>
+            Ground-track history
+            <span class="rhs">
+              <input type="range" id="histOrbits" min="1" max="20" value="6" step="1" />
+              <span class="value" id="histVal">6 orbits</span>
+            </span>
+          </label>
+
+          <div class="check">
+            <input type="checkbox" id="j2On" checked />
+            <label for="j2On" style="margin:0;">Enable J2 secular drift</label>
+          </div>
+
+          <div class="check">
+            <input type="checkbox" id="showKepler" checked />
+            <label for="showKepler" style="margin:0;">Show Kepler reference (no J2)</label>
+          </div>
+
+          <div class="check">
+            <input type="checkbox" id="showHistory3D" checked />
+            <label for="showHistory3D" style="margin:0;">Show historical orbits (3D ghosts)</label>
+          </div>
+
+          <div class="check">
+            <input type="checkbox" id="showAxes" checked />
+            <label for="showAxes" style="margin:0;">Show axes / equator</label>
+          </div>
+
+          <div class="btnrow">
+            <button class="btn" id="pauseBtn" type="button">Pause</button>
+            <button class="btn" id="stepOrbitBtn" type="button">+1 orbit</button>
+            <button class="btn" id="stepDayBtn" type="button">+1 day</button>
+          </div>
+
+          <div class="btnrow">
+            <button class="btn" id="resetBtn" type="button">Reset</button>
+            <button class="btn primary" id="sunSyncBtn" type="button">Sun‑sync solve</button>
+            <button class="btn good" id="viewResetBtn" type="button">Reset view</button>
+          </div>
+
+          <div class="hint">
+            Mouse: <strong>drag</strong> to rotate view, <strong>wheel</strong> to zoom.
+            For strong Ω̇, try <strong>i ≈ 98°</strong>, <strong>alt ≈ 600–900 km</strong>, high speed.
+          </div>
+        </div>
+
+        <div id="info" class="panel overlay" aria-label="Simulation info">
+          <h4>Derived quantities</h4>
+          <div class="param"><div>Period</div><span id="periodOut">--</span></div>
+          <div class="param"><div>Perigee/Apogee alt</div><span id="paOut">--</span></div>
+          <div class="param"><div>Mean motion (n)</div><span id="nOut">--</span></div>
+
+          <hr style="border-color: var(--line); margin: 10px 0;" />
+
+          <h4>J2 secular rates</h4>
+          <div class="param"><div>Ω̇ (RAAN)</div><span class="hl1" id="raanRateOut">--</span></div>
+          <div class="param"><div>ω̇ (AOP)</div><span class="hl2" id="aopRateOut">--</span></div>
+
+          <hr style="border-color: var(--line); margin: 10px 0;" />
+
+          <div class="param"><div>Ω</div><span id="raanOut">--</span></div>
+          <div class="param"><div>ω</div><span id="aopOut">--</span></div>
+          <div class="param"><div>Elapsed</div><span id="timeOut">--</span></div>
+          <div class="param"><div>Orbits</div><span id="orbitOut">--</span></div>
+        </div>
+
+        <div id="status" class="panel overlay" aria-live="polite"></div>
+      </section>
+
+      <!-- Right: ground track -->
+      <section class="panel vis-panel" aria-label="Ground track view">
+        <div class="canvas-host">
+          <canvas id="mapCanvas"></canvas>
+        </div>
+
+        <div id="mapTitle" class="panel overlay">Ground Track (Equirectangular)</div>
+
+        <div id="legend" class="panel overlay">
+          <h4 style="margin-bottom:6px;">Legend</h4>
+          <div class="legend-item"><span class="swatch" style="background:#ff0000;"></span>Current orbit (J2)</div>
+          <div class="legend-item"><span class="swatch" style="background:#ff7a18;"></span>Older orbits</div>
+          <div class="legend-item"><span class="swatch" style="background:#aaaaaa;"></span>Kepler ref (no J2)</div>
+          <div class="legend-item"><span class="dot"></span>Satellite</div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <script>
+    (() => {
+      "use strict";
+
+      // ---------------------------
+      // Status / debug overlay
+      // ---------------------------
+      const statusEl = document.getElementById("status");
+      function showStatus(msg){
+        statusEl.style.display = "block";
+        statusEl.textContent = msg;
+      }
+      function clearStatus(){
+        statusEl.style.display = "none";
+        statusEl.textContent = "";
+      }
+      window.addEventListener("error", (e) => showStatus("Error: " + e.message));
+      window.addEventListener("unhandledrejection", (e) => showStatus("Promise error: " + e.reason));
+
+      // ---------------------------
+      // Constants (Earth)
+      // ---------------------------
+      const MU = 3.986004418e5;         // km^3/s^2
+      const RE = 6378.137;              // km (equatorial radius)
+      const J2 = 1.08263e-3;            // Earth's J2
+      const OMEGA_E = 7.292115e-5;      // rad/s (Earth rotation rate)
+      const DAY = 86400;
+
+      // Sun mean motion for sun-synchronous target (approx)
+      const SUN_MEAN_MOTION = 2*Math.PI / (365.2422 * DAY); // rad/s
+
+      // Keep orbit above atmosphere for visualization sanity
+      const MIN_PERIGEE_ALT = 120; // km
+
+      // ---------------------------
+      // Utility
+      // ---------------------------
+      const clamp = (x, lo, hi) => Math.min(hi, Math.max(lo, x));
+      const deg2rad = d => d * Math.PI / 180;
+      const rad2deg = r => r * 180 / Math.PI;
+      const wrap2pi = a => {
+        const t = 2*Math.PI;
+        a = a % t;
+        return a < 0 ? a + t : a;
+      };
+      const wrap360 = d => {
+        d = d % 360;
+        return d < 0 ? d + 360 : d;
+      };
+
+      // ---------------------------
+      // UI elements
+      // ---------------------------
+      const el = {
+        incl: document.getElementById("incl"),
+        sma: document.getElementById("sma"),
+        ecc: document.getElementById("ecc"),
+        speed: document.getElementById("speed"),
+        histOrbits: document.getElementById("histOrbits"),
+        j2On: document.getElementById("j2On"),
+        showKepler: document.getElementById("showKepler"),
+        showHistory3D: document.getElementById("showHistory3D"),
+        showAxes: document.getElementById("showAxes"),
+        pauseBtn: document.getElementById("pauseBtn"),
+        stepOrbitBtn: document.getElementById("stepOrbitBtn"),
+        stepDayBtn: document.getElementById("stepDayBtn"),
+        resetBtn: document.getElementById("resetBtn"),
+        sunSyncBtn: document.getElementById("sunSyncBtn"),
+        viewResetBtn: document.getElementById("viewResetBtn"),
+
+        inclVal: document.getElementById("inclVal"),
+        smaVal: document.getElementById("smaVal"),
+        eccVal: document.getElementById("eccVal"),
+        speedVal: document.getElementById("speedVal"),
+        histVal: document.getElementById("histVal"),
+
+        periodOut: document.getElementById("periodOut"),
+        paOut: document.getElementById("paOut"),
+        nOut: document.getElementById("nOut"),
+        raanRateOut: document.getElementById("raanRateOut"),
+        aopRateOut: document.getElementById("aopRateOut"),
+        raanOut: document.getElementById("raanOut"),
+        aopOut: document.getElementById("aopOut"),
+        timeOut: document.getElementById("timeOut"),
+        orbitOut: document.getElementById("orbitOut"),
+      };
+
+      function updateValueDisplays(){
+        el.inclVal.textContent = `${el.incl.value}°`;
+        el.smaVal.textContent  = `${el.sma.value} km`;
+        el.eccVal.textContent  = `${parseFloat(el.ecc.value).toFixed(3)}`;
+        el.speedVal.textContent = `${el.speed.value}×`;
+        el.histVal.textContent = `${el.histOrbits.value} orbits`;
+      }
+
+      function getParams(){
+        const a = parseFloat(el.sma.value);
+        let e = parseFloat(el.ecc.value);
+        const i = deg2rad(parseFloat(el.incl.value));
+
+        // enforce perigee >= RE + MIN_PERIGEE_ALT
+        const eMax = 1 - (RE + MIN_PERIGEE_ALT) / a;
+        if (e > eMax){
+          e = clamp(eMax, 0, 0.99);
+          el.ecc.value = e.toFixed(3);
+        }
+
+        return {
+          a,
+          e,
+          i,
+          speed: parseFloat(el.speed.value),
+          histOrbits: parseInt(el.histOrbits.value, 10),
+          j2On: el.j2On.checked,
+          showKepler: el.showKepler.checked,
+          showHistory3D: el.showHistory3D.checked,
+          showAxes: el.showAxes.checked
+        };
+      }
+
+      // ---------------------------
+      // Orbital mechanics helpers
+      // ---------------------------
+      function meanMotion(a){ return Math.sqrt(MU / (a*a*a)); }
+      function period(a){ return 2*Math.PI / meanMotion(a); }
+      function pSLR(a,e){ return a*(1 - e*e); }
+
+      function raanRateJ2(p){
+        if (!p.j2On) return 0;
+        const n = meanMotion(p.a);
+        const ps = pSLR(p.a, p.e);
+        return -1.5 * J2 * Math.pow(RE/ps, 2) * n * Math.cos(p.i);
+      }
+
+      function aopRateJ2(p){
+        if (!p.j2On) return 0;
+        const n = meanMotion(p.a);
+        const ps = pSLR(p.a, p.e);
+        const c = Math.cos(p.i);
+        return 0.75 * J2 * Math.pow(RE/ps, 2) * n * (5*c*c - 1);
+      }
+
+      function solveKepler(M, e){
+        // Newton-Raphson on: M = E - e sinE
+        let E = (e < 0.8) ? M : Math.PI;
+        for (let k=0; k<60; k++){
+          const f = E - e*Math.sin(E) - M;
+          const fp = 1 - e*Math.cos(E);
+          const dE = -f / fp;
+          E += dE;
+          if (Math.abs(dE) < 1e-10) break;
+        }
+        return E;
+      }
+
+      function pqwFromM(M, a, e){
+        const E = solveKepler(M, e);
+        const r = a*(1 - e*Math.cos(E));
+        const x = a*(Math.cos(E) - e);
+        const y = a*Math.sqrt(1 - e*e)*Math.sin(E);
+        return { x, y, z: 0, r };
+      }
+
+      // R3(Ω) R1(i) R3(ω)
+      function pqwToEci(pos, i, O, w){
+        const cO = Math.cos(O), sO = Math.sin(O);
+        const ci = Math.cos(i), si = Math.sin(i);
+        const cw = Math.cos(w), sw = Math.sin(w);
+
+        const r11 = cO*cw - sO*sw*ci;
+        const r12 = -cO*sw - sO*cw*ci;
+        const r21 = sO*cw + cO*sw*ci;
+        const r22 = -sO*sw + cO*cw*ci;
+        const r31 = sw*si;
+        const r32 = cw*si;
+
+        return {
+          x: r11*pos.x + r12*pos.y,
+          y: r21*pos.x + r22*pos.y,
+          z: r31*pos.x + r32*pos.y
+        };
+      }
+
+      function eciToLatLon(eci, t){
+        // ECI -> ECEF rotation about +Z
+        const th = OMEGA_E * t;
+        const c = Math.cos(th), s = Math.sin(th);
+
+        const x =  eci.x*c + eci.y*s;
+        const y = -eci.x*s + eci.y*c;
+        const z =  eci.z;
+
+        const r = Math.sqrt(x*x + y*y + z*z);
+        const lat = rad2deg(Math.asin(z/r));
+        let lon = rad2deg(Math.atan2(y,x));
+        // keep in [-180, 180]
+        if (lon > 180) lon -= 360;
+        if (lon < -180) lon += 360;
+        return { lat, lon };
+      }
+
+      function sunSyncSolveInclinationDeg(a, e){
+        // Solve Ωdot = +SUN_MEAN_MOTION
+        const n = meanMotion(a);
+        const ps = pSLR(a,e);
+        const denom = 1.5 * J2 * Math.pow(RE/ps, 2) * n; // Ωdot = -denom*cos(i)
+        const cosi = clamp(-SUN_MEAN_MOTION / denom, -1, 1);
+        return rad2deg(Math.acos(cosi));
+      }
+
+      // ---------------------------
+      // Canvases + resize
+      // ---------------------------
+      const orbitCanvas = document.getElementById("orbitCanvas");
+      const mapCanvas = document.getElementById("mapCanvas");
+      const octx = orbitCanvas.getContext("2d");
+      const mctx = mapCanvas.getContext("2d");
+
+      function resizeCanvasToHost(canvas){
+        const host = canvas.parentElement;
+        const r = host.getBoundingClientRect();
+        const w = Math.max(2, Math.floor(r.width));
+        const h = Math.max(2, Math.floor(r.height));
+        if (canvas.width !== w || canvas.height !== h){
+          canvas.width = w;
+          canvas.height = h;
+        }
+      }
+
+      const ro = new ResizeObserver(() => {
+        resizeCanvasToHost(orbitCanvas);
+        resizeCanvasToHost(mapCanvas);
+      });
+      ro.observe(orbitCanvas.parentElement);
+      ro.observe(mapCanvas.parentElement);
+      resizeCanvasToHost(orbitCanvas);
+      resizeCanvasToHost(mapCanvas);
+
+      // ---------------------------
+      // Simple camera (mouse drag + wheel)
+      // ---------------------------
+      const cam = {
+        yaw: deg2rad(-35),
+        pitch: deg2rad(25),
+        dist: 5.2,
+        fov: deg2rad(45),
+        dragging: false,
+        lastX: 0,
+        lastY: 0
+      };
+
+      function resetView(){
+        cam.yaw = deg2rad(-35);
+        cam.pitch = deg2rad(25);
+        cam.dist = 5.2;
+      }
+
+      function clampPitch(){
+        const lim = deg2rad(85);
+        cam.pitch = clamp(cam.pitch, -lim, lim);
+      }
+
+      orbitCanvas.addEventListener("mousedown", (e) => {
+        cam.dragging = true;
+        cam.lastX = e.clientX;
+        cam.lastY = e.clientY;
+      });
+      window.addEventListener("mouseup", () => cam.dragging = false);
+      window.addEventListener("mousemove", (e) => {
+        if (!cam.dragging) return;
+        const dx = e.clientX - cam.lastX;
+        const dy = e.clientY - cam.lastY;
+        cam.lastX = e.clientX;
+        cam.lastY = e.clientY;
+
+        cam.yaw += dx * 0.007;
+        cam.pitch += dy * 0.007;
+        clampPitch();
+      });
+      orbitCanvas.addEventListener("wheel", (e) => {
+        e.preventDefault();
+        const dz = Math.sign(e.deltaY);
+        cam.dist *= (dz > 0) ? 1.08 : 0.92;
+        cam.dist = clamp(cam.dist, 2.4, 20);
+      }, { passive: false });
+
+      // ---------------------------
+      // Projection helpers (3D -> 2D)
+      // ---------------------------
+      function cameraBasis(){
+        // Camera position in world (ECI, scaled units)
+        const cp = Math.cos(cam.pitch), sp = Math.sin(cam.pitch);
+        const cy = Math.cos(cam.yaw),   sy = Math.sin(cam.yaw);
+        const C = { x: cam.dist*cp*cy, y: cam.dist*cp*sy, z: cam.dist*sp };
+
+        // forward points from camera to origin
+        const f0 = { x: -C.x, y: -C.y, z: -C.z };
+        const fLen = Math.hypot(f0.x, f0.y, f0.z);
+        const F = { x: f0.x/fLen, y: f0.y/fLen, z: f0.z/fLen };
+
+        // world up = +Z
+        const U0 = { x: 0, y: 0, z: 1 };
+
+        // right = up x forward
+        const R0 = {
+          x: U0.y*F.z - U0.z*F.y,
+          y: U0.z*F.x - U0.x*F.z,
+          z: U0.x*F.y - U0.y*F.x
+        };
+        const rLen = Math.hypot(R0.x, R0.y, R0.z) || 1;
+        const R = { x: R0.x/rLen, y: R0.y/rLen, z: R0.z/rLen };
+
+        // trueUp = forward x right
+        const T = {
+          x: F.y*R.z - F.z*R.y,
+          y: F.z*R.x - F.x*R.z,
+          z: F.x*R.y - F.y*R.x
+        };
+
+        return { C, R, T, F };
+      }
+
+      function projectPoint(P, basis, w, h){
+        const { C, R, T, F } = basis;
+        const rel = { x: P.x - C.x, y: P.y - C.y, z: P.z - C.z };
+
+        const xCam = rel.x*R.x + rel.y*R.y + rel.z*R.z;
+        const yCam = rel.x*T.x + rel.y*T.y + rel.z*T.z;
+        const zCam = rel.x*F.x + rel.y*F.y + rel.z*F.z;
+
+        const near = 0.12;
+        if (zCam <= near) return null;
+
+        const f = (Math.min(w,h)*0.5) / Math.tan(cam.fov*0.5);
+        const sx = (xCam / zCam) * f + w*0.5;
+        const sy = (-yCam / zCam) * f + h*0.5;
+        return { x: sx, y: sy, z: zCam };
+      }
+
+      // ---------------------------
+      // Drawing: orbit view
+      // ---------------------------
+      function drawOrbitView(p, sim){
+        const w = orbitCanvas.width, h = orbitCanvas.height;
+        octx.clearRect(0,0,w,h);
+
+        // background
+        octx.fillStyle = "rgba(11,18,32,1)";
+        octx.fillRect(0,0,w,h);
+
+        const basis = cameraBasis();
+
+        // Earth projected circle radius: project a point of radius 1 along camera right
+        const origin = projectPoint({x:0,y:0,z:0}, basis, w, h);
+        if (!origin){
+          showStatus("View error: camera is inside/behind near plane.");
+          return;
+        } else {
+          clearStatus();
+        }
+
+        const Rworld = basis.R; // unit vector in world coordinates
+        const earthEdge = projectPoint({ x:Rworld.x, y:Rworld.y, z:Rworld.z }, basis, w, h);
+        const rPx = earthEdge ? Math.hypot(earthEdge.x - origin.x, earthEdge.y - origin.y) : Math.min(w,h)*0.18;
+
+        // Earth shading
+        const grd = octx.createRadialGradient(origin.x - 0.25*rPx, origin.y - 0.25*rPx, 0.2*rPx, origin.x, origin.y, 1.1*rPx);
+        grd.addColorStop(0, "rgba(96,165,250,0.55)");
+        grd.addColorStop(0.6, "rgba(30,64,175,0.55)");
+        grd.addColorStop(1, "rgba(2,6,23,0.85)");
+        octx.fillStyle = grd;
+        octx.beginPath();
+        octx.arc(origin.x, origin.y, rPx, 0, 2*Math.PI);
+        octx.fill();
+
+        // Earth outline
+        octx.strokeStyle = "rgba(229,231,235,0.18)";
+        octx.lineWidth = 1;
+        octx.beginPath();
+        octx.arc(origin.x, origin.y, rPx, 0, 2*Math.PI);
+        octx.stroke();
+
+        // Axes / equator
+        if (p.showAxes){
+          // Earth axis line (Z)
+          const z1 = projectPoint({x:0,y:0,z:-1.7}, basis, w, h);
+          const z2 = projectPoint({x:0,y:0,z: 1.7}, basis, w, h);
+          if (z1 && z2){
+            octx.strokeStyle = "rgba(52,211,153,0.55)";
+            octx.lineWidth = 2;
+            octx.beginPath(); octx.moveTo(z1.x,z1.y); octx.lineTo(z2.x,z2.y); octx.stroke();
+          }
+
+          // Equator ring: circle in z=0 plane
+          octx.strokeStyle = "rgba(96,165,250,0.30)";
+          octx.lineWidth = 1.5;
+          octx.beginPath();
+          let started = false;
+          for (let k=0; k<=200; k++){
+            const a = (k/200)*2*Math.PI;
+            const P = { x:Math.cos(a)*1.05, y:Math.sin(a)*1.05, z:0 };
+            const s = projectPoint(P, basis, w, h);
+            if (!s) continue;
+            if (!started){ octx.moveTo(s.x,s.y); started=true; }
+            else octx.lineTo(s.x,s.y);
+          }
+          if (started) octx.stroke();
+        }
+
+        // RAAN indicator in equatorial plane
+        const O = sim.Omega;
+        const raanVec = { x: Math.cos(O)*2.1, y: Math.sin(O)*2.1, z: 0 };
+        const raanEnd = projectPoint(raanVec, basis, w, h);
+        if (raanEnd){
+          octx.strokeStyle = "rgba(255,0,255,0.85)";
+          octx.lineWidth = 2;
+          octx.beginPath(); octx.moveTo(origin.x, origin.y); octx.lineTo(raanEnd.x, raanEnd.y); octx.stroke();
+        }
+
+        // Helper to draw an orbit curve
+        function drawOrbitCurve(Omega, omega, stroke, widthPx, alpha){
+          octx.strokeStyle = stroke;
+          octx.globalAlpha = alpha;
+          octx.lineWidth = widthPx;
+          octx.beginPath();
+          let started = false;
+
+          const N = 260;
+          for (let k=0; k<=N; k++){
+            const M = (k/N)*2*Math.PI;
+            const pqw = pqwFromM(M, p.a, p.e);
+            const eciKm = pqwToEci(pqw, p.i, Omega, omega);
+            // scale to Earth radii
+            const P = { x: eciKm.x/RE, y: eciKm.y/RE, z: eciKm.z/RE };
+            const s = projectPoint(P, basis, w, h);
+            if (!s) continue;
+            if (!started){ octx.moveTo(s.x,s.y); started=true; }
+            else octx.lineTo(s.x,s.y);
+          }
+          if (started) octx.stroke();
+          octx.globalAlpha = 1;
+        }
+
+        // Historical orbit ghosts
+        if (p.showHistory3D){
+          for (let j=0; j<sim.history.length; j++){
+            const hOrbit = sim.history[j];
+            const a = Math.max(0.12, 0.55 - 0.08*j);
+            drawOrbitCurve(hOrbit.Omega, hOrbit.omega, "rgba(96,165,250,1)", 1.2, a);
+          }
+        }
+
+        // Kepler reference orbit (no J2)
+        if (p.showKepler && p.j2On){
+          drawOrbitCurve(sim.Omega0, sim.omega0, "rgba(170,170,170,1)", 1.5, 0.75);
+        }
+
+        // Current orbit
+        drawOrbitCurve(sim.Omega, sim.omega, "rgba(52,211,153,1)", 2.0, 1.0);
+
+        // Satellite point
+        const n = meanMotion(p.a);
+        const Mnow = wrap2pi(sim.M0 + n*sim.t);
+        const pqwNow = pqwFromM(Mnow, p.a, p.e);
+        const eciNowKm = pqwToEci(pqwNow, p.i, sim.Omega, sim.omega);
+        const Pnow = { x: eciNowKm.x/RE, y: eciNowKm.y/RE, z: eciNowKm.z/RE };
+        const sNow = projectPoint(Pnow, basis, w, h);
+        if (sNow){
+          octx.fillStyle = "rgba(255,0,0,0.95)";
+          octx.beginPath();
+          octx.arc(sNow.x, sNow.y, 5, 0, 2*Math.PI);
+          octx.fill();
+          octx.strokeStyle = "rgba(255,255,255,0.65)";
+          octx.lineWidth = 2;
+          octx.stroke();
+        }
+
+        // Small overlay labels
+        octx.fillStyle = "rgba(229,231,235,0.75)";
+        octx.font = "12px " + getComputedStyle(document.documentElement).getPropertyValue("--mono");
+        octx.fillText("ECI view (drag to rotate, wheel to zoom)", 14, h - 14);
+      }
+
+      // ---------------------------
+      // Drawing: ground track view
+      // ---------------------------
+      function drawGroundTrack(p, sim){
+        const w = mapCanvas.width, h = mapCanvas.height;
+
+        mctx.clearRect(0,0,w,h);
+        mctx.fillStyle = "rgba(11,18,32,1)";
+        mctx.fillRect(0,0,w,h);
+
+        // grid
+        mctx.strokeStyle = "rgba(148,163,184,.22)";
+        mctx.lineWidth = 1;
+        mctx.font = "12px " + getComputedStyle(document.documentElement).getPropertyValue("--mono");
+        mctx.fillStyle = "rgba(148,163,184,.85)";
+
+        for (let lat=-90; lat<=90; lat+=30){
+          const y = (90-lat)/180 * h;
+          mctx.beginPath(); mctx.moveTo(0,y); mctx.lineTo(w,y); mctx.stroke();
+          mctx.fillText(`${lat}°`, 8, Math.max(14, y-4));
+        }
+        for (let lon=-180; lon<=180; lon+=45){
+          const x = (lon+180)/360 * w;
+          mctx.beginPath(); mctx.moveTo(x,0); mctx.lineTo(x,h); mctx.stroke();
+          mctx.fillText(`${lon}°`, Math.min(w-44, x+6), h-10);
+        }
+
+        const n = meanMotion(p.a);
+        const T = period(p.a);
+
+        // For each orbit in history, draw a track ending at tEnd
+        function drawOneTrack(tEnd, color, widthPx, alpha, useJ2){
+          mctx.strokeStyle = color;
+          mctx.lineWidth = widthPx;
+          mctx.globalAlpha = alpha;
+
+          mctx.beginPath();
+          let lastX = null;
+          let started = false;
+
+          const N = 300;
+          for (let k=0; k<=N; k++){
+            const M = (k/N)*2*Math.PI;
+            const tPt = tEnd - (2*Math.PI - M)/n;
+
+            // Elements at that time
+            let O = sim.Omega0;
+            let wArg = sim.omega0;
+            if (useJ2){
+              // secular drift
+              const Odot = raanRateJ2(p);
+              const wdot = aopRateJ2(p);
+              O = wrap2pi(sim.Omega0 + Odot * tPt);
+              wArg = wrap2pi(sim.omega0 + wdot * tPt);
+            }
+
+            const pqw = pqwFromM(M, p.a, p.e);
+            const eciKm = pqwToEci(pqw, p.i, O, wArg);
+            const { lat, lon } = eciToLatLon(eciKm, tPt);
+
+            const x = (lon + 180)/360 * w;
+            const y = (90 - lat)/180 * h;
+
+            // dateline split
+            if (lastX !== null && Math.abs(x-lastX) > w/2){
+              if (started) mctx.stroke();
+              mctx.beginPath();
+              started = false;
+            }
+
+            if (!started){
+              mctx.moveTo(x,y);
+              started = true;
+            } else {
+              mctx.lineTo(x,y);
+            }
+            lastX = x;
+          }
+
+          if (started) mctx.stroke();
+          mctx.globalAlpha = 1;
+        }
+
+        // J2 tracks (multi-orbit)
+        for (let j=0; j<p.histOrbits; j++){
+          const tEnd = sim.t - j*T;
+          const a = Math.max(0.28, 1.0 - 0.12*j);
+          const width = (j===0) ? 2.4 : 1.2;
+
+          // color blend
+          const col = (j===0) ? "rgba(255,0,0,1)" : "rgba(255,122,24,1)";
+          drawOneTrack(tEnd, col, width, a, true);
+        }
+
+        // Kepler reference (optional)
+        if (p.showKepler && p.j2On){
+          for (let j=0; j<Math.min(p.histOrbits, 6); j++){
+            const tEnd = sim.t - j*T;
+            drawOneTrack(tEnd, "rgba(170,170,170,1)", 1.0, Math.max(0.22, 0.6 - 0.08*j), false);
+          }
+        }
+
+        // Satellite marker (current)
+        const Mnow = wrap2pi(sim.M0 + n*sim.t);
+        const pqwNow = pqwFromM(Mnow, p.a, p.e);
+        const eciNowKm = pqwToEci(pqwNow, p.i, sim.Omega, sim.omega);
+        const { lat, lon } = eciToLatLon(eciNowKm, sim.t);
+
+        const xs = (lon + 180)/360 * w;
+        const ys = (90 - lat)/180 * h;
+
+        mctx.beginPath();
+        mctx.arc(xs, ys, 6, 0, 2*Math.PI);
+        mctx.fillStyle = "cyan";
+        mctx.fill();
+        mctx.strokeStyle = "rgba(255,255,255,0.75)";
+        mctx.lineWidth = 2;
+        mctx.stroke();
+      }
+
+      // ---------------------------
+      // Info panel updates
+      // ---------------------------
+      function updateInfoPanel(p, sim){
+        const n = meanMotion(p.a);
+        const T = period(p.a);
+
+        const rp = p.a*(1-p.e);
+        const ra = p.a*(1+p.e);
+        const hp = rp - RE;
+        const ha = ra - RE;
+
+        const Odot = raanRateJ2(p);
+        const wdot = aopRateJ2(p);
+
+        el.periodOut.textContent = `${(T/60).toFixed(2)} min`;
+        el.paOut.textContent = `${hp.toFixed(0)} / ${ha.toFixed(0)} km`;
+        el.nOut.textContent = `${(n).toFixed(6)} rad/s`;
+
+        el.raanRateOut.textContent = `${(rad2deg(Odot)*DAY).toFixed(4)} °/day`;
+        el.aopRateOut.textContent  = `${(rad2deg(wdot)*DAY).toFixed(4)} °/day`;
+
+        el.raanOut.textContent = `${wrap360(rad2deg(sim.Omega)).toFixed(2)}°`;
+        el.aopOut.textContent  = `${wrap360(rad2deg(sim.omega)).toFixed(2)}°`;
+
+        const total = Math.floor(sim.t);
+        const days = Math.floor(total / DAY);
+        const hrs  = Math.floor((total % DAY)/3600);
+        const mins = Math.floor((total % 3600)/60);
+        el.timeOut.textContent = `${days}d ${hrs}h ${mins}m`;
+
+        el.orbitOut.textContent = `${(sim.t / T).toFixed(2)}`;
+      }
+
+      // ---------------------------
+      // Simulation state
+      // ---------------------------
+      const sim = {
+        t: 0,
+        Omega: 0, omega: 0,
+        Omega0: 0, omega0: 0,
+        M0: 0,
+        paused: false,
+        lastMs: performance.now(),
+        lastOrbitIndex: 0,
+        history: [] // array of {Omega, omega}
+      };
+
+      function resetSimulation(){
+        sim.t = 0;
+        sim.Omega = 0;
+        sim.omega = 0;
+        sim.Omega0 = 0;
+        sim.omega0 = 0;
+        sim.M0 = 0;
+        sim.lastOrbitIndex = 0;
+        sim.history = [];
+        sim.lastMs = performance.now();
+        sim.paused = false;
+        el.pauseBtn.textContent = "Pause";
+      }
+
+      function stepSeconds(dt){
+        const p = getParams();
+        const Odot = raanRateJ2(p);
+        const wdot = aopRateJ2(p);
+
+        sim.t += dt;
+
+        sim.Omega = wrap2pi(sim.Omega + Odot*dt);
+        sim.omega = wrap2pi(sim.omega + wdot*dt);
+      }
+
+      // ---------------------------
+      // UI wiring
+      // ---------------------------
+      updateValueDisplays();
+
+      function onParamChange(){
+        // Reset so "since start" drift is clean
+        resetSimulation();
+        updateValueDisplays();
+      }
+
+      [el.incl, el.sma, el.ecc].forEach(x => x.addEventListener("input", onParamChange));
+      [el.speed, el.histOrbits].forEach(x => x.addEventListener("input", updateValueDisplays));
+      [el.j2On, el.showKepler, el.showHistory3D, el.showAxes].forEach(x => x.addEventListener("change", () => {
+        // no reset needed, but keep stable for toggle except J2: reset is clearer
+        if (x === el.j2On) resetSimulation();
+      }));
+
+      el.pauseBtn.addEventListener("click", () => {
+        sim.paused = !sim.paused;
+        el.pauseBtn.textContent = sim.paused ? "Resume" : "Pause";
+      });
+
+      el.stepOrbitBtn.addEventListener("click", () => {
+        const p = getParams();
+        stepSeconds(period(p.a));
+      });
+
+      el.stepDayBtn.addEventListener("click", () => stepSeconds(DAY));
+
+      el.resetBtn.addEventListener("click", () => {
+        // a reasonable teaching default: sun-sync-ish LEO
+        el.incl.value = 98;
+        el.sma.value = 7078;
+        el.ecc.value = 0.001;
+        el.speed.value = 5000;
+        el.histOrbits.value = 6;
+        el.j2On.checked = true;
+        el.showKepler.checked = true;
+        el.showHistory3D.checked = true;
+        el.showAxes.checked = true;
+        updateValueDisplays();
+        resetSimulation();
+      });
+
+      el.sunSyncBtn.addEventListener("click", () => {
+        const p = getParams();
+        const ideg = sunSyncSolveInclinationDeg(p.a, p.e);
+        el.incl.value = Math.round(ideg);
+        el.j2On.checked = true;
+        updateValueDisplays();
+        resetSimulation();
+      });
+
+      el.viewResetBtn.addEventListener("click", resetView);
+
+      // Keyboard shortcuts
+      window.addEventListener("keydown", (e) => {
+        const k = e.key.toLowerCase();
+        if (k === " "){ e.preventDefault(); sim.paused = !sim.paused; el.pauseBtn.textContent = sim.paused ? "Resume" : "Pause"; }
+        if (k === "r"){ e.preventDefault(); el.resetBtn.click(); }
+        if (k === "o"){ e.preventDefault(); const p = getParams(); stepSeconds(period(p.a)); }
+        if (k === "d"){ e.preventDefault(); stepSeconds(DAY); }
+      });
+
+      // ---------------------------
+      // Animation loop
+      // ---------------------------
+      let lastMapDrawMs = 0;
+
+      function animate(){
+        requestAnimationFrame(animate);
+
+        // Ensure canvases are not zero-sized
+        resizeCanvasToHost(orbitCanvas);
+        resizeCanvasToHost(mapCanvas);
+
+        const now = performance.now();
+        let dt = (now - sim.lastMs)/1000;
+        sim.lastMs = now;
+        dt = Math.min(dt, 0.05);
+
+        const p = getParams();
+        const Odot = raanRateJ2(p);
+        const wdot = aopRateJ2(p);
+
+        if (!sim.paused){
+          const simDt = dt * p.speed;
+
+          sim.t += simDt;
+          sim.Omega = wrap2pi(sim.Omega + Odot*simDt);
+          sim.omega = wrap2pi(sim.omega + wdot*simDt);
+
+          // capture history once per orbit
+          const T = period(p.a);
+          const orbitIndex = Math.floor(sim.t / T);
+          if (orbitIndex > sim.lastOrbitIndex){
+            sim.history.unshift({ Omega: sim.Omega, omega: sim.omega });
+            if (sim.history.length > 10) sim.history.pop();
+            sim.lastOrbitIndex = orbitIndex;
+          }
+        }
+
+        // Draw orbit view every frame
+        drawOrbitView(p, sim);
+
+        // Ground tracks are expensive; throttle to ~15 FPS
+        if (now - lastMapDrawMs > 66){
+          lastMapDrawMs = now;
+          drawGroundTrack(p, sim);
+        }
+
+        updateInfoPanel(p, sim);
+      }
+
+      // Initial sanity message if canvas is blocked
+      try {
+        resetSimulation();
+        animate();
+      } catch (err){
+        showStatus("Initialization failed: " + err.message);
+      }
+    })();
+  </script>
+</body>
+</html>

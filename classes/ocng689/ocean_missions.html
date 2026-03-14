@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Ocean-Observing Satellites Since 1978 – Complete Interactive Catalog</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  body { font-family: system-ui, sans-serif; background:#0d1117; color:#e6edf3; margin:0; padding:20px; line-height:1.5; }
+  h1 { text-align:center; color:#58a6ff; margin-bottom:8px; }
+  .subtitle { text-align:center; color:#8b949e; margin-bottom:30px; font-size:15px; }
+  .filters { text-align:center; margin:25px 0; }
+  button { margin:5px; padding:9px 16px; border:none; border-radius:8px; background:#21262d; color:#f0f6fc; cursor:pointer; font-size:14px; }
+  button.active { background:#1f6feb; }
+  .timeline { max-width:1100px; margin:0 auto; }
+  .mission {
+    display:flex; align-items:center; margin:14px 0; padding:14px; background:#161b22; border-radius:10px;
+    border-left:6px solid; transition:all 0.3s; position:relative; cursor:pointer;
+  }
+  .mission:hover { transform:translateX(6px); box-shadow:0 8px 25px rgba(0,0,0,0.5); }
+  .year { width:78px; font-weight:bold; font-size:19px; color:#58a6ff; text-align:center; flex-shrink:0; }
+  .dot { width:18px; height:18px; border-radius:50%; margin:0 18px; flex-shrink:0; box-shadow:0 0 10px rgba(0,0,0,0.6); }
+  .info { flex:1; min-width:0; }
+  .name { font-weight:bold; font-size:17px; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .agency { font-size:13.5px; color:#8b949e; margin:3px 0; }
+  .meta { font-size:13px; margin-top:6px; display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
+  .tag { background:#30363d; padding:3px 9px; border-radius:6px; font-size:12px; }
+  .status.op { background:#238636; color:#fff; }
+  .status.ret { background:#6e7681; }
+  .status.future { background:#bb8009; color:#fff; }
+  .tooltip {
+    position:absolute; right:100%; top:50%; transform:translateY(-50%); margin-right:16px;
+    background:#0d1117; border:1px solid #30363d; padding:14px; border-radius:8px; width:380px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.7); z-index:100; display:none; font-size:14px;
+  }
+  .tooltip.show { display:block; }
+  .tooltip strong { color:#58a6ff; }
+  @media (max-width: 868px) {
+    .mission { flex-direction:column; text-align:center; padding:16px; }
+    .year { width:auto; margin-bottom:8px; }
+    .dot { margin:10px auto; }
+    .tooltip { position:relative; right:auto; top:auto; transform:none; margin:12px 0 0; width:auto; display:none; }
+    .tooltip.show { display:block; }
+  }
+  .legend { display:flex; flex-wrap:wrap; justify-content:center; gap:16px; margin:30px 0; font-size:14.5px; }
+  .legend span { display:flex; align-items:center; gap:8px; }
+  footer { text-align:center; margin:60px 0 20px; color:#6e7681; font-size:13px; }
+</style>
+</head>
+<body>
+
+<h1>Comprehensive Ocean-Observing Satellite Missions (1978–2025+)</h1>
+<p class="subtitle">Tap or click a row to see full details • Data current as of November 2025</p>
+
+<div class="filters">
+  <button data-filter="all" class="active">All Missions</button>
+  <button data-filter="altimetry">Altimetry</button>
+  <button data-filter="color">Ocean Color</button>
+  <button data-filter="sar">SAR / Waves</button>
+  <button data-filter="wind">Winds</button>
+  <button data-filter="salinity">Salinity</button>
+  <button data-filter="ice">Sea Ice / Gravity</button>
+  <button data-filter="geo">Geostationary</button>
+</div>
+
+<div class="legend">
+  <span><div class="dot" style="background:#58a6ff"></div> Altimetry / Sea Level</span>
+  <span><div class="dot" style="background:#39d353"></div> Ocean Color / Biology</span>
+  <span><div class="dot" style="background:#d671ff"></div> SAR / Waves / Ships</span>
+  <span><div class="dot" style="background:#ffa657"></div> Scatterometer / Winds</span>
+  <span><div class="dot" style="background:#ffdb4d"></div> Microwave / SST / Salinity</span>
+  <span><div class="dot" style="background:#8b949e"></div> Gravity / Ice Thickness</span>
+  <span><div class="dot" style="background:#f85149"></div> Geostationary</span>
+</div>
+
+<div class="timeline" id="timeline"></div>
+
+<footer>November 2025</footer>
+
+<script>
+const missions = [
+  {y:1965,n:"DMSP Series",a:"DOD/NOAA",alt:"830-850 km",life:"1965–present",inst:"SSM/I, SSMIS",app:"Sea ice, winds, rain over oceans",cat:"ice wind",c:"#8b949e",s:"op"},
+  {y:1978,n:"Seasat",a:"NASA",alt:"800 km",life:"1978–1978",inst:"SAR, Altimeter, Scatterometer, SMMR",app:"Pioneer of microwave oceanography; winds, waves, SST, ice",cat:"wind sar altimetry",c:"#ffdb4d",s:"ret"},
+  {y:1978,n:"Nimbus-7 (CZCS)",a:"NASA",alt:"955 km",life:"1978–1994",inst:"CZCS, SMMR, TOMS",app:"First ocean color sensor – phytoplankton revolution",cat:"color",c:"#39d353",s:"ret"},
+  {y:1981,n:"Space Shuttle SIR-A/B/C",a:"NASA",alt:"350–400 km",life:"1981–2011",inst:"Shuttle Imaging Radar, MAPS",app:"Experimental SAR ocean wave & coastal imaging",cat:"sar",c:"#d671ff",s:"ret"},
+  {y:1991,n:"ERS-1",a:"ESA",alt:"785 km",life:"1991–2000",inst:"SAR, RA, ATSR, Scatterometer",app:"First ESA ocean remote sensing satellite",cat:"sar altimetry wind",c:"#d671ff",s:"ret"},
+  {y:1992,n:"Geosat",a:"US Navy",alt:"800 km",life:"1992–1990",inst:"Radar altimeter",app:"Sea surface height, improved accuracy",cat:"altimetry",c:"#58a6ff",s:"ret"},
+  {y:1992,n:"TOPEX/Poseidon",a:"NASA/CNES",alt:"1,336 km",life:"1992–2006",inst:"Dual-frequency altimeter, TMR",app:"Started the golden reference sea-level record",cat:"altimetry",c:"#58a6ff",s:"ret"},
+  {y:1995,n:"ERS-2",a:"ESA",alt:"785 km",life:"1995–2011",inst:"SAR, RA, ATSR-2, GOME",app:"Tandem missions with ERS-1",cat:"sar altimetry",c:"#d671ff",s:"ret"},
+  {y:1996,n:"ADEOS (Midori)",a:"JAXA",alt:"797 km",life:"1996–1997",inst:"OCTS, NSCAT, AVNIR, POLDER",app:"Ocean color + NASA scatterometer (failed early)",cat:"color wind",c:"#ffa657",s:"ret"},
+  {y:1997,n:"OrbView-2 (SeaWiFS)",a:"NASA/Orbital",alt:"705 km",life:"1997–2010",inst:"SeaWiFS",app:"Longest continuous ocean color dataset (13 years)",cat:"color",c:"#39d353",s:"ret"},
+  {y:1997,n:"TRMM",a:"NASA/JAXA",alt:"350→402 km",life:"1997–2015",inst:"PR, TMI",app:"Tropical rainfall & ocean-atmosphere interaction",cat:"wind",c:"#ffa657",s:"ret"},
+  {y:1999,n:"QuikSCAT",a:"NASA",alt:"803 km",life:"1999–2009",inst:"SeaWinds scatterometer",app:"Critical ocean vector winds for a decade",cat:"wind",c:"#ffa657",s:"ret"},
+  {y:1999,n:"Terra (MODIS)",a:"NASA",alt:"705 km",life:"1999–present",inst:"MODIS, ASTER, CERES",app:"Ocean color, SST, aerosols",cat:"color",c:"#39d353",s:"op"},
+  {y:2000,n:"SAC-C",a:"CONAE/NASA",alt:"702 km",life:"2000–2013",inst:"HSRS, Golfo Nuevo Camera",app:"Coastal ocean monitoring, Argentine coast",cat:"color",c:"#39d353",s:"ret"},
+  {y:2001,n:"Jason-1",a:"NASA/CNES",alt:"1,336 km",life:"2001–2013",inst:"Poseidon-2, JMR",app:"Continued TOPEX/Poseidon record",cat:"altimetry",c:"#58a6ff",s:"ret"},
+  {y:2002,n:"ENVISAT",a:"ESA",alt:"790 km",life:"2002–2012",inst:"ASAR, MERIS, AATSR, RA-2 (+7 more)",app:"Most comprehensive ocean mission of its time",cat:"sar color altimetry",c:"#d671ff",s:"ret"},
+  {y:2002,n:"Aqua (MODIS + AMSR-E)",a:"NASA",alt:"705 km",life:"2002–present",inst:"MODIS, AMSR-E (to 2011), AIRS",app:"Ocean color, SST, water cycle",cat:"color",c:"#39d353",s:"op"},
+  {y:2002,n:"GRACE (Twin)",a:"NASA/DLR",alt:"~500 km",life:"2002–2017",inst:"K-band microwave ranging",app:"Ocean mass redistribution & bottom pressure",cat:"ice",c:"#8b949e",s:"ret"},
+  {y:2002,n:"ADEOS-II (Midori-II)",a:"JAXA",alt:"803 km",life:"2002–2003",inst:"AMSR, SeaWinds, GLI",app:"SST, sea ice, winds, ocean color",cat:"color wind",c:"#ffdb4d",s:"ret"},
+  {y:2003,n:"ICESat",a:"NASA",alt:"600 km",life:"2003–2010",inst:"GLAS laser altimeter",app:"Sea ice thickness & freeboard",cat:"ice",c:"#8b949e",s:"ret"},
+  {y:2003,n:"SORCE",a:"NASA",alt:"640 km",life:"2003–2020",inst:"Solar irradiance instruments",app:"Solar forcing of oceans, energy balance",cat:"color",c:"#39d353",s:"ret"},
+  {y:2004,n:"Aura",a:"NASA",alt:"705 km",life:"2004–present",inst:"OMI, MLS, HIRDLS, TES",app:"Atmospheric chemistry over oceans, aerosols",cat:"color",c:"#39d353",s:"op"},
+  {y:2004,n:"PARASOL",a:"CNES",alt:"705 km",life:"2004–2013",inst:"POLDER polarization sensor",app:"Ocean color with polarization, aerosols",cat:"color",c:"#39d353",s:"ret"},
+  {y:2006,n:"MetOp-A",a:"EUMETSAT/ESA",alt:"817 km",life:"2006–2021",inst:"ASCAT, AVHRR, IASI",app:"Operational winds & SST",cat:"wind",c:"#ffa657",s:"ret"},
+  {y:2006,n:"CloudSat",a:"NASA",alt:"705 km",life:"2006–present (limited)",inst:"Cloud Profiling Radar",app:"Precipitation over oceans",cat:"wind",c:"#ffa657",s:"op"},
+  {y:2006,n:"CALIPSO",a:"NASA/CNES",alt:"705 km",life:"2006–2023",inst:"CALIOP lidar",app:"Aerosols for ocean color correction",cat:"color",c:"#39d353",s:"ret"},
+  {y:2008,n:"OSTM/Jason-2",a:"Multi-agency",alt:"1,336 km",life:"2008–2019",inst:"Poseidon-3",app:"Continued reference altimetry",cat:"altimetry",c:"#58a6ff",s:"ret"},
+  {y:2009,n:"GOCE",a:"ESA",alt:"260 km",life:"2009–2013",inst:"Gravity gradiometer",app:"Ocean geoid & mean dynamic topography",cat:"ice",c:"#8b949e",s:"ret"},
+  {y:2009,n:"SMOS",a:"ESA",alt:"758 km",life:"2009–present",inst:"MIRAS L-band radiometer",app:"First global sea surface salinity",cat:"salinity",c:"#ffdb4d",s:"op"},
+  {y:2010,n:"CryoSat-2",a:"ESA",alt:"717 km",life:"2010–present",inst:"SIRAL interferometric radar",app:"Sea ice thickness + polar oceans",cat:"ice",c:"#8b949e",s:"op"},
+  {y:2010,n:"Picard",a:"CNES",alt:"725 km",life:"2010–2014",inst:"SOVAP, PREMOS",app:"Solar irradiance for ocean energy budget",cat:"color",c:"#39d353",s:"ret"},
+  {y:2011,n:"Suomi NPP (VIIRS)",a:"NASA/NOAA",alt:"824 km",life:"2011–present",inst:"VIIRS, CrIS, OMPS",app:"Ocean color, SST, night lights",cat:"color",c:"#39d353",s:"op"},
+  {y:2011,n:"Aquarius/SAC-D",a:"NASA/CONAE",alt:"657 km",life:"2011–2015",inst:"Aquarius L-band",app:"NASA's first dedicated salinity mission",cat:"salinity",c:"#ffdb4d",s:"ret"},
+  {y:2011,n:"HY-2A",a:"CNSA",alt:"971 km",life:"2011–2020",inst:"Altimeter, Scatterometer, Radiometer",app:"China's first ocean satellite",cat:"wind altimetry",c:"#ffa657",s:"ret"},
+  {y:2012,n:"MetOp-B",a:"EUMETSAT/ESA",alt:"817 km",life:"2012–present",inst:"ASCAT, AVHRR, IASI",app:"Operational winds & SST",cat:"wind",c:"#ffa657",s:"op"},
+  {y:2013,n:"SARAL",a:"ISRO/CNES",alt:"800 km",life:"2013–present",inst:"AltiKa (Ka-band)",app:"High-precision coastal altimetry",cat:"altimetry",c:"#58a6ff",s:"op"},
+  {y:2013,n:"Landsat 8",a:"NASA/USGS",alt:"705 km",life:"2013–present",inst:"OLI, TIRS",app:"Coastal ocean color & water quality",cat:"color",c:"#39d353",s:"op"},
+  {y:2013,n:"INSAT-3D",a:"ISRO",alt:"GEO",life:"2013–present",inst:"Imager, Sounder",app:"SST, winds, monsoon, cyclones (Indian Ocean)",cat:"geo",c:"#f85149",s:"op"},
+  {y:2014,n:"Sentinel-1A",a:"ESA",alt:"693 km",life:"2014–2022",inst:"C-band SAR",app:"Waves, ice, oil spills, ships",cat:"sar",c:"#d671ff",s:"ret"},
+  {y:2014,n:"Himawari-8",a:"JMA",alt:"GEO",life:"2014–present",inst:"AHI 16-band",app:"10-min SST & cyclones (W Pacific)",cat:"geo",c:"#f85149",s:"op"},
+  {y:2016,n:"Sentinel-1B",a:"ESA",alt:"693 km",life:"2016–2022",inst:"C-band SAR",app:"Completed SAR constellation (failed 2022)",cat:"sar",c:"#d671ff",s:"ret"},
+  {y:2016,n:"Jason-3",a:"Multi-agency",alt:"1,336 km",life:"2016–present",inst:"Poseidon-3B",app:"Continues 30+ year reference record",cat:"altimetry",c:"#58a6ff",s:"op"},
+  {y:2016,n:"Sentinel-3A",a:"ESA/EUMETSAT",alt:"815 km",life:"2016–present",inst:"OLCI, SLSTR, SRAL",app:"Ocean color + SST + altimetry",cat:"color altimetry",c:"#39d353",s:"op"},
+  {y:2016,n:"INSAT-3DR",a:"ISRO",alt:"GEO",life:"2016–present",inst:"Imager, Sounder",app:"SST, winds, cyclones (Indian Ocean)",cat:"geo",c:"#f85149",s:"op"},
+  {y:2016,n:"FY-4A",a:"CMA",alt:"GEO",life:"2016–present",inst:"AGRI",app:"SST, winds, cyclones (China, Indian Ocean)",cat:"geo",c:"#f85149",s:"op"},
+  {y:2018,n:"MetOp-C",a:"EUMETSAT/ESA",alt:"817 km",life:"2018–present",inst:"ASCAT, AVHRR, IASI",app:"Final MetOp – operational winds",cat:"wind",c:"#ffa657",s:"op"},
+  {y:2018,n:"GRACE-FO",a:"NASA/GFZ",alt:"490 km",life:"2018–present",inst:"Laser + microwave ranging",app:"Ocean mass follow-on",cat:"ice",c:"#8b949e",s:"op"},
+  {y:2018,n:"ICESat-2",a:"NASA",alt:"500 km",life:"2018–present",inst:"ATLAS photon-counting lidar",app:"Sea ice freeboard & ocean waves",cat:"ice",c:"#8b949e",s:"op"},
+  {y:2018,n:"Sentinel-3B",a:"ESA/EUMETSAT",alt:"815 km",life:"2018–present",inst:"OLCI, SLSTR, SRAL",app:"Full daily coverage with 3A",cat:"color altimetry",c:"#39d353",s:"op"},
+  {y:2018,n:"HY-2B",a:"CNSA",alt:"973 km",life:"2018–present",inst:"Altimeter, Scatterometer",app:"Chinese ocean constellation",cat:"wind altimetry",c:"#ffa657",s:"op"},
+  {y:2018,n:"GEO-KOMPSAT-2A (GK-2A)",a:"KMA",alt:"GEO 128°E",life:"2018–present",inst:"AMI",app:"SST, red tides, sea fog (E Asia)",cat:"geo",c:"#f85149",s:"op"},
+  {y:2020,n:"Sentinel-6A Michael Freilich",a:"Multi-agency",alt:"1,336 km",life:"2020–present",inst:"Poseidon-4",app:"Continues reference altimetry",cat:"altimetry",c:"#58a6ff",s:"op"},
+  {y:2020,n:"HY-2C",a:"CNSA",alt:"973 km",life:"2020–present",inst:"Altimeter, Scatterometer",app:"Chinese constellation",cat:"wind altimetry",c:"#ffa657",s:"op"},
+  {y:2021,n:"Landsat 9",a:"NASA/USGS",alt:"705 km",life:"2021–present",inst:"OLI-2, TIRS-2",app:"Coastal ocean & coral reefs",cat:"color",c:"#39d353",s:"op"},
+  {y:2021,n:"HY-2D",a:"CNSA",alt:"973 km",life:"2021–present",inst:"Altimeter, Scatterometer",app:"Completes HY-2 quartet",cat:"wind altimetry",c:"#ffa657",s:"op"},
+  {y:2021,n:"FY-4B",a:"CMA",alt:"GEO",life:"2021–present",inst:"AGRI",app:"SST, winds (Western Pacific)",cat:"geo",c:"#f85149",s:"op"},
+  {y:2022,n:"SWOT",a:"NASA/CNES/CSA/UKSA",alt:"891 km",life:"2022–present",inst:"KaRIn wide-swath interferometry",app:"Revolutionary 2D ocean topography",cat:"altimetry",c:"#58a6ff",s:"op"},
+  {y:2024,n:"PACE",a:"NASA",alt:"677 km",life:"2024–present",inst:"OCI hyperspectral + polarimeters",app:"Most advanced ocean color mission ever",cat:"color",c:"#39d353",s:"op"},
+  {y:2024,n:"Sentinel-3C",a:"ESA/EUMETSAT",alt:"815 km",life:"2024–present",inst:"OLCI, SLSTR, SRAL",app:"Extends Sentinel-3 constellation",cat:"color altimetry",c:"#39d353",s:"op"},
+  {y:2025,n:"Sentinel-3D",a:"ESA/EUMETSAT",alt:"815 km",life:"2025–present",inst:"OLCI, SLSTR, SRAL",app:"Completes Sentinel-3 quartet",cat:"color altimetry",c:"#39d353",s:"op"},
+  {y:2025,n:"Himawari-10",a:"JMA",alt:"GEO",life:"2025–present",inst:"AHI",app:"Next-gen rapid SST & cyclones",cat:"geo",c:"#f85149",s:"future"},
+  {y:2026,n:"Sentinel-6B",a:"Multi-agency",alt:"1,336 km",life:"2026–2035+",inst:"Poseidon-4",app:"Will extend record to 2035+",cat:"altimetry",c:"#58a6ff",s:"future"},
+  {y:2026,n:"Sentinel-1C",a:"ESA",alt:"693 km",life:"2026–present",inst:"C-band SAR",app:"Replaces Sentinel-1A/B",cat:"sar",c:"#d671ff",s:"future"},
+  {y:2027,n:"Sentinel-1D",a:"ESA",alt:"693 km",life:"2027–present",inst:"C-band SAR",app:"Completes next-gen SAR constellation",cat:"sar",c:"#d671ff",s:"future"},
+  {y:2028,n:"CRISTAL (Sentinel-7)",a:"ESA",alt:"~800 km",life:"2028–present",inst:"Ku/Ka altimeter",app:"Sea ice, coastal altimetry, cryosphere",cat:"ice altimetry",c:"#8b949e",s:"future"},
+  {y:2029,n:"LSTM (Sentinel-8)",a:"ESA",alt:"~700 km",life:"2029–present",inst:"Thermal IR sensor",app:"Land/sea surface temperature",cat:"color",c:"#39d353",s:"future"},
+  {y:2030,n:"CIMR (Sentinel-9)",a:"ESA",alt:"~700 km",life:"2030–present",inst:"Multi-frequency microwave radiometer",app:"SST, sea ice, salinity",cat:"salinity ice",c:"#ffdb4d",s:"future"},
+  {y:2031,n:"CHIME (Sentinel-10)",a:"ESA",alt:"~700 km",life:"2031–present",inst:"Hyperspectral imager",app:"Coastal ecosystems, water quality",cat:"color",c:"#39d353",s:"future"},
+  {y:2032,n:"ROSE-L (Sentinel-11)",a:"ESA",alt:"~700 km",life:"2032–present",inst:"L-band SAR",app:"Forests, coastal dynamics",cat:"sar",c:"#d671ff",s:"future"},
+  {y:2033,n:"Faraday (Sentinel-12)",a:"ESA",alt:"GEO",life:"2033–present",inst:"UV/VIS/NIR spectrometer",app:"Atmospheric correction for ocean color",cat:"color",c:"#39d353",s:"future"},
+  {y:2025,n:"GCOM-C3 (SHIKISAI)",a:"JAXA",alt:"800 km",life:"2025–present",inst:"SGLI",app:"Ocean color, aerosols, vegetation",cat:"color",c:"#39d353",s:"future"},
+  {y:2026,n:"ALOS-4",a:"JAXA",alt:"670 km",life:"2026–present",inst:"PALSAR-3 L-band SAR",app:"Coastal monitoring, waves",cat:"sar",c:"#d671ff",s:"future"},
+  {y:2027,n:"GOSAT-GW",a:"JAXA",alt:"666 km",life:"2027–present",inst:"Greenhouse gas sensors",app:"Ocean CO2 flux",cat:"color",c:"#39d353",s:"future"}
+];
+
+const container = document.getElementById('timeline');
+
+missions
+  .sort((a,b) => a.y - b.y)
+  .forEach(m => {
+    const div = document.createElement('div');
+    div.className = 'mission';
+    div.dataset.cat = m.cat;
+    div.style.borderLeftColor = m.c;
+
+    const statusClass = m.s === 'op' ? 'op' : m.s === 'ret' ? 'ret' : 'future';
+    const statusText = m.s === 'op' ? 'Operational' : m.s === 'ret' ? 'Retired' : 'Planned';
+
+    div.innerHTML = `
+      <div class="year">${m.y}</div>
+      <div class="dot" style="background:${m.c}"></div>
+      <div class="info">
+        <div class="name">${m.n}</div>
+        <div class="agency">${m.a}</div>
+        <div class="meta">
+          <span class="tag">${m.alt}</span>
+          <span class="tag">${m.life}</span>
+          <span class="tag status ${statusClass}">${statusText}</span>
+        </div>
+      </div>
+      <div class="tooltip">
+        <strong>Instruments:</strong> ${m.inst}<br><br>
+        <strong>Ocean Applications:</strong> ${m.app}
+      </div>
+    `;
+
+    div.addEventListener('click', (e) => {
+      const tooltip = div.querySelector('.tooltip');
+      const alreadyOpen = tooltip.classList.contains('show');
+      document.querySelectorAll('.tooltip.show').forEach(t => t.classList.remove('show'));
+      if (!alreadyOpen) tooltip.classList.add('show');
+    });
+
+    container.appendChild(div);
+  });
+
+// Filter buttons
+document.querySelectorAll('.filters button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filters button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.filter;
+    document.querySelectorAll('.mission').forEach(m => {
+      m.style.display = (f === 'all' || m.dataset.cat.includes(f)) ? 'flex' : 'none';
+    });
+  });
+});
+
+// Close tooltips when clicking elsewhere
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.mission')) {
+    document.querySelectorAll('.tooltip.show').forEach(t => t.classList.remove('show'));
+  }
+});
+</script>
+</body>
+</html>

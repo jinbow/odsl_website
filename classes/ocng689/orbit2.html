@@ -1,0 +1,1645 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Orbit Shape Lab — Satellite Orbit Interactive Learning</title>
+  <meta name="description" content="Interactive learning page for satellite orbits with a focus on orbit shape, key concepts, and terminology." />
+  <link rel="stylesheet" href="styles-light.css" />
+  <style>
+    /*
+      Minimal add-ons that complement the provided style.css.
+      All colors use the CSS variables already defined.
+    */
+
+    .two-col{
+      display: grid;
+      grid-template-columns: 1fr 1.15fr;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .field{
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px 12px;
+      background: rgba(148,163,184,.06);
+      display: grid;
+      gap: 8px;
+    }
+
+    .field .row{
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .field label{
+      font-weight: 850;
+      letter-spacing: .2px;
+      font-size: .92rem;
+    }
+
+    .field small{
+      color: var(--muted);
+      font-size: .86rem;
+    }
+
+    .field input[type="range"]{ width: 100%; }
+
+    .field input[type="number"],
+    .field input[type="text"],
+    .field select{
+      width: 100%;
+      padding: 10px 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(148,163,184,.22);
+      background: rgba(15,26,46,.55);
+      color: rgba(229,231,235,.96);
+      font: inherit;
+      outline: none;
+    }
+
+    .field input[type="number"]:focus,
+    .field input[type="text"]:focus,
+    .field select:focus{
+      border-color: rgba(96,165,250,.55);
+      box-shadow: 0 0 0 3px rgba(96,165,250,.18);
+    }
+
+    .radio-row{
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .radio-row label{
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: .92rem;
+      letter-spacing: 0;
+    }
+
+    .viz{
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(15,26,46,.35);
+      box-shadow: var(--shadow);
+    }
+
+    .metrics{
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .metric{
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(15,26,46,.45);
+      padding: 12px;
+      display: grid;
+      gap: 6px;
+    }
+    .metric strong{ font-size: .92rem; letter-spacing: .2px; }
+    .metric .big{ font-family: var(--mono); font-size: 1.05rem; }
+    .metric .muted{ color: var(--muted); font-size: .88rem; }
+
+    .pill{
+      font-family: var(--mono);
+      font-size: .8rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,.22);
+      background: rgba(148,163,184,.08);
+      color: rgba(229,231,235,.92);
+      white-space: nowrap;
+    }
+
+    .kbd{
+      font-family: var(--mono);
+      font-size: .82rem;
+      border: 1px solid rgba(148,163,184,.22);
+      background: rgba(148,163,184,.08);
+      padding: 2px 6px;
+      border-radius: 8px;
+      color: rgba(229,231,235,.92);
+      white-space: nowrap;
+    }
+
+    .split{
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .term-head{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+
+    .term-head h3{ margin: 0; }
+
+    .term-meta{
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .definition{
+      color: rgba(229,231,235,.92);
+      margin: 0;
+    }
+
+    .formula{
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px dashed rgba(148,163,184,.28);
+      background: rgba(148,163,184,.06);
+      font-family: var(--mono);
+      font-size: .9rem;
+      overflow-x: auto;
+    }
+
+    .flashcard{
+      user-select: none;
+      cursor: pointer;
+      min-height: 140px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 16px;
+    }
+
+    .flashcard .front{
+      font-weight: 950;
+      font-size: 1.08rem;
+      letter-spacing: .2px;
+    }
+    .flashcard .back{
+      color: rgba(229,231,235,.92);
+      font-size: .94rem;
+    }
+
+    .quiz-options{ display: grid; gap: 10px; margin-top: 12px; }
+
+    .btn.warn{
+      background: rgba(251,191,36,.14);
+      border-color: rgba(251,191,36,.35);
+    }
+    .btn.warn:hover{
+      background: rgba(251,191,36,.20);
+      border-color: rgba(251,191,36,.50);
+    }
+
+    .btn.disabled{
+      opacity: .55;
+      pointer-events: none;
+    }
+
+    .note{
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: .92rem;
+    }
+
+    @media (max-width: 980px){
+      .two-col{ grid-template-columns: 1fr; }
+      .metrics{ grid-template-columns: 1fr; }
+      .split{ grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand" aria-label="Site">
+        <a href="#home">Orbit Shape Lab</a>
+        <small>Orbit shape, key concepts, and terminology (satellite focus)</small>
+      </div>
+
+      <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="nav">Menu</button>
+
+      <nav class="nav" id="nav" aria-label="Primary">
+        <a href="#orbit" class="active">Orbit Shape</a>
+        <a href="#concepts">Key Concepts</a>
+        <a href="#glossary">Terminology</a>
+        <a href="#quiz">Quick Quiz</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="container">
+    <section id="home" class="hero">
+      <div class="panel">
+        <h1>Interactive satellite orbit learning (with an orbit-shape focus)</h1>
+        <p>
+          Use the explorer below to see how <span class="pill">semi-major axis</span> and <span class="pill">eccentricity</span>
+          control the geometry of a satellite’s orbit. Then connect the shape to the terminology you will see in mission
+          documents and remote-sensing discussions (perigee/apogee, true anomaly, orbital period, and more).
+        </p>
+        <div class="cta-row">
+          <a class="btn primary" href="#orbit">Open Orbit Shape Explorer</a>
+          <a class="btn" href="#glossary">Browse Terminology</a>
+          <a class="btn" href="#quiz">Try the Quiz</a>
+        </div>
+        <div class="callout">
+          <strong>Model scope:</strong> computations assume a two-body Earth model (no atmospheric drag, no J2/oblateness,
+          no third-body perturbations). This is ideal for learning core definitions and relationships.
+        </div>
+      </div>
+
+      <aside class="mini" aria-label="Learning targets">
+        <h2>What you will learn</h2>
+        <dl class="kv">
+          <div>
+            <dt>Orbit shape</dt>
+            <dd>Circle vs. ellipse; how <span class="pill">e</span> changes perigee and apogee.</dd>
+          </div>
+          <div>
+            <dt>Core terms</dt>
+            <dd><span class="pill">a</span>, <span class="pill">e</span>, <span class="pill">r<sub>p</sub></span>, <span class="pill">r<sub>a</sub></span>, <span class="pill">ν</span>, <span class="pill">ω</span>.</dd>
+          </div>
+          <div>
+            <dt>Useful outputs</dt>
+            <dd>Orbital period, mean motion, perigee/apogee speeds (via vis-viva).</dd>
+          </div>
+          <div>
+            <dt>Why it matters</dt>
+            <dd>Shape and altitude influence sampling, revisit, and viewing geometry in Earth observation.</dd>
+          </div>
+        </dl>
+      </aside>
+    </section>
+
+    <section id="orbit" aria-label="Orbit shape explorer">
+      <div class="page-head">
+        <div class="breadcrumbs">
+          <a href="#home">Home</a><span>›</span><span>Orbit Shape Explorer</span>
+        </div>
+        <h1>Orbit Shape Explorer</h1>
+        <p>
+          Adjust either <span class="pill">(h<sub>p</sub>, h<sub>a</sub>)</span> or <span class="pill">(a, e)</span> to see the orbit’s geometry.
+          Earth is drawn at the <em>focus</em> of the ellipse (not the center). Use <span class="pill">ν</span> to move the satellite along its path.
+        </p>
+      </div>
+
+      <div class="two-col">
+        <div class="panel" aria-label="Inputs">
+          <div class="section-title">
+            <h2>Inputs</h2>
+            <span>Choose a parameterization, then explore</span>
+          </div>
+
+          <div class="field">
+            <div class="row">
+              <label>Input mode</label>
+              <span class="pill" id="modePill">Perigee/Apogee</span>
+            </div>
+            <div class="radio-row" role="radiogroup" aria-label="Input mode">
+              <label><input type="radio" name="mode" value="rpra" checked /> Perigee &amp; apogee altitude</label>
+              <label><input type="radio" name="mode" value="ae" /> Semi-major axis &amp; eccentricity</label>
+            </div>
+            <small>
+              Tip: perigee/apogee is intuitive; <span class="pill">a</span> &amp; <span class="pill">e</span> is the canonical two-body description.
+            </small>
+          </div>
+
+          <div class="field">
+            <div class="row">
+              <label for="preset">Preset orbits</label>
+              <span class="pill">Optional</span>
+            </div>
+            <select id="preset" aria-label="Orbit presets">
+              <option value="custom" selected>Custom (keep current values)</option>
+              <option value="leo500">Circular LEO (~500 km)</option>
+              <option value="leo800">Circular LEO (~800 km)</option>
+              <option value="elliptical">Mildly elliptical (hₚ=500 km, hₐ=2500 km)</option>
+              <option value="heo">Highly elliptical (hₚ=500 km, hₐ=39000 km)</option>
+              <option value="geo">Geostationary (circular, ~35786 km)</option>
+            </select>
+            <small>
+              Presets are representative (not mission-precise). After selecting, you can fine-tune with the sliders.
+            </small>
+          </div>
+
+          <div id="inputs-rpra" class="split" aria-label="Perigee/apogee inputs">
+            <div class="field">
+              <div class="row">
+                <label for="hp">Perigee altitude h<sub>p</sub> (km)</label>
+                <span class="pill" id="hpVal">500</span>
+              </div>
+              <input id="hp" type="range" min="200" max="40000" step="50" value="500" />
+              <small>Closest point to Earth for a bound orbit.</small>
+            </div>
+
+            <div class="field">
+              <div class="row">
+                <label for="ha">Apogee altitude h<sub>a</sub> (km)</label>
+                <span class="pill" id="haVal">500</span>
+              </div>
+              <input id="ha" type="range" min="200" max="40000" step="50" value="500" />
+              <small>Farthest point to Earth for a bound orbit.</small>
+            </div>
+          </div>
+
+          <div id="inputs-ae" class="split" aria-label="a/e inputs" hidden>
+            <div class="field">
+              <div class="row">
+                <label for="a">Semi-major axis a (km)</label>
+                <span class="pill" id="aVal">6878</span>
+              </div>
+              <input id="a" type="range" min="6578" max="50000" step="10" value="6878" />
+              <small>Distance from ellipse center to a vertex (Earth is at a focus).</small>
+            </div>
+
+            <div class="field">
+              <div class="row">
+                <label for="e">Eccentricity e</label>
+                <span class="pill" id="eVal">0.000</span>
+              </div>
+              <input id="e" type="range" min="0" max="0.95" step="0.001" value="0" />
+              <small>
+                Shape parameter: 0 = circle; 0&lt;e&lt;1 = ellipse; e→1 approaches the escape boundary.
+              </small>
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="row">
+              <label for="omega">Argument of perigee ω (deg)</label>
+              <span class="pill" id="omegaVal">0</span>
+            </div>
+            <input id="omega" type="range" min="0" max="360" step="1" value="0" />
+            <small>Rotates the ellipse in its orbital plane. It changes orientation, not shape.</small>
+          </div>
+
+          <div class="field">
+            <div class="row">
+              <label for="nu">True anomaly ν (deg)</label>
+              <span class="pill" id="nuVal">45</span>
+            </div>
+            <input id="nu" type="range" min="0" max="360" step="1" value="45" />
+            <small>Moves the satellite marker along the orbit; ν=0 at perigee.</small>
+          </div>
+
+          <div class="cta-row" role="group" aria-label="Orbit actions">
+            <button class="btn primary" id="copyBtn" type="button">Copy elements</button>
+            <button class="btn" id="resetBtn" type="button">Reset</button>
+          </div>
+
+          <div class="callout" id="shapeCallout" aria-live="polite"></div>
+        </div>
+
+        <div class="panel" aria-label="Visualization and derived quantities">
+          <div class="section-title">
+            <h2>Orbit geometry view</h2>
+            <span>Earth at the focus; ellipse rotates with ω</span>
+          </div>
+
+          <canvas id="orbitCanvas" class="viz" width="900" height="900" aria-label="Orbit canvas"></canvas>
+
+          <div class="section-title" style="margin-top: 14px;">
+            <h2>Derived quantities</h2>
+            <span>Earth μ and radius assumptions shown below</span>
+          </div>
+
+          <div class="metrics" id="metrics"></div>
+
+          <div class="note" id="constantsNote"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="concepts" aria-label="Key concepts">
+      <div class="page-head">
+        <div class="breadcrumbs">
+          <a href="#home">Home</a><span>›</span><span>Key Concepts</span>
+        </div>
+        <h1>Key concepts you should connect to orbit shape</h1>
+        <p>
+          Orbit shape is not just geometry—it is how we encode the satellite’s energy and distance-from-Earth variability.
+          The cards below summarize the minimum set of ideas you should be able to state, sketch, and compute.
+        </p>
+      </div>
+
+      <div class="grid" aria-label="Concept cards">
+        <div class="card">
+          <h3>Conic sections <span class="tag">shape</span></h3>
+          <p>
+            Two-body orbits are conic sections defined by <span class="pill">e</span>: circle (e=0), ellipse (0&lt;e&lt;1),
+            parabola (e=1), hyperbola (e&gt;1). Earth satellites are almost always ellipses.
+          </p>
+          <a class="btn" href="#glossary" aria-label="Jump to glossary">See terms</a>
+        </div>
+
+        <div class="card">
+          <h3>Semi-major axis a <span class="tag">scale</span></h3>
+          <p>
+            <span class="pill">a</span> sets the orbit’s size and (for bound orbits) the period via Kepler’s third law.
+            Larger a implies longer period and generally higher altitude.
+          </p>
+          <a class="btn" href="#orbit">Try adjusting a</a>
+        </div>
+
+        <div class="card">
+          <h3>Eccentricity e <span class="tag">shape</span></h3>
+          <p>
+            <span class="pill">e</span> controls how “stretched” the ellipse is. For fixed a, increasing e lowers perigee
+            and raises apogee, increasing altitude variation across an orbit.
+          </p>
+          <a class="btn" href="#orbit">Try adjusting e</a>
+        </div>
+
+        <div class="card">
+          <h3>Perigee &amp; apogee <span class="tag">geometry</span></h3>
+          <p>
+            <span class="pill">r<sub>p</sub>=a(1−e)</span> and <span class="pill">r<sub>a</sub>=a(1+e)</span>. These are distances from Earth’s center.
+            Altitudes are <span class="pill">h=r−R<sub>E</sub></span>.
+          </p>
+          <a class="btn" href="#orbit">Explore r<sub>p</sub>/r<sub>a</sub></a>
+        </div>
+
+        <div class="card">
+          <h3>Speed varies along the orbit <span class="tag">dynamics</span></h3>
+          <p>
+            By the vis-viva equation, the satellite moves fastest at perigee and slowest at apogee. Shape therefore influences
+            where time is spent, which can matter for dwell time and sampling.
+          </p>
+          <a class="btn" href="#orbit">Watch v<sub>p</sub> vs v<sub>a</sub></a>
+        </div>
+
+        <div class="card">
+          <h3>True anomaly ν &amp; ω <span class="tag">where you are</span></h3>
+          <p>
+            <span class="pill">ν</span> tells you where you are on the orbit relative to perigee; <span class="pill">ω</span>
+            rotates where perigee sits in the orbital plane. Neither changes the ellipse’s size.
+          </p>
+          <a class="btn" href="#orbit">Move ν</a>
+        </div>
+      </div>
+
+      <div class="callout">
+        <strong>Remote-sensing connection:</strong> for Earth observation, altitude strongly influences footprint size and swath,
+        while orbit period and repeat characteristics influence revisit time and sampling patterns.
+      </div>
+    </section>
+
+    <section id="glossary" aria-label="Terminology glossary">
+      <div class="page-head">
+        <div class="breadcrumbs">
+          <a href="#home">Home</a><span>›</span><span>Terminology</span>
+        </div>
+        <h1>Terminology and definitions</h1>
+        <p>
+          Use the search bar to filter terms, select a term to view details, or practice with the flashcard.
+          Many terms are part of the classical orbital elements (COEs).
+        </p>
+      </div>
+
+      <div class="two-col">
+        <div class="panel" aria-label="Term browser">
+          <div class="section-title">
+            <h2>Find a term</h2>
+            <span>Search is instant</span>
+          </div>
+
+          <div class="field">
+            <div class="row">
+              <label for="termSearch">Search</label>
+              <span class="pill" id="termCount">0 terms</span>
+            </div>
+            <input id="termSearch" type="text" placeholder="Try: eccentricity, perigee, mean motion, node" autocomplete="off" />
+            <small>Tip: you can also search by symbol (a, e, ν, Ω, ω).</small>
+          </div>
+
+          <div class="list" id="termList" aria-label="Term list"></div>
+        </div>
+
+        <div class="panel" aria-label="Term detail and flashcards">
+          <div id="termDetail"></div>
+
+          <div class="section-title" style="margin-top: 16px;">
+            <h2>Flashcard</h2>
+            <span>Click to flip</span>
+          </div>
+
+          <div class="card flashcard" id="flashcard" role="button" tabindex="0" aria-label="Flashcard (click to flip)">
+            <div id="flashFront" class="front">Loading…</div>
+            <div id="flashBack" class="back" hidden>Loading…</div>
+          </div>
+
+          <div class="cta-row">
+            <button class="btn primary" id="nextCardBtn" type="button">Next card</button>
+            <button class="btn" id="revealCardBtn" type="button">Reveal</button>
+          </div>
+
+          <div class="note">
+            Tip: Say the term out loud, then explain it using a sketch. That is the fastest way to make orbit vocabulary “stick.”
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="quiz" aria-label="Quick quiz">
+      <div class="page-head">
+        <div class="breadcrumbs">
+          <a href="#home">Home</a><span>›</span><span>Quick Quiz</span>
+        </div>
+        <h1>Quick quiz (orbit shape + core terms)</h1>
+        <p>
+          This quiz is short by design. The goal is to rehearse the definitions that matter most for interpreting orbit descriptions.
+        </p>
+      </div>
+
+      <div class="panel" aria-label="Quiz panel">
+        <div class="section-title">
+          <h2>Start</h2>
+          <span>Instant feedback</span>
+        </div>
+
+        <p class="definition">
+          You will get 8 multiple-choice questions. Questions include orbit classification, relationships among
+          <span class="pill">a</span>, <span class="pill">e</span>, <span class="pill">r<sub>p</sub></span>, and <span class="pill">r<sub>a</sub></span>, plus basic dynamics.
+        </p>
+
+        <div class="cta-row">
+          <button class="btn primary" id="startQuizBtn" type="button">Start quiz</button>
+          <button class="btn" id="resetQuizBtn" type="button">Reset</button>
+        </div>
+
+        <div id="quizArea" hidden>
+          <div class="field" style="margin-top: 12px;">
+            <div class="row">
+              <label id="quizProgress">Question</label>
+              <span class="pill" id="quizScore">Score: 0</span>
+            </div>
+            <div id="quizQuestion" style="color: rgba(229,231,235,.96); font-weight: 800; margin-top: 6px;"></div>
+            <div class="quiz-options" id="quizOptions"></div>
+            <div class="note" id="quizFeedback"></div>
+          </div>
+
+          <div class="cta-row">
+            <button class="btn" id="nextQuizBtn" type="button">Next</button>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top: 14px;">
+          <strong>Study pattern:</strong> run the quiz once, then return to the explorer and intentionally vary one parameter at a time.
+          That “controlled experiment” habit is exactly how you debug orbit logic later.
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div>
+        <span class="foot-badge">Orbit Shape Lab</span>
+        <span class="foot-badge" id="buildStamp"></span>
+      </div>
+      <div>
+        <a class="link" href="#home">Back to top</a>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    (function(){
+      'use strict';
+
+      // ----------------------------
+      // Utilities
+      // ----------------------------
+      const clamp = (x, lo, hi) => Math.min(Math.max(x, lo), hi);
+      const toRad = (deg) => deg * Math.PI / 180;
+      const toDeg = (rad) => rad * 180 / Math.PI;
+
+      function fmt(x, digits = 3){
+        if (!Number.isFinite(x)) return '—';
+        return x.toLocaleString(undefined, { maximumFractionDigits: digits, minimumFractionDigits: digits });
+      }
+
+      function fmt0(x){
+        if (!Number.isFinite(x)) return '—';
+        return x.toLocaleString(undefined, { maximumFractionDigits: 0 });
+      }
+
+      function secondsToHMS(seconds){
+        if (!Number.isFinite(seconds)) return '—';
+        const s = Math.max(0, seconds);
+        const h = Math.floor(s / 3600);
+        const m = Math.floor((s - 3600*h) / 60);
+        const sec = Math.round(s - 3600*h - 60*m);
+        if (h > 0) return `${h} h ${m} min ${sec} s`;
+        return `${m} min ${sec} s`;
+      }
+
+      function pickCssVar(name, fallback){
+        const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+        return v || fallback;
+      }
+
+      // ----------------------------
+      // Constants (two-body Earth model)
+      // ----------------------------
+      // Values in km and seconds.
+      const Re = 6378.137;              // WGS-84 equatorial radius, km
+      const mu = 398600.4418;           // Earth's gravitational parameter, km^3/s^2
+
+      // ----------------------------
+      // DOM
+      // ----------------------------
+      const menuBtn = document.getElementById('menuBtn');
+      const nav = document.getElementById('nav');
+
+      const modePill = document.getElementById('modePill');
+      const inputsRpRa = document.getElementById('inputs-rpra');
+      const inputsAE = document.getElementById('inputs-ae');
+
+      const preset = document.getElementById('preset');
+
+      const hp = document.getElementById('hp');
+      const ha = document.getElementById('ha');
+      const hpVal = document.getElementById('hpVal');
+      const haVal = document.getElementById('haVal');
+
+      const aEl = document.getElementById('a');
+      const eEl = document.getElementById('e');
+      const aVal = document.getElementById('aVal');
+      const eVal = document.getElementById('eVal');
+
+      const omega = document.getElementById('omega');
+      const nu = document.getElementById('nu');
+      const omegaVal = document.getElementById('omegaVal');
+      const nuVal = document.getElementById('nuVal');
+
+      const metricsEl = document.getElementById('metrics');
+      const shapeCallout = document.getElementById('shapeCallout');
+      const constantsNote = document.getElementById('constantsNote');
+
+      const copyBtn = document.getElementById('copyBtn');
+      const resetBtn = document.getElementById('resetBtn');
+
+      const canvas = document.getElementById('orbitCanvas');
+      const ctx = canvas.getContext('2d');
+
+      const buildStamp = document.getElementById('buildStamp');
+
+      // Glossary DOM
+      const termSearch = document.getElementById('termSearch');
+      const termList = document.getElementById('termList');
+      const termDetail = document.getElementById('termDetail');
+      const termCount = document.getElementById('termCount');
+
+      const flashcard = document.getElementById('flashcard');
+      const flashFront = document.getElementById('flashFront');
+      const flashBack = document.getElementById('flashBack');
+      const nextCardBtn = document.getElementById('nextCardBtn');
+      const revealCardBtn = document.getElementById('revealCardBtn');
+
+      // Quiz DOM
+      const startQuizBtn = document.getElementById('startQuizBtn');
+      const resetQuizBtn = document.getElementById('resetQuizBtn');
+      const quizArea = document.getElementById('quizArea');
+      const quizProgress = document.getElementById('quizProgress');
+      const quizScore = document.getElementById('quizScore');
+      const quizQuestion = document.getElementById('quizQuestion');
+      const quizOptions = document.getElementById('quizOptions');
+      const quizFeedback = document.getElementById('quizFeedback');
+      const nextQuizBtn = document.getElementById('nextQuizBtn');
+
+      // ----------------------------
+      // Navigation behavior (mobile menu + active link)
+      // ----------------------------
+      menuBtn.addEventListener('click', () => {
+        const open = nav.classList.toggle('open');
+        menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+
+      function setActiveNav(hash){
+        const links = Array.from(nav.querySelectorAll('a'));
+        links.forEach(a => a.classList.remove('active'));
+        const match = links.find(a => a.getAttribute('href') === hash);
+        if (match) match.classList.add('active');
+      }
+
+      window.addEventListener('hashchange', () => setActiveNav(location.hash || '#orbit'));
+
+      // ----------------------------
+      // Orbit state + model
+      // ----------------------------
+      const state = {
+        mode: 'rpra',
+        hp: 500,
+        ha: 500,
+        a: Re + 500,
+        e: 0,
+        omegaDeg: 0,
+        nuDeg: 45,
+      };
+
+      function computeFromRpRa(hpKm, haKm){
+        const rp = Re + hpKm;
+        const ra = Re + haKm;
+        const a = 0.5 * (rp + ra);
+        const e = (ra - rp) / (ra + rp);
+        return { a, e, rp, ra };
+      }
+
+      function computeFromAE(aKm, e){
+        const rp = aKm * (1 - e);
+        const ra = aKm * (1 + e);
+        const hpKm = rp - Re;
+        const haKm = ra - Re;
+        return { rp, ra, hpKm, haKm };
+      }
+
+      function orbitRadius(aKm, e, nuRad){
+        // r(nu) = a(1-e^2) / (1 + e cos(nu))
+        return (aKm * (1 - e*e)) / (1 + e*Math.cos(nuRad));
+      }
+
+      function visVivaSpeed(muKm3s2, rKm, aKm){
+        // v = sqrt( mu * (2/r - 1/a) )
+        return Math.sqrt(muKm3s2 * (2/rKm - 1/aKm));
+      }
+
+      function keplerPeriodSeconds(aKm){
+        return 2*Math.PI * Math.sqrt(Math.pow(aKm, 3) / mu);
+      }
+
+      function meanMotionRadPerSec(aKm){
+        return Math.sqrt(mu / Math.pow(aKm, 3));
+      }
+
+      // ----------------------------
+      // UI sync + rendering
+      // ----------------------------
+      let isSyncing = false;
+
+      function updateModeUI(){
+        const isRpRa = state.mode === 'rpra';
+        inputsRpRa.hidden = !isRpRa;
+        inputsAE.hidden = isRpRa;
+        modePill.textContent = isRpRa ? 'Perigee/Apogee' : 'a & e';
+      }
+
+      function applyPreset(value){
+        // Presets expressed in hp/ha (km) for clarity.
+        const presets = {
+          leo500: { hp: 500, ha: 500, omegaDeg: 0, nuDeg: 45 },
+          leo800: { hp: 800, ha: 800, omegaDeg: 0, nuDeg: 45 },
+          elliptical: { hp: 500, ha: 2500, omegaDeg: 25, nuDeg: 20 },
+          heo: { hp: 500, ha: 39000, omegaDeg: 90, nuDeg: 15 },
+          geo: { hp: 35786, ha: 35786, omegaDeg: 0, nuDeg: 45 },
+        };
+
+        const p = presets[value];
+        if (!p) return;
+
+        state.mode = 'rpra';
+        state.hp = p.hp;
+        state.ha = p.ha;
+        state.omegaDeg = p.omegaDeg;
+        state.nuDeg = p.nuDeg;
+
+        // Push to UI
+        hp.value = String(state.hp);
+        ha.value = String(state.ha);
+        omega.value = String(state.omegaDeg);
+        nu.value = String(state.nuDeg);
+
+        updateAll();
+      }
+
+      function updateAll(){
+        if (isSyncing) return;
+        isSyncing = true;
+
+        // 1) Normalize inputs
+        state.hp = Number(hp.value);
+        state.ha = Number(ha.value);
+        state.a = Number(aEl.value);
+        state.e = Number(eEl.value);
+        state.omegaDeg = Number(omega.value);
+        state.nuDeg = Number(nu.value);
+
+        // Ensure ha >= hp when in hp/ha mode
+        if (state.mode === 'rpra' && state.ha < state.hp){
+          state.ha = state.hp;
+          ha.value = String(state.ha);
+        }
+
+        // Ensure rp > Re (avoid going inside Earth), clamp if needed
+        if (state.mode === 'ae'){
+          const rp = state.a * (1 - state.e);
+          if (rp <= Re + 10){
+            // Reduce e so rp is above Earth's surface.
+            const eMax = 1 - (Re + 10) / state.a;
+            state.e = clamp(state.e, 0, Math.max(0, eMax));
+            eEl.value = String(state.e);
+          }
+        }
+
+        // 2) Convert between parameterizations so both sets stay consistent
+        let aKm, e, rp, ra, hpKm, haKm;
+
+        if (state.mode === 'rpra'){
+          hpKm = state.hp;
+          haKm = state.ha;
+          ({ a: aKm, e, rp, ra } = computeFromRpRa(hpKm, haKm));
+
+          // Sync AE sliders (clamped to their ranges)
+          const aClamped = clamp(aKm, Number(aEl.min), Number(aEl.max));
+          const eClamped = clamp(e, Number(eEl.min), Number(eEl.max));
+          aEl.value = String(aClamped);
+          eEl.value = String(eClamped);
+          state.a = aClamped;
+          state.e = eClamped;
+
+          // Recompute with clamped values for display consistency
+          aKm = state.a;
+          e = state.e;
+          ({ rp, ra, hpKm, haKm } = computeFromAE(aKm, e));
+
+          // Sync back hp/ha if clamping changed it (within slider bounds)
+          hp.value = String(clamp(hpKm, Number(hp.min), Number(hp.max)));
+          ha.value = String(clamp(haKm, Number(ha.min), Number(ha.max)));
+          state.hp = Number(hp.value);
+          state.ha = Number(ha.value);
+
+          ({ a: aKm, e, rp, ra } = computeFromRpRa(state.hp, state.ha));
+        } else {
+          aKm = state.a;
+          e = state.e;
+          ({ rp, ra, hpKm, haKm } = computeFromAE(aKm, e));
+
+          // Sync hp/ha sliders (clamped)
+          const hpClamped = clamp(hpKm, Number(hp.min), Number(hp.max));
+          const haClamped = clamp(haKm, Number(ha.min), Number(ha.max));
+          hp.value = String(hpClamped);
+          ha.value = String(Math.max(hpClamped, haClamped));
+          state.hp = Number(hp.value);
+          state.ha = Number(ha.value);
+
+          // Recompute a/e from the clamped hp/ha so the view stays consistent
+          ({ a: aKm, e, rp, ra } = computeFromRpRa(state.hp, state.ha));
+
+          // Sync AE controls back to these values (within bounds)
+          aEl.value = String(clamp(aKm, Number(aEl.min), Number(aEl.max)));
+          eEl.value = String(clamp(e, Number(eEl.min), Number(eEl.max)));
+          state.a = Number(aEl.value);
+          state.e = Number(eEl.value);
+
+          aKm = state.a;
+          e = state.e;
+          ({ rp, ra, hpKm, haKm } = computeFromAE(aKm, e));
+        }
+
+        // 3) Update numeric pills
+        hpVal.textContent = fmt0(state.hp);
+        haVal.textContent = fmt0(state.ha);
+
+        aVal.textContent = fmt0(state.a);
+        eVal.textContent = fmt(state.e, 3);
+
+        omegaVal.textContent = fmt0(state.omegaDeg);
+        nuVal.textContent = fmt0(state.nuDeg);
+
+        // 4) Update callout (shape classification)
+        const shapeText = (() => {
+          if (e < 0.005) return 'Nearly circular: e ≈ 0.';
+          if (e < 0.2) return 'Low-eccentricity ellipse: slight perigee/apogee difference.';
+          if (e < 0.6) return 'Elliptical (bound): noticeable altitude variation.';
+          if (e < 0.9) return 'Highly elliptical (bound): large variation; satellite spends longer near apogee.';
+          return 'Approaching parabolic: e → 1 is the escape boundary (not typical for Earth-observing satellites).';
+        })();
+
+        shapeCallout.innerHTML = `
+          <strong>Orbit classification:</strong> ${shapeText}<br />
+          <span style="color: var(--muted);">Key identity:</span>
+          <span class="kbd">r(ν)=a(1−e²)/(1+e cos ν)</span>
+        `;
+
+        // 5) Update derived metrics
+        const T = keplerPeriodSeconds(aKm);
+        const n = meanMotionRadPerSec(aKm);
+        const eps = -mu / (2*aKm);
+        const h = Math.sqrt(mu * aKm * (1 - e*e));
+
+        const vp = visVivaSpeed(mu, rp, aKm);
+        const va = visVivaSpeed(mu, ra, aKm);
+
+        const nuRad = toRad(state.nuDeg);
+        const rNow = orbitRadius(aKm, e, nuRad);
+        const vNow = visVivaSpeed(mu, rNow, aKm);
+
+        const metrics = [
+          { label: 'Semi-major axis a', value: `${fmt(aKm, 1)} km`, note: `Mean altitude ≈ ${(aKm - Re).toFixed(1)} km` },
+          { label: 'Eccentricity e', value: fmt(e, 3), note: 'Shape (0=circle; 0<e<1=ellipse)' },
+          { label: 'Perigee rₚ / hₚ', value: `${fmt(rp, 1)} km`, note: `Altitude hₚ ≈ ${fmt(hpKm, 1)} km` },
+          { label: 'Apogee rₐ / hₐ', value: `${fmt(ra, 1)} km`, note: `Altitude hₐ ≈ ${fmt(haKm, 1)} km` },
+          { label: 'Period T', value: secondsToHMS(T), note: `Kepler: T ∝ a^(3/2)` },
+          { label: 'Mean motion n', value: `${fmt(n, 6)} rad/s`, note: `${fmt(n*86400/(2*Math.PI), 4)} rev/day` },
+          { label: 'Speed at perigee vₚ', value: `${fmt(vp, 3)} km/s`, note: 'Maximum speed (bound orbit)' },
+          { label: 'Speed at apogee vₐ', value: `${fmt(va, 3)} km/s`, note: 'Minimum speed (bound orbit)' },
+          { label: 'At ν (current)', value: `r=${fmt(rNow, 1)} km`, note: `v=${fmt(vNow, 3)} km/s` },
+          { label: 'Specific energy ε', value: `${fmt(eps, 3)} km²/s²`, note: 'Negative ⇒ bound orbit' },
+          { label: 'Ang. momentum h', value: `${fmt(h, 2)} km²/s`, note: 'Conserved in two-body motion' },
+          { label: 'Perigee argument ω', value: `${fmt(state.omegaDeg, 0)}°`, note: 'Rotates ellipse in-plane' },
+        ];
+
+        metricsEl.innerHTML = metrics.map(m => `
+          <div class="metric">
+            <strong>${m.label}</strong>
+            <div class="big">${m.value}</div>
+            <div class="muted">${m.note}</div>
+          </div>
+        `).join('');
+
+        constantsNote.textContent = `Assumptions: Earth radius Rₑ = ${Re.toFixed(3)} km; μ = ${mu.toFixed(4)} km³/s².`;
+
+        // 6) Draw
+        drawOrbit(aKm, e, state.omegaDeg, state.nuDeg);
+
+        isSyncing = false;
+      }
+
+      function resizeCanvasToDisplaySize(){
+        const dpr = Math.max(1, window.devicePixelRatio || 1);
+        const rect = canvas.getBoundingClientRect();
+        const w = Math.max(320, Math.floor(rect.width * dpr));
+        const h = Math.max(320, Math.floor(rect.height * dpr));
+        if (canvas.width !== w || canvas.height !== h){
+          canvas.width = w;
+          canvas.height = h;
+        }
+        return { w, h, dpr };
+      }
+
+      function drawOrbit(aKm, e, omegaDeg, nuDeg){
+        const { w, h } = resizeCanvasToDisplaySize();
+        ctx.clearRect(0, 0, w, h);
+
+        const accent = pickCssVar('--accent', '#60a5fa');
+        const accent2 = pickCssVar('--accent2', '#34d399');
+        const line = pickCssVar('--line', 'rgba(148,163,184,.22)');
+        const text = pickCssVar('--text', '#e5e7eb');
+        const muted = pickCssVar('--muted', '#94a3b8');
+
+        // Geometry extents
+        const rp = aKm * (1 - e);
+        const ra = aKm * (1 + e);
+        const rMax = ra;
+
+        const padPx = 44;
+        const scale = (Math.min(w, h) / 2 - padPx) / (rMax * 1.02);
+
+        const cx = w / 2;
+        const cy = h / 2;
+
+        // Axes
+        ctx.save();
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = line;
+        ctx.setLineDash([6, 6]);
+        ctx.beginPath();
+        ctx.moveTo(0, cy);
+        ctx.lineTo(w, cy);
+        ctx.moveTo(cx, 0);
+        ctx.lineTo(cx, h);
+        ctx.stroke();
+        ctx.restore();
+
+        // Earth (at focus)
+        ctx.save();
+        ctx.fillStyle = 'rgba(96,165,250,.14)';
+        ctx.strokeStyle = 'rgba(96,165,250,.55)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(cx, cy, Re * scale, 0, Math.PI*2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.restore();
+
+        // Draw orbit as a polyline in (focus-centered) coordinates, rotated by omega
+        const omegaRad = toRad(omegaDeg);
+        const cosO = Math.cos(omegaRad);
+        const sinO = Math.sin(omegaRad);
+
+        function rot(x, y){
+          return { x: x*cosO - y*sinO, y: x*sinO + y*cosO };
+        }
+
+        // Orbit path
+        ctx.save();
+        ctx.strokeStyle = accent;
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        const N = 720;
+        for (let i = 0; i <= N; i++){
+          const nu = (i / N) * 2*Math.PI;
+          const r = orbitRadius(aKm, e, nu);
+          const x = r * Math.cos(nu);
+          const y = r * Math.sin(nu);
+          const p = rot(x, y);
+          const px = cx + p.x * scale;
+          const py = cy - p.y * scale;
+          if (i === 0) ctx.moveTo(px, py);
+          else ctx.lineTo(px, py);
+        }
+        ctx.stroke();
+        ctx.restore();
+
+        // Perigee and apogee points
+        function drawPoint(label, nuPointRad, color){
+          const r = orbitRadius(aKm, e, nuPointRad);
+          const x = r * Math.cos(nuPointRad);
+          const y = r * Math.sin(nuPointRad);
+          const p = rot(x, y);
+          const px = cx + p.x * scale;
+          const py = cy - p.y * scale;
+
+          ctx.save();
+          ctx.fillStyle = color;
+          ctx.beginPath();
+          ctx.arc(px, py, 5, 0, Math.PI*2);
+          ctx.fill();
+
+          ctx.font = '12px ' + pickCssVar('--sans', 'system-ui');
+          ctx.fillStyle = text;
+          ctx.fillText(label, px + 8, py - 8);
+          ctx.restore();
+
+          return { px, py };
+        }
+
+        const per = drawPoint('Perigee', 0, accent2);
+        const apo = drawPoint('Apogee', Math.PI, 'rgba(251,191,36,.95)');
+
+        // Satellite position at nu
+        const nuRad = toRad(nuDeg);
+        const rSat = orbitRadius(aKm, e, nuRad);
+        const xSat = rSat * Math.cos(nuRad);
+        const ySat = rSat * Math.sin(nuRad);
+        const pSat = rot(xSat, ySat);
+        const sx = cx + pSat.x * scale;
+        const sy = cy - pSat.y * scale;
+
+        ctx.save();
+        ctx.strokeStyle = 'rgba(229,231,235,.65)';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([4, 6]);
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(sx, sy);
+        ctx.stroke();
+        ctx.restore();
+
+        ctx.save();
+        ctx.fillStyle = 'rgba(229,231,235,.95)';
+        ctx.beginPath();
+        ctx.arc(sx, sy, 6.5, 0, Math.PI*2);
+        ctx.fill();
+        ctx.restore();
+
+        // Direction arrow (approximate)
+        ctx.save();
+        ctx.strokeStyle = 'rgba(229,231,235,.55)';
+        ctx.lineWidth = 1.5;
+        const nu2 = nuRad + 0.07;
+        const r2 = orbitRadius(aKm, e, nu2);
+        const x2 = r2 * Math.cos(nu2);
+        const y2 = r2 * Math.sin(nu2);
+        const p2 = rot(x2, y2);
+        const xA = cx + p2.x * scale;
+        const yA = cy - p2.y * scale;
+        ctx.beginPath();
+        ctx.moveTo(sx, sy);
+        ctx.lineTo(xA, yA);
+        ctx.stroke();
+        ctx.restore();
+
+        // Small legend
+        ctx.save();
+        ctx.fillStyle = muted;
+        ctx.font = '12px ' + pickCssVar('--sans', 'system-ui');
+        ctx.fillText('Earth at focus • Ellipse rotated by ω • Satellite at ν', 14, h - 16);
+        ctx.restore();
+      }
+
+      // ----------------------------
+      // Inputs: event wiring
+      // ----------------------------
+      function setMode(mode){
+        state.mode = mode;
+        updateModeUI();
+        updateAll();
+      }
+
+      document.querySelectorAll('input[name="mode"]').forEach(r => {
+        r.addEventListener('change', (ev) => setMode(ev.target.value));
+      });
+
+      preset.addEventListener('change', () => {
+        if (preset.value !== 'custom'){
+          applyPreset(preset.value);
+          preset.value = 'custom';
+        }
+      });
+
+      [hp, ha, aEl, eEl, omega, nu].forEach(el => {
+        el.addEventListener('input', () => updateAll());
+      });
+
+      window.addEventListener('resize', () => updateAll());
+
+      copyBtn.addEventListener('click', async () => {
+        const aKm = Number(aEl.value);
+        // Prefer e computed from current hp/ha for consistency
+        const { a, e, rp, ra } = computeFromRpRa(Number(hp.value), Number(ha.value));
+        const text = [
+          'Classical (shape-focused) elements / values:',
+          `a = ${a.toFixed(3)} km`,
+          `e = ${e.toFixed(6)}`,
+          `rp = ${rp.toFixed(3)} km (hp ≈ ${(rp - Re).toFixed(3)} km)`,
+          `ra = ${ra.toFixed(3)} km (ha ≈ ${(ra - Re).toFixed(3)} km)`,
+          `ω = ${Number(omega.value).toFixed(0)} deg`,
+          `ν = ${Number(nu.value).toFixed(0)} deg`,
+          '',
+          `Assumed: Re = ${Re.toFixed(3)} km; mu = ${mu.toFixed(4)} km^3/s^2`,
+        ].join('\n');
+
+        try {
+          await navigator.clipboard.writeText(text);
+          copyBtn.textContent = 'Copied';
+          setTimeout(() => (copyBtn.textContent = 'Copy elements'), 900);
+        } catch (err){
+          // Fallback: prompt
+          window.prompt('Copy to clipboard:', text);
+        }
+      });
+
+      resetBtn.addEventListener('click', () => {
+        state.mode = 'rpra';
+        state.hp = 500;
+        state.ha = 500;
+        state.omegaDeg = 0;
+        state.nuDeg = 45;
+
+        // Update UI values
+        document.querySelector('input[name="mode"][value="rpra"]').checked = true;
+        hp.value = String(state.hp);
+        ha.value = String(state.ha);
+        omega.value = String(state.omegaDeg);
+        nu.value = String(state.nuDeg);
+
+        // Sync a/e
+        const { a, e } = computeFromRpRa(state.hp, state.ha);
+        aEl.value = String(clamp(a, Number(aEl.min), Number(aEl.max)));
+        eEl.value = String(clamp(e, Number(eEl.min), Number(eEl.max)));
+
+        updateModeUI();
+        updateAll();
+      });
+
+      // ----------------------------
+      // Glossary dataset
+      // ----------------------------
+      const TERMS = [
+        {
+          term: 'Semi-major axis (a)',
+          symbols: ['a'],
+          tags: ['COE', 'shape'],
+          definition: 'Half the long axis of an ellipse. For a bound orbit, a sets the orbital size and determines the period via Kepler’s third law.',
+          formula: 'T = 2π √(a³/μ)   (two-body, bound orbit)',
+          why: 'Higher a generally means higher altitude and longer revisit time for a given sensor geometry.'
+        },
+        {
+          term: 'Eccentricity (e)',
+          symbols: ['e'],
+          tags: ['COE', 'shape'],
+          definition: 'A dimensionless shape parameter for conic sections. e=0 is circular, 0<e<1 is elliptical (bound), e=1 is parabolic, and e>1 is hyperbolic.',
+          formula: 'rp = a(1−e),   ra = a(1+e)',
+          why: 'Controls altitude variability, which affects footprint size, dwell time, and measurement geometry along the orbit.'
+        },
+        {
+          term: 'Perigee',
+          symbols: ['rp', 'hp'],
+          tags: ['geometry'],
+          definition: 'The point of closest approach to Earth in an elliptical orbit. Perigee altitude hp is measured above Earth’s surface.',
+          formula: 'rp = a(1−e),   hp = rp − Rₑ',
+          why: 'Lower perigee increases atmospheric drag (in LEO) and changes spatial resolution and sampling.'
+        },
+        {
+          term: 'Apogee',
+          symbols: ['ra', 'ha'],
+          tags: ['geometry'],
+          definition: 'The point farthest from Earth in an elliptical orbit. Apogee altitude ha is measured above Earth’s surface.',
+          formula: 'ra = a(1+e),   ha = ra − Rₑ',
+          why: 'Higher apogee increases coverage but reduces spatial resolution and usually increases revisit time.'
+        },
+        {
+          term: 'True anomaly (ν)',
+          symbols: ['ν'],
+          tags: ['COE', 'position'],
+          definition: 'Angle in the orbital plane from perigee to the satellite’s current position, measured at the focus (Earth). ν=0 at perigee, ν=180° at apogee.',
+          formula: 'r(ν) = a(1−e²)/(1 + e cosν)',
+          why: 'Convenient for describing “where you are” on the ellipse when interpreting geometry and speed.'
+        },
+        {
+          term: 'Argument of perigee (ω)',
+          symbols: ['ω'],
+          tags: ['COE', 'orientation'],
+          definition: 'Angle in the orbital plane from the ascending node to perigee. It rotates the ellipse within the orbital plane.',
+          formula: 'ω is an angle (0–360°); it changes orientation, not the ellipse shape.',
+          why: 'Determines where perigee occurs relative to Earth-fixed reference directions once combined with Ω and i.'
+        },
+        {
+          term: 'Inclination (i)',
+          symbols: ['i'],
+          tags: ['COE', 'orientation'],
+          definition: 'Angle between the orbital plane and Earth’s equatorial plane. i=0° is equatorial; i=90° is polar.',
+          formula: 'i is an angle (0–180°).',
+          why: 'Controls latitude coverage; near-polar inclinations support global mapping for many Earth-observing missions.'
+        },
+        {
+          term: 'Right ascension of ascending node (Ω)',
+          symbols: ['Ω'],
+          tags: ['COE', 'orientation'],
+          definition: 'Angle in the equatorial plane from a reference direction to the ascending node (where the orbit crosses northward through the equator).',
+          formula: 'Ω is an angle (0–360°).',
+          why: 'Combined with i and ω, Ω sets the orbit’s 3D orientation and thus the ground track pattern.'
+        },
+        {
+          term: 'Orbital period (T)',
+          symbols: ['T'],
+          tags: ['dynamics'],
+          definition: 'Time required to complete one orbit. In the two-body approximation for bound orbits, T depends only on a.',
+          formula: 'T = 2π √(a³/μ)',
+          why: 'Period influences how quickly the satellite revisits longitudes and affects temporal sampling.'
+        },
+        {
+          term: 'Mean motion (n)',
+          symbols: ['n'],
+          tags: ['dynamics'],
+          definition: 'Average angular rate of orbital motion for a Keplerian orbit. In two-body dynamics, n depends only on a.',
+          formula: 'n = √(μ/a³)   (rad/s)',
+          why: 'Used in repeat-cycle calculations and quick timing estimates.'
+        },
+        {
+          term: 'Vis-viva equation',
+          symbols: ['v'],
+          tags: ['dynamics'],
+          definition: 'Relates speed v to position r and semi-major axis a in a Keplerian orbit.',
+          formula: 'v = √( μ(2/r − 1/a) )',
+          why: 'Explains why satellites move fastest at perigee and slowest at apogee.'
+        },
+        {
+          term: 'Specific orbital energy (ε)',
+          symbols: ['ε'],
+          tags: ['dynamics'],
+          definition: 'Mechanical energy per unit mass for a two-body orbit. For bound elliptical orbits, ε is negative.',
+          formula: 'ε = −μ/(2a)',
+          why: 'A compact way to connect “size of orbit” to “how tightly bound” the satellite is.'
+        },
+        {
+          term: 'Node (ascending/descending)',
+          symbols: ['node'],
+          tags: ['geometry'],
+          definition: 'Points where the orbit crosses the equatorial plane. Ascending node crosses south-to-north; descending is north-to-south.',
+          formula: 'Defined geometrically by the orbit plane intersection with the equatorial plane.',
+          why: 'Key for defining Ω and for interpreting ground tracks and local time of overpass.'
+        },
+        {
+          term: 'Altitude vs. radius',
+          symbols: ['h', 'r'],
+          tags: ['basics'],
+          definition: 'Radius r is measured from Earth’s center; altitude h is measured above Earth’s surface. Confusing the two is a common early mistake.',
+          formula: 'h = r − Rₑ',
+          why: 'Most mission docs quote altitude; most equations use radius.'
+        },
+      ];
+
+      function normalize(s){
+        return (s || '').toLowerCase().replace(/\s+/g, ' ').trim();
+      }
+
+      function renderTermList(filter){
+        const f = normalize(filter);
+        const items = TERMS.filter(t => {
+          if (!f) return true;
+          const blob = normalize([t.term, ...(t.symbols||[]).join(' '), ...(t.tags||[]).join(' '), t.definition].join(' '));
+          return blob.includes(f);
+        });
+
+        termCount.textContent = `${items.length} term${items.length === 1 ? '' : 's'}`;
+
+        termList.innerHTML = items.map((t, idx) => {
+          const tagHtml = (t.tags || []).slice(0, 3).map(x => `<span class="tag">${x}</span>`).join('');
+          return `
+            <div class="item" data-term-index="${TERMS.indexOf(t)}" role="button" tabindex="0" aria-label="Open term: ${t.term}">
+              <div class="top">
+                <strong>${t.term}</strong>
+                <time>${tagHtml}</time>
+              </div>
+              <p>${t.definition}</p>
+            </div>
+          `;
+        }).join('');
+
+        // Bind click handlers
+        Array.from(termList.querySelectorAll('.item')).forEach(el => {
+          const open = () => {
+            const i = Number(el.getAttribute('data-term-index'));
+            showTerm(i);
+          };
+          el.addEventListener('click', open);
+          el.addEventListener('keydown', (ev) => {
+            if (ev.key === 'Enter' || ev.key === ' ') open();
+          });
+        });
+
+        // If nothing selected yet, select the first visible term
+        if (!state.selectedTermIndex && items.length > 0){
+          const i = TERMS.indexOf(items[0]);
+          showTerm(i);
+        }
+
+        return items;
+      }
+
+      state.selectedTermIndex = 0;
+
+      function showTerm(index){
+        const t = TERMS[index];
+        if (!t) return;
+        state.selectedTermIndex = index;
+
+        const tags = (t.tags || []).map(x => `<span class="tag">${x}</span>`).join('');
+        const symbols = (t.symbols || []).map(x => `<span class="pill">${x}</span>`).join(' ');
+
+        termDetail.innerHTML = `
+          <div class="term-head">
+            <h3 style="margin: 0;">${t.term}</h3>
+            <div class="term-meta">${tags}</div>
+          </div>
+          <p class="definition">${t.definition}</p>
+          <div style="margin-top: 10px; color: var(--muted); font-size: .92rem;">
+            <strong style="color: rgba(229,231,235,.92);">Symbols:</strong> ${symbols || '<span class="pill">(none)</span>'}
+          </div>
+          <div class="formula" aria-label="Formula">${t.formula}</div>
+          <div class="callout"><strong>Why it matters:</strong> ${t.why}</div>
+        `;
+
+        // Highlight selection in list
+        Array.from(termList.querySelectorAll('.item')).forEach(el => {
+          el.style.borderColor = 'rgba(148,163,184,.16)';
+          el.style.background = 'rgba(148,163,184,.06)';
+        });
+        const selected = termList.querySelector(`.item[data-term-index="${index}"]`);
+        if (selected){
+          selected.style.borderColor = 'rgba(96,165,250,.35)';
+          selected.style.background = 'rgba(96,165,250,.10)';
+        }
+      }
+
+      // Flashcards
+      state.flashIndex = 0;
+      state.flashRevealed = false;
+
+      function setFlashcard(index, revealed){
+        const t = TERMS[index];
+        if (!t) return;
+        state.flashIndex = index;
+        state.flashRevealed = !!revealed;
+
+        flashFront.textContent = t.term;
+        flashBack.textContent = t.definition;
+        flashBack.hidden = !state.flashRevealed;
+      }
+
+      function nextFlashcard(){
+        const next = Math.floor(Math.random() * TERMS.length);
+        setFlashcard(next, false);
+      }
+
+      flashcard.addEventListener('click', () => {
+        setFlashcard(state.flashIndex, !state.flashRevealed);
+      });
+      flashcard.addEventListener('keydown', (ev) => {
+        if (ev.key === 'Enter' || ev.key === ' ') setFlashcard(state.flashIndex, !state.flashRevealed);
+      });
+
+      nextCardBtn.addEventListener('click', nextFlashcard);
+      revealCardBtn.addEventListener('click', () => setFlashcard(state.flashIndex, true));
+
+      termSearch.addEventListener('input', () => {
+        renderTermList(termSearch.value);
+      });
+
+      // ----------------------------
+      // Quiz
+      // ----------------------------
+      const QUIZ_QUESTIONS = [
+        {
+          q: 'For a bound Earth satellite orbit in the two-body model, which range of eccentricity e corresponds to an ellipse?',
+          choices: ['e = 0', '0 < e < 1', 'e = 1', 'e > 1'],
+          answer: 1,
+          explain: 'Ellipses have 0<e<1. (e=0 is the circular special case; e=1 is parabolic; e>1 is hyperbolic.)'
+        },
+        {
+          q: 'Which relationship is correct for perigee and apogee distances (from Earth’s center)?',
+          choices: ['rp=a(1+e), ra=a(1−e)', 'rp=a(1−e), ra=a(1+e)', 'rp=a/e, ra=a·e', 'rp=Re−h, ra=Re+h'],
+          answer: 1,
+          explain: 'For an ellipse, rp=a(1−e) and ra=a(1+e).'
+        },
+        {
+          q: 'If semi-major axis a is held fixed and eccentricity e increases, what happens?',
+          choices: ['Both rp and ra increase', 'Both rp and ra decrease', 'rp decreases and ra increases', 'rp increases and ra decreases'],
+          answer: 2,
+          explain: 'With fixed a, increasing e stretches the ellipse: rp=a(1−e) decreases, ra=a(1+e) increases.'
+        },
+        {
+          q: 'In a bound Keplerian orbit, where is the satellite speed greatest?',
+          choices: ['At apogee', 'At perigee', 'It is constant', 'At ν=90° always'],
+          answer: 1,
+          explain: 'By vis-viva, v is largest at the smallest r, which occurs at perigee.'
+        },
+        {
+          q: 'Which equation gives the speed in a Keplerian orbit (two-body) as a function of r and a?',
+          choices: ['v = √(μ(2/r − 1/a))', 'v = μr/a', 'v = √(μa/r²)', 'v = 2πr/T always'],
+          answer: 0,
+          explain: 'That is the vis-viva equation.'
+        },
+        {
+          q: 'What is the correct relationship between altitude h and radius r?',
+          choices: ['h = r + Rₑ', 'h = r − Rₑ', 'r = h − Rₑ', 'h = Rₑ − r'],
+          answer: 1,
+          explain: 'Altitude is measured above the surface: h=r−Rₑ.'
+        },
+        {
+          q: 'In the two-body approximation for bound orbits, the orbital period T depends on:',
+          choices: ['Only a', 'Only e', 'a and e equally', 'Only ω'],
+          answer: 0,
+          explain: 'Kepler’s third law: T=2π√(a³/μ), independent of e.'
+        },
+        {
+          q: 'Specific orbital energy ε for a bound elliptical orbit is:',
+          choices: ['Positive', 'Zero', 'Negative', 'Undefined'],
+          answer: 2,
+          explain: 'ε=−μ/(2a) < 0 for a bound orbit.'
+        },
+        {
+          q: 'True anomaly ν is defined as:',
+          choices: ['Angle from the ascending node to perigee in the orbital plane', 'Angle from perigee to the satellite’s position measured at Earth’s center', 'Angle from perigee to the satellite’s position measured at Earth (focus)', 'Angle between orbit plane and equator'],
+          answer: 2,
+          explain: 'ν is measured at the focus from perigee to the satellite position.'
+        },
+        {
+          q: 'Argument of perigee ω mainly changes:',
+          choices: ['The size of the ellipse', 'The shape of the ellipse', 'The orientation of the ellipse within the orbital plane', 'The value of μ'],
+          answer: 2,
+          explain: 'ω is an in-plane orientation angle; it does not change a or e.'
+        },
+      ];
+
+      const QUIZ_LEN = 8;
+      const quizState = {
+        running: false,
+        idx: 0,
+        score: 0,
+        selected: null,
+        questions: [],
+      };
+
+      function startQuiz(){
+        quizState.running = true;
+        quizState.idx = 0;
+        quizState.score = 0;
+        quizState.selected = null;
+
+        // Random sample without replacement
+        const pool = QUIZ_QUESTIONS.slice();
+        const picked = [];
+        while (picked.length < QUIZ_LEN && pool.length > 0){
+          const j = Math.floor(Math.random() * pool.length);
+          picked.push(pool.splice(j, 1)[0]);
+        }
+        quizState.questions = picked;
+
+        quizArea.hidden = false;
+        resetQuizBtn.classList.remove('disabled');
+        renderQuizQuestion();
+      }
+
+      function resetQuiz(){
+        quizState.running = false;
+        quizArea.hidden = true;
+        quizFeedback.textContent = '';
+        quizOptions.innerHTML = '';
+        quizQuestion.textContent = '';
+        quizProgress.textContent = 'Question';
+        quizScore.textContent = 'Score: 0';
+      }
+
+      function renderQuizQuestion(){
+        const q = quizState.questions[quizState.idx];
+        if (!q){
+          quizProgress.textContent = 'Complete';
+          quizQuestion.textContent = 'Quiz complete.';
+          quizOptions.innerHTML = '';
+          quizFeedback.innerHTML = `Final score: <strong>${quizState.score}</strong> / ${quizState.questions.length}.`;
+          nextQuizBtn.classList.add('disabled');
+          return;
+        }
+
+        nextQuizBtn.classList.add('disabled');
+        quizState.selected = null;
+
+        quizProgress.textContent = `Question ${quizState.idx + 1} of ${quizState.questions.length}`;
+        quizScore.textContent = `Score: ${quizState.score}`;
+        quizQuestion.textContent = q.q;
+        quizFeedback.textContent = 'Select an answer.';
+
+        quizOptions.innerHTML = q.choices.map((c, i) => {
+          return `<button class="btn" type="button" data-choice="${i}">${c}</button>`;
+        }).join('');
+
+        Array.from(quizOptions.querySelectorAll('button')).forEach(btn => {
+          btn.addEventListener('click', () => {
+            const choice = Number(btn.getAttribute('data-choice'));
+            gradeChoice(choice);
+          });
+        });
+      }
+
+      function gradeChoice(choice){
+        const q = quizState.questions[quizState.idx];
+        if (!q || quizState.selected !== null) return;
+        quizState.selected = choice;
+
+        const correct = choice === q.answer;
+        if (correct) quizState.score += 1;
+
+        quizScore.textContent = `Score: ${quizState.score}`;
+
+        // Style choices
+        Array.from(quizOptions.querySelectorAll('button')).forEach(btn => {
+          const i = Number(btn.getAttribute('data-choice'));
+          btn.classList.add('disabled');
+          if (i === q.answer) btn.classList.add('good');
+          else if (i === choice) btn.classList.add('warn');
+        });
+
+        quizFeedback.textContent = (correct ? 'Correct. ' : 'Not quite. ') + q.explain;
+        nextQuizBtn.classList.remove('disabled');
+      }
+
+      nextQuizBtn.addEventListener('click', () => {
+        if (!quizState.running) return;
+        if (nextQuizBtn.classList.contains('disabled')) return;
+        quizState.idx += 1;
+        renderQuizQuestion();
+      });
+
+      startQuizBtn.addEventListener('click', startQuiz);
+      resetQuizBtn.addEventListener('click', resetQuiz);
+
+      // ----------------------------
+      // Initialize
+      // ----------------------------
+      buildStamp.textContent = `Built ${new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: '2-digit' })}`;
+
+      // Ensure the correct nav highlight on first load
+      setActiveNav(location.hash || '#orbit');
+
+      // Initialize mode
+      updateModeUI();
+      updateAll();
+
+      // Initialize glossary
+      renderTermList('');
+      setFlashcard(0, false);
+
+      // Quiz initial state
+      resetQuiz();
+
+    })();
+  </script>
+</body>
+</html>

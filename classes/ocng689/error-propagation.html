@@ -1,0 +1,1258 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="color-scheme" content="dark light">
+  <title>Error Propagation in Satellite Oceanography — Module</title>
+  <style>
+:root{
+  /* Theme tokens (default: dark) */
+  --bg: #0b1220;
+  --bg2: #0b1220;
+  --text: #e5e7eb;
+  --muted: #94a3b8;
+  --line: rgba(148,163,184,.22);
+
+  --card: rgba(255,255,255,.05);
+  --card2: rgba(15,26,46,.55);
+
+  --accent: #60a5fa;
+  --accent2: #34d399;
+  --warn: #fbbf24;
+  --info: #22d3ee;
+  --danger: #fb7185;
+
+  /* Typography accents */
+  --heading: color-mix(in oklab, var(--text) 96%, transparent);
+  --heading-accent: color-mix(in oklab, var(--accent) 78%, var(--text));
+  --heading-rule: color-mix(in oklab, var(--accent) 35%, transparent);
+
+  --shadow: 0 10px 30px rgba(0,0,0,.35);
+  --radius: 14px;
+
+  --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+  /* Component surfaces (use variables so light mode can override cleanly) */
+  --topbar-bg: rgba(11,18,32,.70);
+  --topbar-border: var(--line);
+
+  --body-grad-1: rgba(96,165,250,.22);
+  --body-grad-2: rgba(52,211,153,.14);
+
+  --panel-bg: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+
+  --btn-bg: rgba(148,163,184,.06);
+  --btn-border: var(--line);
+  --btn-text: rgba(229,231,235,.96);
+
+  --table-head-bg: rgba(15,26,46,.92);
+  --table-head-text: color-mix(in oklab, var(--text) 98%, transparent);
+  --table-head-rule: color-mix(in oklab, var(--accent) 50%, transparent);
+  --table-stripe-odd: color-mix(in oklab, var(--muted) 6%, transparent);
+  --table-stripe-even: color-mix(in oklab, var(--muted) 2%, transparent);
+  --table-hover: color-mix(in oklab, var(--accent) 10%, transparent);
+  --table-wrap-bg: rgba(15,26,46,.45);
+  --card-bg: rgba(15,26,46,.45);
+  --item-bg: rgba(148,163,184,.06);
+}
+
+/* Light mode: activate by setting <html data-theme="light"> (or on body) */
+:root[data-theme="light"],
+body[data-theme="light"]{
+  --bg: #f7fafc;
+  --bg2: #f7fafc;
+  --text: #0f172a;
+  --muted: #475569;
+  --line: rgba(15,23,42,.12);
+
+  --card: rgba(15,23,42,.04);
+  --card2: rgba(15,23,42,.05);
+
+  --accent: #2563eb;
+  --accent2: #059669;
+  --info: #0891b2;
+  --danger: #e11d48;
+
+  --heading: color-mix(in oklab, var(--text) 96%, transparent);
+  --heading-accent: color-mix(in oklab, var(--accent) 82%, var(--text));
+  --heading-rule: color-mix(in oklab, var(--accent) 28%, transparent);
+  --info: #0891b2;
+  --danger: #e11d48;
+
+  --shadow: 0 10px 26px rgba(2,6,23,.10);
+
+  --topbar-bg: rgba(247,250,252,.85);
+  --body-grad-1: rgba(37,99,235,.10);
+  --body-grad-2: rgba(5,150,105,.08);
+
+  --panel-bg: linear-gradient(180deg, rgba(15,23,42,.03), rgba(15,23,42,.015));
+
+  --btn-bg: rgba(15,23,42,.04);
+  --btn-text: rgba(15,23,42,.92);
+
+  --table-head-bg: rgba(248,250,252,.95);
+  --table-head-text: color-mix(in oklab, var(--text) 98%, transparent);
+  --table-head-rule: color-mix(in oklab, var(--accent) 45%, transparent);
+  --table-stripe-odd: rgba(15,23,42,.02);
+  --table-stripe-even: rgba(15,23,42,.01);
+  --table-hover: color-mix(in oklab, var(--accent) 8%, transparent);
+  --table-wrap-bg: rgba(15,23,42,.03);
+  --card-bg: rgba(15,23,42,.03);
+  --item-bg: rgba(15,23,42,.03);
+}
+
+/* Optional: respect user OS preference unless explicitly overridden */
+@media (prefers-color-scheme: light){
+  :root:not([data-theme]){
+    --bg: #f7fafc;
+    --bg2: #f7fafc;
+    --text: #0f172a;
+    --muted: #475569;
+    --line: rgba(15,23,42,.12);
+
+    --card: rgba(15,23,42,.04);
+    --card2: rgba(15,23,42,.05);
+
+    --accent: #2563eb;
+    --accent2: #059669;
+    --info: #0891b2;
+    --danger: #e11d48;
+
+    --heading: color-mix(in oklab, var(--text) 96%, transparent);
+    --heading-accent: color-mix(in oklab, var(--accent) 82%, var(--text));
+    --heading-rule: color-mix(in oklab, var(--accent) 28%, transparent);
+    --info: #0891b2;
+    --danger: #e11d48;
+
+    --shadow: 0 10px 26px rgba(2,6,23,.10);
+
+    --topbar-bg: rgba(247,250,252,.85);
+    --body-grad-1: rgba(37,99,235,.10);
+    --body-grad-2: rgba(5,150,105,.08);
+
+    --panel-bg: linear-gradient(180deg, rgba(15,23,42,.03), rgba(15,23,42,.015));
+
+    --btn-bg: rgba(15,23,42,.04);
+    --btn-text: rgba(15,23,42,.92);
+
+    --table-head-bg: rgba(248,250,252,.95);
+    --table-head-text: color-mix(in oklab, var(--text) 98%, transparent);
+    --table-head-rule: color-mix(in oklab, var(--accent) 45%, transparent);
+    --table-stripe-odd: rgba(15,23,42,.02);
+    --table-stripe-even: rgba(15,23,42,.01);
+    --table-hover: color-mix(in oklab, var(--accent) 8%, transparent);
+    --table-wrap-bg: rgba(15,23,42,.03);
+    --card-bg: rgba(15,23,42,.03);
+    --item-bg: rgba(15,23,42,.03);
+  }
+}
+
+*{ box-sizing: border-box; }
+
+html, body{ height: 100%; }
+body{
+  margin: 0;
+  font-family: var(--sans);
+  color: var(--text);
+  background:
+    radial-gradient(1200px 600px at 12% -10%, var(--body-grad-1), transparent 55%),
+    radial-gradient(900px 500px at 92% 0%, var(--body-grad-2), transparent 55%),
+    var(--bg);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  line-height: 1.45;
+}
+
+/* Reduce fixed-background jank on smaller screens */
+@media (max-width: 980px){
+  body{ background-attachment: scroll; }
+}
+
+h1, h2, h3, h4{
+  color: var(--heading);
+}
+
+/* Section heading styling (works for both home + content pages) */
+.section-title h2,
+.page-head h1{
+  color: var(--heading-accent);
+}
+.section-title h2{
+  position: relative;
+  padding-bottom: 6px;
+}
+.section-title h2::after{
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 58px;
+  height: 2px;
+  background: var(--heading-rule);
+  border-radius: 999px;
+}
+
+a{ color: inherit; }
+a.link{
+  color: color-mix(in oklab, var(--text) 96%, transparent);
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in oklab, var(--accent) 35%, transparent);
+}
+a.link:hover{ border-bottom-color: color-mix(in oklab, var(--accent) 90%, transparent); }
+
+/* Accessibility */
+.skip{
+  position: absolute;
+  left: -999px;
+  top: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: color-mix(in oklab, var(--accent) 18%, transparent);
+  border: 1px solid color-mix(in oklab, var(--accent) 35%, transparent);
+  color: var(--text);
+  z-index: 50;
+}
+.skip:focus{ left: 12px; }
+
+/* Layout */
+.container{
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 18px 18px 48px;
+}
+
+/* Topbar */
+.topbar{
+  position: fixed;
+  top: 0;
+  z-index: 30;
+  left: 0;
+  right: 0;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  background: var(--topbar-bg);
+  border-bottom: 1px solid var(--topbar-border);
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+.topbar-inner{
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+.brand{
+  display: grid;
+  gap: 2px;
+}
+.brand a{
+  text-decoration: none;
+  font-weight: 900;
+  letter-spacing: .2px;
+  font-size: 1.02rem;
+}
+.brand small{
+  color: var(--muted);
+  font-size: .86rem;
+}
+
+/* Nav */
+.nav{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.nav a{
+  text-decoration: none;
+  color: color-mix(in oklab, var(--text) 92%, transparent);
+  font-size: .92rem;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  transition: background .15s ease, border-color .15s ease;
+  white-space: nowrap;
+}
+.nav a:hover{
+  background: color-mix(in oklab, var(--muted) 8%, transparent);
+  border-color: color-mix(in oklab, var(--muted) 18%, transparent);
+}
+.nav a.active{
+  background: color-mix(in oklab, var(--accent) 16%, transparent);
+  border-color: color-mix(in oklab, var(--accent) 35%, transparent);
+  font-weight: 750;
+}
+.nav a.active:hover{
+  background: color-mix(in oklab, var(--accent) 22%, transparent);
+  border-color: color-mix(in oklab, var(--accent) 48%, transparent);
+}
+
+.menu-btn{
+  display: none;
+  border: 1px solid var(--line);
+  background: color-mix(in oklab, var(--accent) 14%, transparent);
+  color: color-mix(in oklab, var(--text) 96%, transparent);
+  padding: 9px 11px;
+  border-radius: 10px;
+  cursor: pointer;
+  font: inherit;
+}
+
+/* Panels/cards/buttons */
+.panel{
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel-bg);
+  box-shadow: var(--shadow);
+  padding: 14px;
+}
+
+.btn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--btn-border);
+  text-decoration: none;
+  color: var(--btn-text);
+  background: var(--btn-bg);
+  transition: transform .06s ease, background .15s ease, border-color .15s ease;
+  font-weight: 650;
+  font-size: .92rem;
+}
+.btn:hover{
+  background: color-mix(in oklab, var(--muted) 10%, transparent);
+  border-color: color-mix(in oklab, var(--muted) 26%, transparent);
+}
+.btn:active{ transform: translateY(1px); }
+
+.btn.primary{
+  background: color-mix(in oklab, var(--accent) 18%, transparent);
+  border-color: color-mix(in oklab, var(--accent) 35%, transparent);
+}
+.btn.primary:hover{
+  background: color-mix(in oklab, var(--accent) 24%, transparent);
+  border-color: color-mix(in oklab, var(--accent) 48%, transparent);
+}
+.btn.good{
+  background: color-mix(in oklab, var(--accent2) 14%, transparent);
+  border-color: color-mix(in oklab, var(--accent2) 28%, transparent);
+}
+.btn.good:hover{
+  background: color-mix(in oklab, var(--accent2) 20%, transparent);
+  border-color: color-mix(in oklab, var(--accent2) 42%, transparent);
+}
+
+/* Home hero */
+.hero{
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: 1.2fr .8fr;
+  gap: 14px;
+  align-items: stretch;
+}
+.hero h1{
+  margin: 0 0 6px;
+  font-size: clamp(1.25rem, 2.8vw, 2.0rem);
+  letter-spacing: .2px;
+}
+.hero p{
+  margin: 0 0 12px;
+  color: var(--muted);
+  max-width: 80ch;
+}
+.cta-row{
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+/* Mini info box (right-side) */
+.mini{
+  background: var(--card2);
+  border: 1px solid color-mix(in oklab, var(--muted) 18%, transparent);
+  border-radius: 12px;
+  padding: 12px;
+}
+.mini h2{
+  margin: 0 0 8px;
+  font-size: 1.0rem;
+  letter-spacing: .2px;
+}
+.kv{
+  display: grid;
+  gap: 8px;
+  color: color-mix(in oklab, var(--text) 92%, transparent);
+  font-size: .92rem;
+}
+.kv div{
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 10px;
+  align-items: start;
+}
+.kv dt{ color: var(--muted); font-weight: 750; }
+.kv dd{ margin: 0; }
+
+/* Titles and grids */
+.section-title{
+  margin: 18px 0 10px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.section-title h2{
+  margin: 0;
+  font-size: 1.05rem;
+  letter-spacing: .2px;
+}
+.section-title span{
+  color: var(--muted);
+  font-size: .92rem;
+}
+
+.grid{
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+.card{
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--card-bg);
+  padding: 12px;
+  transition: transform .08s ease, border-color .15s ease, background .15s ease;
+  min-height: 120px;
+  display: grid;
+  gap: 6px;
+}
+.card:hover{
+  transform: translateY(-1px);
+  background: color-mix(in oklab, var(--card-bg) 88%, rgba(255,255,255,.04));
+  border-color: color-mix(in oklab, var(--accent) 35%, transparent);
+}
+.card h3{
+  margin: 0;
+  font-size: 1.0rem;
+  letter-spacing: .2px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.tag{
+  font-family: var(--mono);
+  font-size: .78rem;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in oklab, var(--muted) 22%, transparent);
+  background: color-mix(in oklab, var(--muted) 8%, transparent);
+  color: color-mix(in oklab, var(--text) 92%, transparent);
+  white-space: nowrap;
+}
+.card p{
+  margin: 0;
+  color: var(--muted);
+  font-size: .92rem;
+}
+.card a{ margin-top: 6px; width: fit-content; }
+
+/* List items (announcements, lecture items, etc.) */
+.list{ display: grid; gap: 10px; }
+.item{
+  border: 1px solid color-mix(in oklab, var(--muted) 16%, transparent);
+  border-radius: 12px;
+  background: var(--item-bg);
+  padding: 10px 12px;
+}
+.item .top{
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.item strong{ letter-spacing: .2px; }
+.item time{
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: .82rem;
+}
+.item p{
+  margin: 6px 0 0;
+  color: color-mix(in oklab, var(--text) 88%, transparent);
+  font-size: .92rem;
+}
+
+/* Page header (non-home pages) */
+.page-head{
+  margin-top: 18px;
+  display: grid;
+  gap: 6px;
+}
+.page-head h1{
+  margin: 0;
+  font-size: clamp(1.25rem, 2.5vw, 1.85rem);
+  letter-spacing: .2px;
+}
+.page-head p{
+  margin: 0;
+  color: var(--muted);
+  max-width: 90ch;
+}
+.breadcrumbs{
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  font-size: .9rem;
+  color: var(--muted);
+}
+.breadcrumbs a{
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in oklab, var(--muted) 22%, transparent);
+}
+.breadcrumbs a:hover{
+  border-bottom-color: color-mix(in oklab, var(--accent) 70%, transparent);
+}
+
+/* Tables */
+.table-wrap{
+  margin-top: 10px;
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--table-wrap-bg);
+}
+table.course{
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 980px;
+}
+table.course caption{
+  caption-side: top;
+  text-align: left;
+  padding: 12px 12px 10px;
+  font-weight: 800;
+  letter-spacing: .2px;
+  color: color-mix(in oklab, var(--text) 98%, transparent);
+}
+table.course thead th{
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--table-head-bg);
+  backdrop-filter: blur(8px);
+  color: var(--table-head-text);
+  border-bottom: 1px solid var(--line);
+  border-top: 3px solid var(--table-head-rule);
+  padding: 12px;
+  text-align: left;
+  font-size: .92rem;
+  font-weight: 900;
+}
+table.course tbody td{
+  padding: 12px;
+  border-top: 1px solid color-mix(in oklab, var(--muted) 16%, transparent);
+  vertical-align: top;
+  font-size: .93rem;
+  color: color-mix(in oklab, var(--text) 92%, transparent);
+}
+table.course tbody tr:nth-child(odd){ background: var(--table-stripe-odd); }
+table.course tbody tr:nth-child(even){ background: var(--table-stripe-even); }
+table.course tbody tr:hover{ background: var(--table-hover); }
+
+/* Notes / callouts */
+.callout{
+  margin-top: 12px;
+  border-left: 3px solid color-mix(in oklab, var(--accent) 55%, transparent);
+  padding-left: 12px;
+  color: var(--muted);
+  font-size: .92rem;
+}
+.callout strong{ color: color-mix(in oklab, var(--text) 92%, transparent); }
+
+/* Footer */
+footer{
+  margin-top: 18px;
+  color: var(--muted);
+  font-size: .9rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.foot-badge{
+  font-family: var(--mono);
+  font-size: .82rem;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: color-mix(in oklab, var(--muted) 8%, transparent);
+  color: color-mix(in oklab, var(--text) 86%, transparent);
+}
+
+/* Responsive */
+@media (max-width: 980px){
+  .hero{ grid-template-columns: 1fr; }
+  .grid{ grid-template-columns: 1fr; }
+  .kv div{ grid-template-columns: 110px 1fr; }
+  table.course{ min-width: 0; }
+}
+
+@media (max-width: 840px){
+  .menu-btn{ display: inline-flex; }
+  .nav{
+    display: none;
+    width: 100%;
+    padding-top: 10px;
+  }
+  .nav.open{ display: flex; }
+  .topbar-inner{
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+}
+
+/* Optional: card-style tables on phones */
+@media (max-width: 720px){
+  .table-wrap{ overflow-x: visible; }
+  table.course, table.course thead, table.course tbody, table.course th, table.course td, table.course tr { display: block; }
+  table.course thead { display: none; }
+  table.course{ min-width: 0; }
+  table.course tbody tr{
+    border-top: 1px solid var(--line);
+    padding: 10px 10px 4px;
+  }
+  table.course tbody td{
+    border: none;
+    padding: 8px 6px;
+  }
+  table.course tbody td::before{
+    content: attr(data-label);
+    display: block;
+    font-size: .78rem;
+    color: color-mix(in oklab, var(--muted) 95%, transparent);
+    letter-spacing: .2px;
+    margin-bottom: 2px;
+  }
+}
+
+
+/* --- Module content styling additions --- */
+main{ padding-top: 64px; }
+.content{
+  max-width: 980px;
+  margin: 0 auto;
+  display: grid;
+  gap: 14px;
+}
+hr{ border: none; border-top: 1px solid var(--line); margin: 10px 0; }
+p{ margin: 0; }
+.lede{ color: var(--muted); }
+kbd{
+  font-family: var(--mono);
+  font-size: .85em;
+  padding: 2px 6px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: color-mix(in oklab, var(--muted) 6%, transparent);
+}
+ul, ol{ margin: 0; padding-left: 20px; }
+li{ margin: 6px 0; }
+pre{
+  margin: 10px 0 0;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: color-mix(in oklab, var(--card2) 90%, rgba(0,0,0,.12));
+  overflow-x: auto;
+}
+code{
+  font-family: var(--mono);
+  font-size: .9em;
+}
+.math-note{
+  border-left: 3px solid color-mix(in oklab, var(--accent2) 55%, transparent);
+}
+.small{ font-size: .92rem; color: var(--muted); }
+.badge{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: .82rem;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: color-mix(in oklab, var(--muted) 8%, transparent);
+  color: color-mix(in oklab, var(--text) 90%, transparent);
+}
+.toc{
+  display: grid;
+  gap: 6px;
+  font-size: .95rem;
+}
+.toc a{
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in oklab, var(--accent) 25%, transparent);
+}
+.toc a:hover{
+  border-bottom-color: color-mix(in oklab, var(--accent) 80%, transparent);
+}
+.two-col{
+  display: grid;
+  grid-template-columns: 1.4fr .6fr;
+  gap: 12px;
+}
+@media (max-width: 980px){
+  .two-col{ grid-template-columns: 1fr; }
+}
+details{
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: color-mix(in oklab, var(--card2) 88%, rgba(255,255,255,.02));
+  padding: 10px 12px;
+}
+details > summary{
+  cursor: pointer;
+  font-weight: 800;
+  letter-spacing: .2px;
+}
+details[open] > summary{ margin-bottom: 8px; }
+blockquote{
+  margin: 0;
+  padding: 10px 12px;
+  border-left: 3px solid color-mix(in oklab, var(--accent) 55%, transparent);
+  border-radius: 10px;
+  background: color-mix(in oklab, var(--muted) 6%, transparent);
+  color: color-mix(in oklab, var(--text) 92%, transparent);
+}
+
+  </style>
+
+  <!-- MathJax for LaTeX rendering (requires internet when viewing) -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <a href="#top">Module: Error Propagation & Uncertainty Quantification</a>
+      <small>OCNG 489/689 Study the Oceans from Space</small>
+    </div>
+
+    <button class="menu-btn" id="menuBtn" aria-label="Toggle menu">Menu</button>
+
+    <nav class="nav" id="nav">
+      <a href="#objectives">Objectives</a>
+      <a href="#taxonomy">Error taxonomy</a>
+      <a href="#measurement-equation">Measurement equation</a>
+      <a href="#examples">Worked examples</a>
+      <a href="#averaging">Averaging & gridding</a>
+      <a href="#pitfalls">Pitfalls</a>
+      <a href="#exercises">Exercises</a>
+      <a href="#templates">Python templates</a>
+    </nav>
+  </div>
+</header>
+  <div style="height: 20px;"></div> 
+
+<main id="main">
+  <div class="container content" id="top">
+
+    <section class="panel">
+      <div class="page-head">
+        <div class="breadcrumbs">
+          <a class="link" href="#top">Home</a>
+          <span>›</span>
+          <span>Error propagation</span>
+        </div>
+        <h1>Error Propagation and Uncertainty Quantification in Satellite Oceanography</h1>
+        <p class="lede">
+          A practical module on how uncertainties move through satellite retrieval chains and how to build defensible
+          uncertainty budgets for ocean variables (SST, chlorophyll, SSH/currents, winds, and derived diagnostics).
+        </p>
+        <div class="cta-row" role="group" aria-label="Module actions">
+          <a class="btn primary" href="#toc">Jump to contents</a>
+          <button class="btn" id="themeBtn" type="button" aria-label="Toggle theme">Toggle theme</button>
+          <a class="btn good" href="#exercises">Go to exercises</a>
+        </div>
+        <p class="small" style="margin-top:10px;">
+          Tip: If equations don’t render, you may be viewing the file offline without access to the MathJax CDN.
+          In that case, the LaTeX source still remains readable.
+        </p>
+      </div>
+    </section>
+
+    <section class="panel" id="toc">
+      <div class="section-title">
+        <h2>Contents</h2>
+        <span class="badge">~1 lecture + lab</span>
+      </div>
+      <div class="toc">
+        <a href="#objectives">Learning objectives</a>
+        <a href="#why">1. Why error propagation matters</a>
+        <a href="#taxonomy">2. Error taxonomy for satellite ocean products</a>
+        <a href="#measurement-equation">3. Measurement equation approach</a>
+        <a href="#rules">4. Quick propagation identities (“rules of thumb”)</a>
+        <a href="#examples">5. Worked examples</a>
+        <a href="#nonlinear">6. When first-order propagation is not enough</a>
+        <a href="#averaging">7. Averaging, binning, and gridding</a>
+        <a href="#fusion">8. Multi-sensor fusion and objective mapping (advanced)</a>
+        <a href="#workflow">9. Practical workflow for uncertainty budgets</a>
+        <a href="#pitfalls">10. Common pitfalls</a>
+        <a href="#exercises">11. Exercises</a>
+        <a href="#templates">Appendix: Minimal Python templates</a>
+      </div>
+    </section>
+
+    <section class="panel" id="objectives">
+      <div class="section-title"><h2>Learning objectives</h2><span>What students should be able to do</span></div>
+      <ol>
+        <li><strong>Distinguish</strong> bias, random error, and correlated error—and explain why that distinction matters for satellite-derived ocean variables.</li>
+        <li><strong>Write</strong> a measurement equation (retrieval chain) for a satellite ocean product and identify dominant uncertainty terms.</li>
+        <li><strong>Propagate uncertainties</strong> through common transforms (linear combinations, ratios, logs, powers) using first-order (Taylor/Jacobian) methods.</li>
+        <li><strong>Recognize when linear propagation fails</strong> and apply Monte Carlo propagation for nonlinear algorithms and non-Gaussian errors.</li>
+        <li><strong>Handle covariance</strong> (correlated errors) and show how neglecting correlation can over- or under-estimate uncertainty.</li>
+        <li><strong>Propagate uncertainty through derivatives and averages</strong>, including effective sample size for spatial/temporal averaging and gridded products.</li>
+        <li><strong>Build an uncertainty budget</strong> for an analysis (e.g., currents from altimetry, chlorophyll anomalies, wind stress curl).</li>
+      </ol>
+    </section>
+
+    <section class="panel" id="why">
+      <div class="section-title"><h2>1. Why error propagation matters in satellite oceanography</h2><span>Retrieval chains amplify and reshape error</span></div>
+      <p>Satellite oceanography is fundamentally a chain of transformations:</p>
+      <blockquote>raw detector counts → calibrated radiance/backscatter → geophysical variable(s) → mapped/merged products → derived diagnostics (gradients, fluxes, trends)</blockquote>
+      <p style="margin-top:10px;">
+        Errors enter at every step, and what you do next can amplify or damp them:
+      </p>
+      <ul>
+        <li><strong>Derivatives amplify noise</strong> (e.g., SSH → geostrophic velocity → vorticity).</li>
+        <li><strong>Averages reduce random error</strong> only to the extent samples are independent.</li>
+        <li><strong>Bias does not average away</strong>—it accumulates into trends and climatologies.</li>
+        <li><strong>Correlated errors</strong> (orbit errors, striping, atmospheric correction residuals) can dominate uncertainty at large scales and low frequencies.</li>
+        <li>Multi-sensor fusion and assimilation require <strong>quantitative</strong>, scale-aware error models—not just quality flags.</li>
+      </ul>
+    </section>
+
+    <section class="panel" id="taxonomy">
+      <div class="section-title"><h2>2. Error taxonomy tailored to satellite ocean products</h2><span>Random vs bias vs correlation vs sampling</span></div>
+
+      <h3>2.1 Random error (noise)</h3>
+      <p>Stochastic variability around the true value; often modeled as zero-mean.</p>
+      <ul>
+        <li>Detector noise in radiance/brightness temperature</li>
+        <li>Speckle-like variability in radar backscatter (after averaging)</li>
+        <li>Intermittent cloud contamination behaving like outliers</li>
+      </ul>
+
+      <h3>2.2 Systematic error (bias)</h3>
+      <p>Persistent offset (constant or slowly varying).</p>
+      <ul>
+        <li>Calibration drift</li>
+        <li>Sea state bias mis-modeling in altimetry</li>
+        <li>Coastal ocean color bias due to unmodeled CDOM/sediments</li>
+        <li>Skin–bulk temperature differences when using SST as “bulk SST”</li>
+      </ul>
+
+      <h3>2.3 Correlated error (covariance structure)</h3>
+      <p>Errors that are not independent across space, time, channels, or variables.</p>
+      <ul>
+        <li><strong>Space</strong>: along-track orbit error, scan-line striping, adjacency effects</li>
+        <li><strong>Time</strong>: calibration drift, sampling/aliasing</li>
+        <li><strong>Channels</strong>: multi-band radiance errors, cross-talk</li>
+        <li><strong>Variables</strong>: coupled correction terms (e.g., SST and water vapor)</li>
+      </ul>
+      <div class="callout">
+        <strong>Instructor note:</strong> correlated error is the most common reason “σ/√N” fails for gridded satellite products.
+      </div>
+
+      <h3>2.4 Representativeness / sampling error</h3>
+      <p>Mismatch between what is measured and the target quantity and scale.</p>
+      <ul>
+        <li>Point buoy vs 1–25 km satellite pixel</li>
+        <li>Instantaneous observation vs daily mean</li>
+        <li>Sparse sampling (altimeter repeat) aliasing high-frequency signals</li>
+      </ul>
+    </section>
+
+    <section class="panel" id="measurement-equation">
+      <div class="section-title"><h2>3. The measurement equation approach</h2><span>Write the product as a function</span></div>
+
+      <h3>3.1 Generic measurement equation</h3>
+      <p>Let the derived geophysical quantity be:</p>
+      <p>$$y = f(\mathbf{x})$$</p>
+      <p>where \(\mathbf{x} = [x_1, x_2, \ldots, x_n]^T\) are inputs (radiances, brightness temperatures, correction terms, coefficients, ancillaries).</p>
+
+      <p style="margin-top:10px;">Write each input as:</p>
+      <p>$$x_i = x_{i,true} + \delta x_i$$</p>
+
+      <h3>3.2 First-order (linearized) propagation</h3>
+      <p>Using a first-order Taylor expansion about the mean:</p>
+      <p>$$\delta y \approx \sum_{i=1}^n \frac{\partial f}{\partial x_i}\,\delta x_i$$</p>
+
+      <p>If \(\mathbf{\Sigma_x}\) is the covariance matrix of \(\mathbf{x}\), then:</p>
+      <p>$$\sigma_y^2 \approx \mathbf{J}\,\mathbf{\Sigma_x}\,\mathbf{J}^T$$</p>
+
+      <p>with Jacobian \(\mathbf{J} = [\partial f/\partial x_1,\ldots,\partial f/\partial x_n]\).</p>
+
+      <p>Expanded scalar form:</p>
+      <p>$$\sigma_y^2 \approx \sum_i \left(\frac{\partial f}{\partial x_i}\right)^2 \sigma_{x_i}^2
+      + 2\sum_{i<j}\left(\frac{\partial f}{\partial x_i}\right)\left(\frac{\partial f}{\partial x_j}\right)\mathrm{Cov}(x_i,x_j)$$</p>
+
+      <div class="callout math-note">
+        <strong>Key point:</strong> assuming independence sets all covariance terms to zero. In satellite oceanography, that can be a big mistake.
+      </div>
+
+      <h3>3.3 Bias propagation</h3>
+      <p>If an input has bias \(b_{x_i}=\mathbb{E}[\delta x_i]\), then (first-order):</p>
+      <p>$$b_y \approx \sum_i \frac{\partial f}{\partial x_i}\,b_{x_i}$$</p>
+      <p>Bias is often the dominant concern for trends, climatologies, and cross-sensor merges.</p>
+    </section>
+
+    <section class="panel" id="rules">
+      <div class="section-title"><h2>4. “Rules of thumb” propagation identities</h2><span>Fast approximations for common transforms</span></div>
+
+      <p>These are first-order approximations; assume independence unless noted.</p>
+
+      <h3>4.1 Linear combination</h3>
+      <p>If \(y = a + \sum_i c_i x_i\), then:</p>
+      <p>$$\sigma_y^2 = \sum_i c_i^2\sigma_{x_i}^2 \quad (\text{independent})$$</p>
+
+      <h3>4.2 Product</h3>
+      <p>If \(y=x_1x_2\), then:</p>
+      <p>$$\left(\frac{\sigma_y}{y}\right)^2 \approx
+      \left(\frac{\sigma_{x_1}}{x_1}\right)^2 + \left(\frac{\sigma_{x_2}}{x_2}\right)^2$$</p>
+
+      <h3>4.3 Ratio</h3>
+      <p>If \(y=x_1/x_2\), then:</p>
+      <p>$$\left(\frac{\sigma_y}{y}\right)^2 \approx
+      \left(\frac{\sigma_{x_1}}{x_1}\right)^2 + \left(\frac{\sigma_{x_2}}{x_2}\right)^2$$</p>
+
+      <h3>4.4 Power law</h3>
+      <p>If \(y=x^p\), then:</p>
+      <p>$$\frac{\sigma_y}{y} \approx |p|\frac{\sigma_x}{x}$$</p>
+
+      <h3>4.5 Log transform</h3>
+      <p>If \(y=\ln x\), then:</p>
+      <p>$$\sigma_y \approx \frac{\sigma_x}{x}$$</p>
+      <p>If \(y=\log_{10}x\), then:</p>
+      <p>$$\sigma_y \approx \frac{\sigma_x}{x\ln 10}$$</p>
+    </section>
+
+    <section class="panel" id="examples">
+      <div class="section-title"><h2>5. Worked examples in satellite oceanography</h2><span>From sensor space to ocean physics</span></div>
+
+      <h3>Example 1: Split-window SST (thermal IR) — linear propagation</h3>
+      <p>Consider a simplified split-window SST retrieval:</p>
+      <p>$$T_s = a_0 + a_1 T_{11} + a_2 (T_{11}-T_{12})$$</p>
+      <p>Rearrange:</p>
+      <p>$$T_s = a_0 + (a_1+a_2)T_{11} - a_2T_{12}$$</p>
+
+      <p>Assume \(a_1=1.0\), \(a_2=0.5\), \(\sigma_{11}=\sigma_{12}=0.05\,K\), independent channels.</p>
+      <p>Then:</p>
+      <p>$$\sigma_{T_s}^2 = (a_1+a_2)^2\sigma_{11}^2 + (a_2)^2\sigma_{12}^2$$</p>
+      <p>Numerically, \(\sigma_{T_s}\approx 0.079\,K\).</p>
+
+      <div class="callout">
+        <strong>Interpretation:</strong> channel noise can be amplified by algorithm weights. In practice, atmospheric correction residuals,
+        cloud leakage, emissivity/model errors, and skin–bulk differences often dominate the uncertainty budget.
+      </div>
+
+      <hr />
+
+      <h3>Example 2: Ocean color chlorophyll from a band ratio — nonlinear propagation</h3>
+      <p>Let</p>
+      <p>$$R = \log_{10}\left(\frac{R_{rs}(443)}{R_{rs}(555)}\right)$$</p>
+      <p>and a simplified relationship</p>
+      <p>$$\log_{10}(\mathrm{Chl}) = -1.5R \quad\Rightarrow\quad \mathrm{Chl} = 10^{-1.5R}$$</p>
+
+      <p>Assume \(R_{rs}(443)=0.010\,\mathrm{sr}^{-1}\), \(R_{rs}(555)=0.005\,\mathrm{sr}^{-1}\), and 5% uncertainties in each, independent.</p>
+
+      <p>For \(R=\log_{10}(x)-\log_{10}(y)\):</p>
+      <p>$$\frac{\partial R}{\partial x}=\frac{1}{x\ln 10},\quad \frac{\partial R}{\partial y}=-\frac{1}{y\ln 10}$$</p>
+
+      <p>Thus</p>
+      <p>$$\sigma_R^2 \approx \left(\frac{\sigma_x}{x\ln 10}\right)^2 + \left(\frac{\sigma_y}{y\ln 10}\right)^2$$</p>
+
+      <p>For the numbers above, \(R=\log_{10}2\approx 0.301\) and \(\sigma_R\approx 0.0307\).</p>
+
+      <p>Then \(L=\log_{10}(\mathrm{Chl})=-1.5R\Rightarrow \sigma_L=1.5\sigma_R\approx 0.0461\).</p>
+
+      <p>Finally, since \(\mathrm{Chl}=10^L\), the relative uncertainty is</p>
+      <p>$$\frac{\sigma_{\mathrm{Chl}}}{\mathrm{Chl}} \approx \ln(10)\,\sigma_L \approx 0.106 \;(10.6\%)$$</p>
+
+      <div class="callout">
+        <strong>Interpretation:</strong> small reflectance uncertainties can become larger relative uncertainties in chlorophyll after ratios and logs.
+        Band errors are often <em>correlated</em> via atmospheric correction, which changes the result.
+      </div>
+
+      <hr />
+
+      <h3>Example 3: Altimetry SSH → geostrophic velocity — derivatives and correlated errors</h3>
+      <p>For geostrophic flow (NH):</p>
+      <p>$$u = -\frac{g}{f}\frac{\partial \eta}{\partial y}$$</p>
+
+      <p>Finite difference:</p>
+      <p>$$\frac{\partial \eta}{\partial y} \approx \frac{\eta_2-\eta_1}{\Delta y}
+      \quad\Rightarrow\quad u \approx -\frac{g}{f}\frac{\eta_2-\eta_1}{\Delta y}$$</p>
+
+      <p>Let \(\sigma_{\eta_1}=\sigma_{\eta_2}=\sigma\). If correlation between \(\eta_1\) and \(\eta_2\) is \(\rho\), then:</p>
+      <p>$$\mathrm{Var}(\eta_2-\eta_1)=2\sigma^2(1-\rho)$$</p>
+
+      <div class="callout math-note">
+        <strong>Key lesson:</strong> for gradients/differences, positively correlated errors can cancel.
+        Ignoring covariance can make uncertainty estimates badly wrong (sometimes too large, sometimes too small).
+      </div>
+
+      <hr />
+
+      <h3>Example 4: Scatterometer wind speed → wind stress</h3>
+      <p>Bulk formula:</p>
+      <p>$$\tau = \rho_{air} C_D U^2$$</p>
+      <p>Sensitivity:</p>
+      <p>$$\frac{\partial \tau}{\partial U} = 2\rho_{air} C_D U$$</p>
+      <p>So \(\sigma_\tau \approx (\partial \tau/\partial U)\,\sigma_U\).</p>
+
+      <div class="callout">
+        <strong>Rule check:</strong> because \(\tau\propto U^2\), a 5% wind error implies about a 10% stress error (first-order).
+      </div>
+    </section>
+
+    <section class="panel" id="nonlinear">
+      <div class="section-title"><h2>6. When first-order propagation is not enough</h2><span>Monte Carlo as a robust default</span></div>
+
+      <p>First-order (Jacobian) propagation assumes small errors and local linearity. It can fail for:</p>
+      <ul>
+        <li>strongly nonlinear retrievals (e.g., SSS, complex atmospheric correction)</li>
+        <li>thresholding/branching logic (cloud masks, quality filters)</li>
+        <li>heavy-tailed errors/outliers (cloud edges, sun glint leakage)</li>
+        <li>values near detection limits (log-space artifacts)</li>
+      </ul>
+
+      <h3>6.1 Monte Carlo propagation</h3>
+      <p><strong>Algorithm:</strong></p>
+      <ol>
+        <li>Specify distributions for inputs \(x_i\) (include covariance if relevant).</li>
+        <li>Draw \(M\) samples \(\mathbf{x}^{(k)}\).</li>
+        <li>Compute \(y^{(k)}=f(\mathbf{x}^{(k)})\).</li>
+        <li>Estimate mean, variance, and percentiles from \(\{y^{(k)}\}\).</li>
+      </ol>
+
+      <p><strong>Correlated inputs:</strong> if \(\mathbf{x}\sim\mathcal{N}(\mu,\Sigma)\), sample via Cholesky:</p>
+      <p>$$\Sigma = LL^T,\quad \mathbf{x}=\mu+L\mathbf{z},\;\mathbf{z}\sim\mathcal{N}(0,I)$$</p>
+    </section>
+
+    <section class="panel" id="averaging">
+      <div class="section-title"><h2>7. Propagation through averaging, binning, and gridding</h2><span>Why σ/√N often lies</span></div>
+
+      <h3>7.1 Mean of independent samples</h3>
+      <p>If \(\bar x = \frac{1}{N}\sum_{i=1}^N x_i\) with independent errors:</p>
+      <p>$$\sigma_{\bar x} = \frac{\sigma_x}{\sqrt N}$$</p>
+
+      <h3>7.2 Effective sample size for correlated samples</h3>
+      <p>With correlation, uncertainty reduction is weaker. One common approximation:</p>
+      <p>$$N_{eff} \approx \frac{N}{1 + 2\sum_{k=1}^{N-1}\left(1-\frac{k}{N}\right)\rho_k}$$</p>
+      <p>Then:</p>
+      <p>$$\sigma_{\bar x} \approx \frac{\sigma_x}{\sqrt{N_{eff}}}$$</p>
+
+      <h3>7.3 Weighted averages and composites</h3>
+      <p>If \(y=\sum_{i=1}^N w_i x_i\) with \(\sum_i w_i=1\):</p>
+      <p>$$\sigma_y^2 = \mathbf{w}^T\Sigma\mathbf{w}$$</p>
+      <p>For independent errors: \(\sigma_y^2=\sum_i w_i^2\sigma_i^2\).</p>
+    </section>
+
+    <section class="panel" id="fusion">
+      <div class="section-title"><h2>8. Multi-sensor fusion and objective mapping (advanced)</h2><span>Minimum-variance linear ideas</span></div>
+
+      <h3>8.1 Combining two independent estimates</h3>
+      <p>If \(x_1, x_2\) are unbiased with variances \(\sigma_1^2, \sigma_2^2\), the minimum-variance linear estimator is:</p>
+      <p>$$x = \frac{x_1/\sigma_1^2 + x_2/\sigma_2^2}{1/\sigma_1^2 + 1/\sigma_2^2}$$</p>
+      <p>with variance</p>
+      <p>$$\sigma_x^2 = \left(\frac{1}{\sigma_1^2}+\frac{1}{\sigma_2^2}\right)^{-1}$$</p>
+
+      <h3>8.2 Objective mapping viewpoint</h3>
+      <p>Objective analysis methods explicitly model signal covariance and observation-error covariance. Many gridded products provide a mapping error variance field. Interpret it as:</p>
+      <blockquote>“Expected analysis error under the assumed covariance model,” not a universal guarantee of true error.</blockquote>
+    </section>
+
+    <section class="panel" id="workflow">
+      <div class="section-title"><h2>9. A practical workflow for satellite uncertainty budgets</h2><span>How to be defensible</span></div>
+
+      <ol>
+        <li><strong>Define the target quantity and scale.</strong> (Instantaneous vs daily mean; 1 km vs 1° boxes; etc.)</li>
+        <li><strong>Write the measurement equation.</strong> Make every correction explicit.</li>
+        <li><strong>Inventory error sources</strong> (random + bias + correlation scale) in a budget table.</li>
+        <li><strong>Choose a propagation method:</strong> Jacobian for smooth steps; Monte Carlo for nonlinear/thresholded steps.</li>
+        <li><strong>Carry covariance</strong> when differencing, gridding, or fitting trends.</li>
+        <li><strong>Validate with matchups—carefully.</strong> Matchup RMSE includes representativeness and collocation error.</li>
+        <li><strong>Communicate uncertainty honestly</strong> (what’s included, what’s not, and assumptions).</li>
+      </ol>
+    </section>
+
+    <section class="panel" id="pitfalls">
+      <div class="section-title"><h2>10. Common pitfalls</h2><span>What goes wrong most often</span></div>
+      <ol>
+        <li>Mixing variance and standard deviation (forgetting to square/√).</li>
+        <li>Assuming “quality flag = uncertainty.” Flags indicate conditions, not quantitative σ.</li>
+        <li>Ignoring covariance when taking differences/gradients (currents!) or averaging.</li>
+        <li>Treating matchup RMSE as satellite uncertainty without representativeness analysis.</li>
+        <li>Using \(\sigma/\sqrt N\) with \(N\)=pixels even though pixels are correlated.</li>
+        <li>Propagating random error but forgetting bias (especially for trends).</li>
+        <li>Unit mistakes in derivatives (meters vs kilometers; degrees latitude; etc.).</li>
+      </ol>
+    </section>
+
+    <section class="panel" id="exercises">
+      <div class="section-title"><h2>11. Exercises (with brief solution sketches)</h2><span>Homework / exam-ready</span></div>
+
+      <details>
+        <summary>Problem 1 (core): Linear propagation</summary>
+        <p>An SST retrieval is \(T_s = a_0 + 1.2T_{11} + 0.3(T_{11}-T_{12})\).
+        Given \(\sigma_{11}=0.04\,K\) and \(\sigma_{12}=0.05\,K\) (independent), compute \(\sigma_{T_s}\).</p>
+        <p class="small"><strong>Sketch:</strong> rewrite as \(T_s=a_0+(1.2+0.3)T_{11}-0.3T_{12}\), then sum coefficient-squared times variances.</p>
+      </details>
+
+      <details>
+        <summary>Problem 2 (core): Log-ratio propagation</summary>
+        <p>Let \(R=\log_{10}(x/y)\) with \(x=0.012\pm 4\%\), \(y=0.006\pm 6\%\). Compute \(\sigma_R\).
+        Then if \(\log_{10}(\mathrm{Chl})=b_0+b_1R\) with \(b_1=-1.2\), compute relative \(\sigma_{\mathrm{Chl}}/\mathrm{Chl}\).</p>
+        <p class="small"><strong>Sketch:</strong> use \(\sigma_{\log_{10}x}=\sigma_x/(x\ln 10)\), sum in quadrature, multiply by \(|b_1|\), convert from log to linear via \(\ln 10\).</p>
+      </details>
+
+      <details>
+        <summary>Problem 3 (core/advanced): Correlated SSH errors</summary>
+        <p>You estimate geostrophic velocity from two SSH points separated by \(\Delta y\).
+        Assume \(\sigma_{\eta_1}=\sigma_{\eta_2}=\sigma\) and correlation \(\rho\).
+        Derive \(\sigma_{\Delta\eta}\) and show how \(\sigma_u\) depends on \(\rho\).</p>
+        <p class="small"><strong>Sketch:</strong> \(\mathrm{Var}(\eta_2-\eta_1)=2\sigma^2(1-\rho)\); then \(\sigma_u=(g/f)\sigma_{\Delta\eta}/\Delta y\).</p>
+      </details>
+
+      <details>
+        <summary>Problem 4 (advanced): Averaging with correlation</summary>
+        <p>You average \(N=30\) daily SST anomalies with lag-1 autocorrelation \(\rho_1=0.7\) (assume AR(1)).
+        Approximate \(N_{eff}\approx N\frac{1-\rho_1}{1+\rho_1}\). Compare \(\sigma_{\bar x}\) using \(N\) vs \(N_{eff}\).</p>
+        <p class="small"><strong>Sketch:</strong> \(N_{eff}\approx 30\cdot(0.3/1.7)\approx 5.29\); uncertainty reduction is far weaker than \(1/\sqrt{30}\).</p>
+      </details>
+
+      <details>
+        <summary>Problem 5 (lab-style): Monte Carlo propagation</summary>
+        <p>Implement Monte Carlo uncertainty for
+        \(\mathrm{Chl}=10^{-1.5\log_{10}(R_{rs}(443)/R_{rs}(555))}\) given distributions for Rrs uncertainties
+        (optionally include correlated band errors). Compare Monte Carlo \(\sigma\) to Jacobian \(\sigma\).</p>
+        <p class="small"><strong>Sketch:</strong> sample Rrs, compute Chl ensemble, report mean/σ and percentile bounds; test sensitivity to correlation.</p>
+      </details>
+    </section>
+
+    <section class="panel" id="templates">
+      <div class="section-title"><h2>Appendix: Minimal Python templates (for a lab)</h2><span>Optional starter code</span></div>
+
+      <h3>A) Finite-difference Jacobian (scalar output)</h3>
+      <pre><code>import numpy as np
+
+def jacobian_fd(f, x, eps=1e-6):
+    x = np.array(x, dtype=float)
+    y0 = f(x)
+    J = np.zeros_like(x)
+    for i in range(len(x)):
+        dx = np.zeros_like(x)
+        dx[i] = eps * max(1.0, abs(x[i]))
+        J[i] = (f(x + dx) - y0) / dx[i]
+    return J
+
+# Example usage:
+# y = f([T11, T12])  -> SST</code></pre>
+
+      <h3 style="margin-top:12px;">B) Monte Carlo propagation with optional covariance</h3>
+      <pre><code>import numpy as np
+
+def monte_carlo(f, mu, Sigma, M=100000, seed=0):
+    rng = np.random.default_rng(seed)
+    L = np.linalg.cholesky(Sigma)
+    z = rng.standard_normal((M, len(mu)))
+    x = mu + z @ L.T
+    y = np.array([f(xi) for xi in x])
+    return {
+        "mean": y.mean(),
+        "std": y.std(ddof=1),
+        "p16": np.percentile(y, 16),
+        "p84": np.percentile(y, 84),
+    }</code></pre>
+
+      <div class="callout">
+        <strong>Implementation note:</strong> For performance, vectorize <code>f</code> if possible. For complex retrieval chains,
+        Monte Carlo is often the most robust way to carry nonlinearities and non-Gaussian errors.
+      </div>
+    </section>
+
+    <footer>
+      <span>© 2026 — Error Propagation Module</span>
+      <span class="foot-badge">HTML + CSS + MathJax</span>
+    </footer>
+
+  </div>
+</main>
+
+<script>
+  // Mobile nav toggle
+  const menuBtn = document.getElementById('menuBtn');
+  const nav = document.getElementById('nav');
+  menuBtn?.addEventListener('click', () => nav.classList.toggle('open'));
+
+  // Theme toggle: sets data-theme on <html> and stores in localStorage
+  const themeBtn = document.getElementById('themeBtn');
+  const root = document.documentElement;
+
+  function getTheme(){
+    return localStorage.getItem('theme') || root.getAttribute('data-theme') || '';
+  }
+  function setTheme(t){
+    if (!t) {
+      root.removeAttribute('data-theme');
+      localStorage.removeItem('theme');
+      return;
+    }
+    root.setAttribute('data-theme', t);
+    localStorage.setItem('theme', t);
+  }
+  // Initialize from localStorage (if present)
+  const saved = getTheme();
+  if (saved) setTheme(saved);
+
+  themeBtn?.addEventListener('click', () => {
+    const current = root.getAttribute('data-theme');
+    // If unset, default to light (since dark may already be browser default)
+    const next = (current === 'light') ? 'dark' : 'light';
+    setTheme(next);
+  });
+</script>
+
+</body>
+</html>

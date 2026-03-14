@@ -1,0 +1,1103 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Optical Remote Sensing & Ocean Color | OCNG 689</title>
+  <meta name="description" content="Chapter: Optical Remote Sensing and Ocean Color. Concepts, retrieval pipeline, algorithms, pitfalls, missions, and practical PACE processing examples." />
+
+  <!-- Course site stylesheet (with tooltip support) -->
+  <link rel="stylesheet" href="styles-light-tooltips.css" />
+
+  <!-- Small per-page tweaks (keep minimal; move to CSS if you want it global) -->
+  <style>
+    /* Offset fixed topbar */
+    body { padding-top: 64px; }
+
+    /* Content typography */
+    .content h2 { margin-top: 22px; }
+    .content h3 { margin-top: 16px; }
+    .content h4 { margin-top: 12px; }
+
+    .content p, .content li { max-width: 95ch; }
+    .content ul, .content ol { padding-left: 1.25rem; }
+
+    /* Code blocks */
+    .content pre {
+      overflow-x: auto;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--card2);
+      box-shadow: none;
+      margin: 10px 0 14px;
+    }
+    .content code {
+      font-family: var(--mono);
+      font-size: 0.94em;
+    }
+    .content pre code { font-size: 0.90rem; }
+
+    /* Inline “equation blocks” if MathJax is not used */
+    .eq {
+      display: block;
+      padding: 10px 12px;
+      border-left: 3px solid color-mix(in oklab, var(--accent) 55%, transparent);
+      background: color-mix(in oklab, var(--muted) 6%, transparent);
+      border-radius: 10px;
+      margin: 10px 0 14px;
+      overflow-x: auto;
+      font-family: var(--mono);
+      font-size: 0.92rem;
+      max-width: 95ch;
+    }
+
+    /* Tighten TOC list spacing */
+    .toc ul { margin: 6px 0 0 0; }
+    .toc li { margin: 4px 0; }
+    .toc ul ul { margin-left: 18px; margin-top: 4px; }
+  </style>
+</head>
+
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <!-- Top navigation -->
+  <header class="topbar" role="banner">
+    <div class="topbar-inner">
+      <div class="brand">
+        <a href="#" aria-label="Course home">OCNG 689</a>
+        <small>Satellite Oceanography — Optical & Ocean Color</small>
+      </div>
+
+      <button class="menu-btn" type="button" aria-label="Toggle menu">Menu</button>
+
+      <nav class="nav" aria-label="Page navigation">
+        <a href="#intro">Intro</a>
+        <a href="#em-review">EM</a>
+        <a href="#pipeline">Pipeline</a>
+        <a href="#algorithms">Algorithms</a>
+        <a href="#uncertainties">Pitfalls</a>
+        <a href="#missions">Missions</a>
+        <a href="#pace">PACE</a>
+        <a href="#examples">Examples</a>
+        <a href="#references">References</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="container" role="main">
+    <div class="page-head">
+      <div class="breadcrumbs" aria-label="Breadcrumbs">
+        <a class="link" href="index.html">OCNG 689</a>
+        <span>›</span>
+        <span>Chapters</span>
+        <span>›</span>
+        <span>Optical & Ocean Color</span>
+      </div>
+
+      <h1>Optical Remote Sensing and Ocean Color</h1>
+      <p>
+        This chapter develops the conceptual and practical workflow of ocean-color remote sensing:
+        radiometry → atmospheric correction → remote-sensing reflectance → bio-optical inversion → geophysical products,
+        with a focus on PACE OCI examples.
+      </p>
+
+      <div class="callout">
+        <strong>Hover glossary:</strong> Key terms are underlined with a dotted rule.
+        Hover (or focus with Tab) to see brief definitions.
+      </div>
+    </div>
+
+    <!-- Table of contents -->
+    <section class="panel toc" aria-label="Table of contents">
+      <div class="section-title">
+        <h2>Table of contents</h2>
+        <span>On this page</span>
+      </div>
+
+      <ul>
+        <li><a class="link" href="#intro">1. Introduction</a>
+          <ul>
+            <li><a class="link" href="#intro-11">1.1 Brief introduction to remote sensing of ocean color</a></li>
+            <li><a class="link" href="#intro-12">1.2 Foundational concepts and must-to-know points</a></li>
+            <li><a class="link" href="#intro-13">1.3 Learning outcomes</a></li>
+          </ul>
+        </li>
+        <li><a class="link" href="#em-review">2. Review of EM functions relevant to ocean color</a></li>
+        <li><a class="link" href="#pipeline">3. Data flow and processing pipeline</a></li>
+        <li><a class="link" href="#algorithms">4. Major retrieval algorithms</a></li>
+        <li><a class="link" href="#uncertainties">5. Major pitfalls and sources of uncertainty</a></li>
+        <li><a class="link" href="#missions">6. Major ocean-color missions in history</a></li>
+        <li><a class="link" href="#pace">7. Introduction to PACE</a></li>
+        <li><a class="link" href="#examples">8. Practical examples with PACE</a>
+          <ul>
+            <li><a class="link" href="#examples-81">8.1 Data access</a></li>
+            <li><a class="link" href="#examples-82">8.2 Plotting Level-1B vs Level-2 (Rrs and chlorophyll)</a></li>
+            <li><a class="link" href="#examples-83">8.3 Going from L1B → L2 with SeaDAS/OCSSW</a></li>
+            <li><a class="link" href="#examples-84">8.4 Mini-lab checklist</a></li>
+          </ul>
+        </li>
+        <li><a class="link" href="#references">9. References</a></li>
+      </ul>
+    </section>
+
+    <!-- Main content -->
+    <article class="panel content" aria-label="Chapter content">
+      <!-- 1. INTRO -->
+      <section id="intro">
+        <div class="section-title">
+          <h2>1. Introduction</h2>
+          <span>What “ocean color” means, and why it is a hard inverse problem</span>
+        </div>
+
+        <section id="intro-11">
+          <h3>1.1 Brief introduction to remote sensing of ocean color</h3>
+
+          <p>
+            <span class="term" tabindex="0"
+              data-def="Passive optical remote sensing of the ocean’s spectral signal (after atmospheric correction) used to infer biological and biogeochemical properties near the surface.">
+              Ocean color remote sensing
+            </span>
+            is the satellite-based measurement of sunlight that has interacted with the atmosphere
+            and the ocean, with the goal of retrieving the <span class="term" tabindex="0"
+              data-def="The portion of the measured signal that originates in the ocean and exits the sea surface toward the sensor (often expressed via water-leaving radiance or Rrs).">
+              water-leaving signal
+            </span>
+            and using it to infer <strong>biogeochemical and optical properties</strong> of the upper ocean (e.g., chlorophyll-a as a proxy for phytoplankton biomass,
+            particulate and dissolved matter, and water clarity).
+          </p>
+
+          <p>A practical framing:</p>
+          <ol>
+            <li>
+              The sensor measures
+              <span class="term" tabindex="0"
+                data-def="Top-of-atmosphere: the radiance/reflectance measured at the satellite before atmospheric correction. It includes Rayleigh/aerosol scattering, gas absorption, surface reflection, and the ocean signal.">
+                top-of-atmosphere (TOA) radiance/reflectance
+              </span>.
+            </li>
+            <li>
+              We apply
+              <span class="term" tabindex="0"
+                data-def="The set of corrections that remove atmospheric and surface contributions (Rayleigh + aerosols + gases + glint/whitecaps) to estimate the water-leaving component and derive Rrs.">
+                atmospheric correction
+              </span>
+              to estimate the ocean signal.
+            </li>
+            <li>
+              We convert that signal into
+              <span class="term" tabindex="0"
+                data-def="Remote-sensing reflectance Rrs(λ) = Lw(λ)/Ed⁺(λ), units sr⁻¹. It is the primary spectral ocean-color product used by most in-water retrieval algorithms.">
+                remote-sensing reflectance (Rrs)
+              </span>
+              and then into <strong>geophysical products</strong>.
+            </li>
+          </ol>
+
+          <p>
+            A central quantity is <strong>remote-sensing reflectance</strong>, <code>Rrs(λ)</code> (units: sr⁻¹), commonly defined above the surface as:
+          </p>
+
+          <div class="eq">
+            Rrs(λ) = Lw(λ) / Ed⁺(λ)
+          </div>
+
+          <p>
+            where
+            <span class="term" tabindex="0"
+              data-def="Water-leaving radiance: the radiance emerging from the ocean and crossing the sea surface toward the sensor; contains information about in-water constituents through absorption and backscattering.">
+              Lw(λ)
+            </span>
+            is water-leaving radiance and
+            <span class="term" tabindex="0"
+              data-def="Downwelling irradiance just above the sea surface; used to normalize Lw into a reflectance-like quantity (Rrs) that reduces dependence on illumination magnitude.">
+              Ed⁺(λ)
+            </span>
+            is downwelling irradiance just above the sea surface.
+          </p>
+
+          <div class="callout">
+            <strong>Why it’s difficult:</strong> Over most of the open ocean, the ocean is a <em>dark target</em> in the visible; at the satellite,
+            the atmospheric signal is often much larger than the water-leaving signal. This is why atmospheric correction frequently dominates the uncertainty budget.
+          </div>
+
+          <div class="callout">
+            <strong>Interpretation reminder:</strong> “Ocean color” is not just “a pretty RGB image.”
+            It is a quantitative retrieval chain: radiometry → atmospheric correction → Rrs → bio-optical inversion → products.
+          </div>
+        </section>
+
+        <section id="intro-12">
+          <h3>1.2 Foundational concepts and must-to-know points</h3>
+
+          <h4>Radiometry and geometry</h4>
+          <ul>
+            <li>
+              <span class="term" tabindex="0"
+                data-def="Radiance L is directional power per area per solid angle (what satellites measure). Irradiance E is power per area integrated over directions (what illuminates the surface).">
+                Radiance (L) vs irradiance (E)
+              </span>, and why satellites measure radiance.
+            </li>
+            <li>Viewing/illumination geometry: solar zenith, sensor zenith, relative azimuth.</li>
+            <li>Reflectance-like quantities used in processing:
+              <ul>
+                <li>
+                  <span class="term" tabindex="0"
+                    data-def="TOA reflectance (often stored as rhot) is a normalized measure of what the sensor sees at the top of the atmosphere; it still includes atmospheric/surface contributions.">
+                    TOA reflectance (often stored as rhot)
+                  </span>
+                </li>
+                <li>
+                  <span class="term" tabindex="0"
+                    data-def="Remote-sensing reflectance Rrs is the water-leaving radiance normalized by downwelling irradiance; the key spectral input to chlorophyll/IOP algorithms.">
+                    Remote-sensing reflectance (Rrs)
+                  </span>
+                </li>
+              </ul>
+            </li>
+          </ul>
+
+          <h4>Optical properties and the inverse problem</h4>
+
+          <p>
+            <span class="term" tabindex="0"
+              data-def="Inherent optical properties depend only on the medium (water + constituents), not on sun/sensor geometry. Core IOPs are absorption a, scattering b, and backscattering bb.">
+              Inherent optical properties (IOPs)
+            </span>
+            include:
+          </p>
+          <ul>
+            <li>
+              <span class="term" tabindex="0"
+                data-def="Absorption a(λ): removal of photons from the light field by water and constituents (e.g., pigments, CDOM), typically expressed per unit length.">
+                Absorption: a(λ)
+              </span>
+            </li>
+            <li>
+              <span class="term" tabindex="0"
+                data-def="Scattering b(λ): redirection of photons by water and particles; affects the angular distribution of light and the apparent brightness.">
+                Scattering: b(λ)
+              </span>
+            </li>
+            <li>
+              <span class="term" tabindex="0"
+                data-def="Backscattering bb(λ): the portion of scattering into the backward hemisphere; strongly controls the magnitude and shape of Rrs.">
+                Backscattering: bb(λ)
+              </span>
+            </li>
+          </ul>
+
+          <p>
+            <span class="term" tabindex="0"
+              data-def="Apparent optical properties depend on IOPs and also on illumination and viewing geometry. Rrs and Kd are common AOPs.">
+              Apparent optical properties (AOPs)
+            </span>
+            include <code>Rrs(λ)</code> and
+            <span class="term" tabindex="0"
+              data-def="Diffuse attenuation coefficient Kd(λ): describes exponential decay of downwelling light with depth; used as a water-clarity and light-availability metric.">
+              diffuse attenuation Kd(λ)
+            </span>.
+          </p>
+
+          <h4>Case-1 vs Case-2 waters (useful heuristic)</h4>
+          <ul>
+            <li>
+              <span class="term" tabindex="0"
+                data-def="Case-1 waters: optical variability largely driven by phytoplankton and covarying materials (often open ocean), where global chlorophyll algorithms are typically most reliable.">
+                Case-1 waters
+              </span>
+            </li>
+            <li>
+              <span class="term" tabindex="0"
+                data-def="Case-2 waters: optical variability influenced by independently varying CDOM and/or mineral particles (often coastal/inland), requiring alternative corrections and/or algorithms.">
+                Case-2 waters
+              </span>
+            </li>
+          </ul>
+
+          <h4>Atmospheric correction essentials</h4>
+          <p>The sensor sees contributions from:</p>
+          <ul>
+            <li>
+              <span class="term" tabindex="0"
+                data-def="Rayleigh scattering: molecular scattering with strong wavelength dependence (~λ⁻⁴), dominating the blue TOA signal and usually well-modeled.">
+                Rayleigh scattering (molecules)
+              </span>
+            </li>
+            <li>
+              <span class="term" tabindex="0"
+                data-def="Aerosol (Mie) scattering/absorption: particle effects with variable spectral/angle dependence; typically the hardest part of atmospheric correction.">
+                Aerosol scattering/absorption
+              </span>
+            </li>
+            <li>Gaseous absorption (e.g., ozone)</li>
+            <li>
+              Surface effects:
+              <span class="term" tabindex="0"
+                data-def="Sun glint: specular reflection of sunlight from the sea surface into the sensor; can overwhelm the ocean signal if not corrected/masked.">
+                sun glint
+              </span>,
+              <span class="term" tabindex="0"
+                data-def="Whitecaps/foam from breaking waves increase reflectance across visible bands and can bias Rrs if not corrected.">
+                whitecaps
+              </span>
+            </li>
+            <li>Water-leaving signal (the target)</li>
+          </ul>
+
+          <h4>Reprocessing is normal</h4>
+          <ul>
+            <li>Calibration updates, improved ancillary data, and algorithm advances drive reprocessing.</li>
+            <li>For new missions, early products can be explicitly marked as preliminary; always track processing version and release notes.</li>
+          </ul>
+        </section>
+
+        <section id="intro-13">
+          <h3>1.3 Learning outcomes</h3>
+
+          <p>After completing this chapter, you should be able to:</p>
+          <ol>
+            <li>Explain what satellites measure for ocean color and why atmospheric correction is required.</li>
+            <li>Define and interpret TOA radiance/reflectance, water-leaving radiance, <code>Rrs</code>, IOPs, and AOPs (with units).</li>
+            <li>
+              Sketch the processing pipeline from raw counts to
+              <span class="term" tabindex="0"
+                data-def="Level-2: per-pixel geophysical retrievals derived from Level-1 measurements (e.g., Rrs, chlorophyll), after atmospheric correction and QC/flags.">
+                Level-2
+              </span>
+              geophysical products and
+              <span class="term" tabindex="0"
+                data-def="Level-3: spatially mapped/binned and often temporally composited products (e.g., daily/weekly/monthly grids).">
+                Level-3
+              </span>
+              gridded composites.
+            </li>
+            <li>Describe major algorithm families (atmospheric correction, chlorophyll algorithms, semi-analytical IOP inversions).</li>
+            <li>Identify key pitfalls (glint, aerosols, adjacency, turbid water breakdowns, calibration drift) and how they appear in products.</li>
+            <li>Name major historical missions and explain why cross-mission consistency matters for climate records.</li>
+            <li>Summarize why PACE (hyperspectral OCI + polarimetry) matters for aerosol/ocean coupling and improved corrections.</li>
+            <li>Download, read, and plot PACE OCI Level-1B and Level-2 data, and explain what changed between them.</li>
+          </ol>
+        </section>
+      </section>
+
+      <!-- 2. EM REVIEW -->
+      <section id="em-review">
+        <div class="section-title">
+          <h2>2. Review of EM functions relevant to ocean color</h2>
+          <span>Radiometry, attenuation, and scattering regimes</span>
+        </div>
+
+        <p>
+          Ocean color is primarily passive visible/near-IR remote sensing: sunlight is modified by absorption and scattering in the atmosphere and ocean.
+        </p>
+
+        <h3>Photon energy and wavelength</h3>
+        <div class="eq">E = hc / λ</div>
+        <p>
+          Shorter wavelengths (blue/UV) carry higher photon energy and experience stronger Rayleigh scattering (∼λ⁻⁴).
+          Longer wavelengths in the
+          <span class="term" tabindex="0"
+            data-def="Near-infrared (NIR): ~700–1000 nm. Often used to characterize aerosols over the ocean (open-ocean ‘black pixel’ assumption) and to screen clouds/glint.">
+            NIR
+          </span>
+          and
+          <span class="term" tabindex="0"
+            data-def="Shortwave infrared (SWIR): >~1000 nm where water absorption is strong; useful for aerosol estimation in turbid waters where NIR is not dark.">
+            SWIR
+          </span>
+          are crucial for aerosol characterization and atmospheric correction.
+        </p>
+
+        <h3>Planck function (thermal emission context)</h3>
+        <p>
+          Ocean color uses reflected solar radiation, but Planck’s law underpins why thermal emission dominates in the IR:
+        </p>
+        <div class="eq">
+          B(λ,T) = (2hc²/λ⁵) · [exp(hc/(λkT)) − 1]⁻¹
+        </div>
+
+        <h3>Beer–Lambert attenuation</h3>
+        <div class="eq">I(z,λ) = I(0,λ) · exp[ −K(λ) · z ]</div>
+        <p>
+          This motivates why blue-green penetrates deeper than red and why optical depth matters in both atmosphere and water.
+        </p>
+
+        <h3>Rayleigh vs Mie scattering</h3>
+        <ul>
+          <li><strong>Rayleigh:</strong> molecular scattering, strong wavelength dependence (∼λ⁻⁴).</li>
+          <li><strong>Mie:</strong> aerosol scattering with weaker wavelength dependence and strong phase-function effects; often the dominant uncertainty in atmospheric correction.</li>
+        </ul>
+
+        <h3>Fresnel reflection and sun glint</h3>
+        <p>
+          Specular reflection at the air–sea interface depends on incidence angle and surface roughness; wind-driven wave slope statistics are used to model glint.
+        </p>
+      </section>
+
+      <!-- 3. PIPELINE -->
+      <section id="pipeline">
+        <div class="section-title">
+          <h2>3. Data flow and processing pipeline</h2>
+          <span>From counts to chlorophyll</span>
+        </div>
+
+        <h3>3.1 Product levels (typical NASA/OBPG workflow)</h3>
+        <p>
+          Product “levels” provide a standardized way to describe processing maturity:
+          <span class="term" tabindex="0"
+            data-def="Product levels (L0–L4): conventions describing processing maturity from raw sensor counts (L0) to geophysical retrievals (L2), mapped composites (L3), and modeled/assimilated fields (L4).">
+            L0–L4
+          </span>.
+        </p>
+
+        <pre><code>Instrument counts (L0)
+  → reconstruction + time-ordering (L1A)
+  → calibration + geolocation (L1B)
+  → (optional) resampling / gridding (L1C)
+  → atmospheric correction + bio-optical retrievals (L2)
+  → spatial binning + temporal compositing (L3)
+  → model assimilation / derived fields (L4)</code></pre>
+
+        <h3>3.2 The TOA radiance budget (conceptual)</h3>
+        <p>A useful decomposition of TOA radiance Lt(λ) is:</p>
+        <div class="eq">
+          Lt = Lr + La + Lra + t·Lw + Lg + Lwc
+        </div>
+
+        <ul>
+          <li><code>Lr</code>: Rayleigh path radiance</li>
+          <li><code>La</code>: aerosol path radiance</li>
+          <li><code>Lra</code>: Rayleigh–aerosol multiple scattering term</li>
+          <li><code>t·Lw</code>: transmitted water-leaving radiance</li>
+          <li><code>Lg</code>: sun glint</li>
+          <li><code>Lwc</code>: whitecap/foam contribution</li>
+        </ul>
+
+        <h3>3.3 Typical L1B → L2 processing steps</h3>
+        <ol>
+          <li><strong>Radiometric calibration:</strong> counts → radiance; apply instrument corrections (dark current, nonlinearity, stray light, polarization sensitivity).</li>
+          <li><strong>Geolocation:</strong> compute lat/lon and pixel geometry.</li>
+          <li><strong>Ancillary ingestion:</strong> ozone, pressure, winds (glint/whitecaps), aerosol/meteorological fields.</li>
+          <li><strong>Atmospheric correction:</strong> remove Rayleigh, correct absorbing gases, estimate aerosols, correct surface effects, mask clouds/ice.</li>
+          <li><strong>Derive Rrs(λ):</strong> water-leaving radiance normalized by downwelling irradiance.</li>
+          <li><strong>Apply in-water algorithms:</strong> chlorophyll, IOPs, Kd, POC, CDOM proxies, etc.</li>
+          <li><strong>QC + uncertainty:</strong> quality flags, uncertainties, diagnostics.</li>
+        </ol>
+
+        <div class="callout">
+          <strong>Operational mental model:</strong>
+          <span class="term" tabindex="0"
+            data-def="Level-1B: calibrated, geolocated radiances/reflectances at the sensor (still includes atmosphere).">
+            L1B
+          </span>
+          is what the sensor “saw.”
+          <span class="term" tabindex="0"
+            data-def="Level-2: the best estimate of ocean and atmospheric geophysical quantities per pixel (e.g., Rrs, chlor_a) after correction and masking.">
+            L2
+          </span>
+          is what we infer about the Earth system from those measurements.
+        </div>
+      </section>
+
+      <!-- 4. ALGORITHMS -->
+      <section id="algorithms">
+        <div class="section-title">
+          <h2>4. Major retrieval algorithms</h2>
+          <span>Atmospheric correction + bio-optical inversion</span>
+        </div>
+
+        <p>
+          Ocean-color retrieval is best viewed as two coupled inverse problems:
+          (1) atmospheric correction and (2) bio-optical inversion of the water signal.
+        </p>
+
+        <h3>4.1 Atmospheric correction (heritage open-ocean approach)</h3>
+        <h4>(A) Rayleigh correction</h4>
+        <p>
+          Rayleigh scattering is well-modeled with geometry and pressure; this step is typically high accuracy.
+        </p>
+
+        <h4>(B) Aerosol correction (often dominant uncertainty)</h4>
+        <p>
+          Classical open-ocean processing often uses a near-IR “black pixel” assumption to estimate aerosol reflectance in NIR,
+          then extrapolates to VIS using aerosol models and multiple-scattering corrections.
+        </p>
+
+        <h4>(C) Coastal/turbid extensions</h4>
+        <p>
+          In turbid waters, NIR is not black. Strategies include SWIR-based corrections (where water absorption is strong)
+          and leveraging hyperspectral and polarimetric constraints.
+        </p>
+
+        <h3>4.2 Empirical chlorophyll algorithms</h3>
+        <h4>
+          <span class="term" tabindex="0"
+            data-def="OCx algorithms: empirical chlorophyll-a retrievals based on blue-to-green band ratios, typically parameterized as a log-polynomial relationship.">
+            OCx band-ratio family
+          </span>
+        </h4>
+        <p>
+          A widely used approach relates chlorophyll-a to a blue-to-green reflectance ratio via a log-polynomial model:
+        </p>
+        <div class="eq">
+          log10(Chl) = a0 + a1·R + a2·R² + a3·R³ + a4·R⁴
+        </div>
+        <p>
+          where <code>R</code> is the log of a selected maximum band ratio (blue/green).
+        </p>
+
+        <h4>
+          <span class="term" tabindex="0"
+            data-def="Color Index (CI): three-band reflectance difference method designed to reduce noise in very low-chlorophyll (oligotrophic) waters.">
+            Color Index (CI) for oligotrophic waters
+          </span>
+        </h4>
+        <p>
+          For very low chlorophyll, band ratios can be noisy; CI uses a three-band reflectance difference that can be more stable.
+        </p>
+
+        <div class="callout">
+          <strong>Naming collision:</strong>
+          PACE’s sensor is called
+          <span class="term" tabindex="0"
+            data-def="OCI (instrument): PACE Ocean Color Instrument/Imager. A hyperspectral UV–VIS–NIR sensor with additional SWIR bands for atmospheric correction and aerosol work.">
+            OCI
+          </span>.
+          The chlorophyll algorithm “OCI/CI” in the literature refers to an <em>Ocean Color Index</em> concept.
+        </div>
+
+        <h3>4.3 Semi-analytical IOP inversion (Rrs → IOPs → constituents)</h3>
+        <ul>
+          <li>
+            <span class="term" tabindex="0"
+              data-def="GSM: a semi-analytical spectral model that fits Rrs to estimate chlorophyll, CDOM/detrital absorption, and particulate backscattering.">
+              GSM family
+            </span>
+          </li>
+          <li>
+            <span class="term" tabindex="0"
+              data-def="QAA: Quasi-Analytical Algorithm that derives absorption and backscattering from Rrs using radiative-transfer-inspired relationships.">
+              QAA
+            </span>
+          </li>
+          <li>
+            <span class="term" tabindex="0"
+              data-def="GIOP: Generalized Inherent Optical Property inversion framework allowing flexible parameterizations and constraints across water types.">
+              GIOP
+            </span>
+          </li>
+        </ul>
+
+        <h3>4.4 Common Level-2 products derived after Rrs</h3>
+        <ul>
+          <li><strong>AOPs:</strong> Kd(λ), PAR-related fields, water clarity indices</li>
+          <li><strong>BGC proxies:</strong> POC/PIC, bloom indices, CDOM-related products</li>
+          <li><strong>IOPs:</strong> a(λ), bb(λ), etc.</li>
+        </ul>
+      </section>
+
+      <!-- 5. UNCERTAINTIES -->
+      <section id="uncertainties">
+        <div class="section-title">
+          <h2>5. Major pitfalls and sources of uncertainty</h2>
+          <span>How products fail, and how to diagnose</span>
+        </div>
+
+        <h3>5.1 Atmospheric and surface contamination</h3>
+        <ol>
+          <li>
+            <strong>Aerosol model mismatch</strong>
+            <ul>
+              <li>Symptom: biased Rrs spectrum, often strongest in the blue.</li>
+              <li>Consequence: chlorophyll bias and spurious gradients.</li>
+            </ul>
+          </li>
+          <li>
+            <strong>Absorbing aerosols and thin cirrus</strong>
+            <ul>
+              <li>Symptom: depressed blue; patchy artifacts; negative Rrs in short wavelengths.</li>
+            </ul>
+          </li>
+          <li>
+            <strong>
+              <span class="term" tabindex="0"
+                data-def="Sun glint is specular reflection of sunlight off the sea surface into the sensor; it can dominate TOA radiance and cause strong biases if not corrected or masked.">
+                Sun glint
+              </span>
+            </strong>
+            <ul>
+              <li>Symptom: bright streaks; elevated reflectance across bands; chlorophyll artifacts.</li>
+            </ul>
+          </li>
+          <li>
+            <strong>
+              <span class="term" tabindex="0"
+                data-def="Whitecaps/foam increase reflectance (especially in windy conditions) and can bias Rrs and derived products if not corrected.">
+                Whitecaps/foam
+              </span>
+            </strong>
+            <ul>
+              <li>Symptom: positive reflectance bias under high winds.</li>
+            </ul>
+          </li>
+          <li>
+            <strong>
+              <span class="term" tabindex="0"
+                data-def="Adjacency effects: photons reflected from nearby land/bright targets scatter into the sensor’s line-of-sight, contaminating nearshore ocean pixels.">
+                Adjacency effects (coasts)
+              </span>
+            </strong>
+            <ul>
+              <li>Symptom: nearshore contamination from land-reflected photons scattered into the sensor view.</li>
+            </ul>
+          </li>
+        </ol>
+
+        <h3>5.2 In-water algorithm limitations</h3>
+        <ul>
+          <li><strong>Case-2 waters:</strong> CDOM/sediments can mimic pigment absorption effects; global chlorophyll algorithms can fail.</li>
+          <li><strong>Shallow water bottom reflectance:</strong> can produce unrealistically high green/red reflectance and nonsensical inversions.</li>
+          <li><strong>Vertical structure:</strong> satellites see an optically weighted near-surface layer, not a depth-resolved concentration profile.</li>
+          <li><strong>Physiology/community variability:</strong> chlorophyll is a proxy; pigment packaging and C:Chl can vary strongly.</li>
+        </ul>
+
+        <h3>5.3 Instrument and processing issues</h3>
+        <ul>
+          <li><strong>Calibration drift / vicarious calibration differences:</strong> sub-percent changes can matter for ocean products.</li>
+          <li><strong>Stray light and spectral cross-talk:</strong> particularly important for hyperspectral instruments.</li>
+          <li><strong>Polarization sensitivity:</strong> can alias into radiometry if not corrected.</li>
+          <li><strong>Reprocessing/version changes:</strong> always report processing version; early mission products may be preliminary.</li>
+        </ul>
+
+        <h3>5.4 Validation/matchup pitfalls</h3>
+        <ul>
+          <li>Space–time mismatch between in situ sampling and satellite overpass.</li>
+          <li>Representativeness errors: point measurements vs 1 km-scale pixels.</li>
+          <li>Differences in in situ protocols/instruments for radiometry and pigments.</li>
+        </ul>
+      </section>
+
+      <!-- 6. MISSIONS -->
+      <section id="missions">
+        <div class="section-title">
+          <h2>6. Major ocean-color missions in history</h2>
+          <span>Continuity, cross-calibration, and climate records</span>
+        </div>
+
+        <p>
+          Ocean color has a multi-decade record. Building consistent climate records requires careful merging of sensors with different spectral bands,
+          calibration strategies, and viewing geometries.
+        </p>
+
+        <div class="table-wrap" role="region" aria-label="Selected ocean-color missions table">
+          <table class="course">
+            <caption>Selected ocean-color missions and why they matter</caption>
+            <thead>
+              <tr>
+                <th>Mission / Sensor</th>
+                <th>Agency</th>
+                <th>Years (approx.)</th>
+                <th>Key contributions / notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-label="Mission / Sensor">CZCS (Nimbus-7)</td>
+                <td data-label="Agency">NASA (US)</td>
+                <td data-label="Years (approx.)">1978–1986</td>
+                <td data-label="Key contributions / notes">Proof-of-concept global ocean color; demonstrated large-scale biological signals.</td>
+              </tr>
+              <tr>
+                <td data-label="Mission / Sensor">OCTS</td>
+                <td data-label="Agency">NASDA/JAXA (Japan)</td>
+                <td data-label="Years (approx.)">1996–1997</td>
+                <td data-label="Key contributions / notes">Bridged the gap between CZCS and the continuous modern record.</td>
+              </tr>
+              <tr>
+                <td data-label="Mission / Sensor">SeaWiFS</td>
+                <td data-label="Agency">NASA/OrbView-2 (US)</td>
+                <td data-label="Years (approx.)">1997–2010</td>
+                <td data-label="Key contributions / notes">Established a long, stable time series; foundational algorithms and validation.</td>
+              </tr>
+              <tr>
+                <td data-label="Mission / Sensor">MODIS (Terra/Aqua)</td>
+                <td data-label="Agency">NASA (US)</td>
+                <td data-label="Years (approx.)">1999– / 2002–</td>
+                <td data-label="Key contributions / notes">Extended continuity; broad synergy with SST and atmosphere products.</td>
+              </tr>
+              <tr>
+                <td data-label="Mission / Sensor">MERIS (Envisat)</td>
+                <td data-label="Agency">ESA (Europe)</td>
+                <td data-label="Years (approx.)">2002–2012</td>
+                <td data-label="Key contributions / notes">Coastal-capable band set; strong role in merged products.</td>
+              </tr>
+              <tr>
+                <td data-label="Mission / Sensor">VIIRS (S-NPP, NOAA-20, …)</td>
+                <td data-label="Agency">NOAA/NASA (US)</td>
+                <td data-label="Years (approx.)">2011–present</td>
+                <td data-label="Key contributions / notes">Operational continuity and multi-sensor climate-quality streams.</td>
+              </tr>
+              <tr>
+                <td data-label="Mission / Sensor">OLCI (Sentinel-3A/3B)</td>
+                <td data-label="Agency">ESA/EUMETSAT</td>
+                <td data-label="Years (approx.)">2016–present</td>
+                <td data-label="Key contributions / notes">Operational series; coastal emphasis; strong continuity strategy.</td>
+              </tr>
+              <tr>
+                <td data-label="Mission / Sensor">GOCI (geostationary, regional)</td>
+                <td data-label="Agency">KARI (Korea)</td>
+                <td data-label="Years (approx.)">2010–present</td>
+                <td data-label="Key contributions / notes">High-frequency diurnal sampling over regional seas; enables process studies.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 7. PACE -->
+      <section id="pace">
+        <div class="section-title">
+          <h2>7. Introduction to PACE</h2>
+          <span>Hyperspectral ocean color + polarimetry</span>
+        </div>
+
+        <p>
+          <span class="term" tabindex="0"
+            data-def="PACE: Plankton, Aerosol, Cloud, ocean Ecosystem mission. Designed to observe ocean color and aerosols/clouds together to improve retrieval accuracy and ecosystem science.">
+            PACE
+          </span>
+          is designed to advance ocean-color biogeochemistry and atmospheric science jointly,
+          improving our ability to correct atmospheric effects and interpret ocean ecosystem change.
+        </p>
+
+        <h3>7.1 Instruments</h3>
+        <ul>
+          <li>
+            <strong>
+              <span class="term" tabindex="0"
+                data-def="OCI: PACE’s hyperspectral ocean-color sensor measuring UV–VIS–NIR continuously with additional SWIR channels to support aerosol correction and bright-water cases.">
+                OCI
+              </span>
+            </strong>
+            — a <span class="term" tabindex="0"
+              data-def="Hyperspectral: measurements in many contiguous narrow wavelength bands, enabling detailed spectral-shape analysis beyond a few discrete bands.">
+              hyperspectral
+            </span> UV–VIS–NIR instrument with SWIR bands for atmospheric correction/aerosol work.
+          </li>
+          <li>
+            <strong>SPEXone</strong> — multi-angle <span class="term" tabindex="0"
+              data-def="Polarimetry: measurement of the polarization state of light (e.g., degree/angle of linear polarization). Strongly constrains aerosol properties and surface reflection in atmospheric correction.">
+              polarimetry
+            </span> to improve aerosol/cloud characterization.
+          </li>
+          <li><strong>HARP2</strong> — wide-angle imaging polarimetry for aerosols/clouds and surface properties.</li>
+        </ul>
+
+        <h3>7.2 What changes relative to heritage missions?</h3>
+        <ul>
+          <li><strong>Hyperspectral OCI</strong> enables improved discrimination of phytoplankton spectral features and more flexible inversion constraints.</li>
+          <li><strong>Polarimetry</strong> provides stronger aerosol constraints, potentially reducing one of the largest uncertainty sources in ocean color.</li>
+          <li><strong>UV–NIR–SWIR coverage</strong> expands correction and retrieval options in challenging waters (coastal, turbid, absorbing aerosols).</li>
+        </ul>
+
+        <div class="callout">
+          <strong>Data mindset:</strong> Always track processing version and flags. For any mission, early releases can change materially as calibration and algorithms mature.
+        </div>
+      </section>
+
+      <!-- 8. EXAMPLES -->
+      <section id="examples">
+        <div class="section-title">
+          <h2>8. Practical examples with PACE</h2>
+          <span>Data discovery, download, and plotting L1B → L2</span>
+        </div>
+
+        <section id="examples-81">
+          <h3>8.1 Data access</h3>
+          <p>
+            Most PACE ocean-color products are distributed via
+            <span class="term" tabindex="0"
+              data-def="OB.DAAC: NASA Ocean Biology Distributed Active Archive Center; the primary distribution site for ocean biology and ocean-color products.">
+              OB.DAAC
+            </span>
+            / OceanColor/OBPG systems. A common workflow is:
+          </p>
+          <ol>
+            <li>Search granules using OB.DAAC File Search (GUI or API).</li>
+            <li>Authenticate with <span class="term" tabindex="0"
+              data-def="Earthdata Login: NASA user authentication used to access many distributed Earth science datasets, including OB.DAAC downloads.">
+              Earthdata Login
+            </span>.</li>
+            <li>Download Level-1B and Level-2 (OC_AOP and OC_BGC) for the same granule.</li>
+          </ol>
+
+          <h4>Example: programmatic search (illustrative)</h4>
+          <pre><code class="language-bash">BASE="https://oceandata.sci.gsfc.nasa.gov/api/file_search"
+
+curl -G "$BASE"   --data-urlencode "sensor_id=PACE_OCI"   --data-urlencode "dtype=L2"   --data-urlencode "search=OC_BGC"   --data-urlencode "sdate=2024-04-15"   --data-urlencode "edate=2024-04-16"   --data-urlencode "results_as_file=0"</code></pre>
+
+          <div class="callout">
+            <strong>Important:</strong> Parameter strings (sensor_id, dtype, suite names) can evolve; confirm against current OB.DAAC File Search documentation.
+          </div>
+        </section>
+
+        <section id="examples-82">
+          <h3>8.2 Plotting Level-1B (TOA) vs Level-2 (Rrs and chlorophyll)</h3>
+
+          <p>
+            <strong>Goal:</strong> visually demonstrate what atmospheric correction accomplished by comparing
+            a TOA reflectance slice (<span class="term" tabindex="0"
+              data-def="L1B: calibrated/geolocated radiances or reflectances at the sensor; it still includes atmosphere and surface effects.">
+              Level-1B
+            </span>)
+            with an Rrs slice (<span class="term" tabindex="0"
+              data-def="L2: per-pixel geophysical retrievals after atmospheric correction; includes Rrs and derived products such as chlor_a.">
+              Level-2
+            </span>),
+            and then mapping a derived geophysical product (<code>chlor_a</code>).
+          </p>
+
+          <h4>Python environment setup</h4>
+          <pre><code class="language-bash">conda create -n pace-oc python=3.11 -y
+conda activate pace-oc
+pip install numpy xarray netCDF4 matplotlib cartopy dask</code></pre>
+
+          <h4>Helper: open netCDF groups safely</h4>
+          <p>
+            PACE/OBPG files are netCDF4 and often use
+            <span class="term" tabindex="0"
+              data-def="netCDF groups: hierarchical containers inside a netCDF4 file (e.g., geophysical_data, navigation_data, sensor_band_parameters). You open them by specifying the group name in your reader.">
+              groups
+            </span>
+            such as <code>geophysical_data</code> and <code>navigation_data</code>.
+          </p>
+          <pre><code class="language-python">import xarray as xr
+
+def open_group(fn, group):
+    """Open a netCDF group (OBPG-style netCDF4 with groups)."""
+    return xr.open_dataset(fn, group=group, decode_cf=True, mask_and_scale=True)</code></pre>
+
+          <h4>Plot Level-1B TOA reflectance near 443 nm</h4>
+          <pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+
+l1b_file = "PACE_OCI.20240415T150000.L1B.nc"  # replace with your file
+
+geo   = open_group(l1b_file, "geolocation_data")
+obs   = open_group(l1b_file, "observation_data")
+bands = open_group(l1b_file, "sensor_band_parameters")
+
+lat = geo["latitude"]
+lon = geo["longitude"]
+
+wl_blue = bands["blue_wavelength"].values
+i443 = int(np.argmin(np.abs(wl_blue - 443)))
+
+# rhot_* are TOA reflectances
+rhot_443 = obs["rhot_blue"].isel(blue_bands=i443)
+
+plt.figure()
+plt.pcolormesh(lon, lat, rhot_443, shading="auto")
+plt.title("PACE OCI L1B: TOA reflectance (rhot) near 443 nm")
+plt.xlabel("Longitude")
+plt.ylabel("Latitude")
+plt.colorbar(label="unitless (TOA reflectance)")
+plt.show()</code></pre>
+
+          <div class="callout">
+            <strong>Interpretation:</strong> Bright features in L1B can be clouds, haze, glint, or aerosols—not chlorophyll.
+            You are still looking at TOA.
+          </div>
+
+          <h4>Plot Level-2 Rrs near 443 nm and chlorophyll</h4>
+          <pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+
+l2_aop = "PACE_OCI.20240415T150000.L2.OC_AOP.nc"  # replace
+l2_bgc = "PACE_OCI.20240415T150000.L2.OC_BGC.nc"  # replace
+
+# AOP: Rrs spectrum + wavelengths
+aop_band = open_group(l2_aop, "sensor_band_parameters")
+aop_geo  = open_group(l2_aop, "navigation_data")
+aop_data = open_group(l2_aop, "geophysical_data")
+
+wl3d = aop_band["wavelength_3d"].values
+i443 = int(np.argmin(np.abs(wl3d - 443)))
+
+lat = aop_geo["latitude"]
+lon = aop_geo["longitude"]
+
+Rrs_443 = aop_data["Rrs"].isel(wavelength_3d=i443)
+
+plt.figure()
+plt.pcolormesh(lon, lat, Rrs_443, shading="auto")
+plt.title("PACE OCI L2 OC_AOP: Rrs near 443 nm")
+plt.xlabel("Longitude")
+plt.ylabel("Latitude")
+plt.colorbar(label="sr$^{-1}$")
+plt.show()
+
+# BGC: chlorophyll-a (mg m^-3)
+bgc_geo  = open_group(l2_bgc, "navigation_data")
+bgc_data = open_group(l2_bgc, "geophysical_data")
+
+chl = bgc_data["chlor_a"]
+
+plt.figure()
+plt.pcolormesh(lon, lat, np.log10(chl), shading="auto")
+plt.title("PACE OCI L2 OC_BGC: log10(chlor_a)")
+plt.xlabel("Longitude")
+plt.ylabel("Latitude")
+plt.colorbar(label="log10(mg m$^{-3}$)")
+plt.show()</code></pre>
+
+          <h4>Plot an Rrs spectrum at one pixel (hyperspectral advantage)</h4>
+          <pre><code class="language-python">row, col = 800, 600  # choose a pixel of interest
+
+rrs_spec = aop_data["Rrs"].isel(number_of_lines=row, pixels_per_line=col).values
+
+plt.figure()
+plt.plot(wl3d, rrs_spec)
+plt.title("Rrs spectrum at one pixel")
+plt.xlabel("Wavelength (nm)")
+plt.ylabel("Rrs (sr$^{-1}$)")
+plt.show()</code></pre>
+
+          <div class="callout">
+            <strong>What to look for:</strong> In open ocean, Rrs is typically higher in blue and decreases toward red.
+            In coastal/turbid water, green/red can increase depending on particles and CDOM.
+          </div>
+        </section>
+
+        <section id="examples-83">
+          <h3>8.3 Going from L1B → L2 with SeaDAS/OCSSW</h3>
+
+          <p>
+            To reproduce or modify standard processing, use
+            <span class="term" tabindex="0"
+              data-def="SeaDAS: NASA software environment for ocean color analysis; commonly paired with OCSSW command-line tools for standard processing and customization.">
+              SeaDAS
+            </span>
+            and
+            <span class="term" tabindex="0"
+              data-def="OCSSW: Ocean Color Science Software suite distributed by NASA/OBPG; includes processors such as l2gen for atmospheric correction and Level-2 generation.">
+              OCSSW
+            </span>
+            tools (e.g.,
+            <span class="term" tabindex="0"
+              data-def="l2gen: the OCSSW processor that converts Level-1 inputs to Level-2 geophysical outputs (Rrs, chlor_a, IOPs) using atmospheric correction and retrieval algorithms.">
+              l2gen
+            </span>).
+          </p>
+
+          <pre><code class="language-bash"># Illustrative example only — exact options depend on your SeaDAS/OCSSW install and PACE configuration.
+
+l2gen   ifile=PACE_OCI.20240415T150000.L1B.nc   ofile=PACE_OCI.20240415T150000.L2.OC_AOP.nc   l2prod="Rrs_nnn aot_865 angstrom"   glint_opt=1</code></pre>
+
+          <div class="callout">
+            <strong>Practice tip:</strong> Save your parameter file, record software version + ancillary sources, and compare against OBPG-distributed L2 for sanity checks.
+          </div>
+        </section>
+
+        <section id="examples-84">
+          <h3>8.4 Mini-lab checklist</h3>
+
+          <ol>
+            <li><strong>Find</strong> one PACE OCI scene over a region you care about (e.g., Gulf of Mexico, coastal Texas).</li>
+            <li><strong>Download</strong> one L1B and matching L2 OC_AOP and L2 OC_BGC for the same granule.</li>
+            <li><strong>Plot</strong>
+              <ul>
+                <li>L1B <code>rhot_blue</code> near 443 nm</li>
+                <li>L2 <code>Rrs</code> near 443 nm</li>
+                <li>L2 <code>chlor_a</code> (log scale)</li>
+              </ul>
+            </li>
+            <li><strong>Explain (3–5 sentences):</strong>
+              <ul>
+                <li>What looks atmospheric in L1B that largely disappears in L2?</li>
+                <li>Where do you still see algorithm struggle (glint, clouds, coast)?</li>
+              </ul>
+            </li>
+            <li><strong>Bonus:</strong> Extract Rrs spectra for open ocean, coastal water, and a plume pixel; interpret the differences.</li>
+          </ol>
+        </section>
+      </section>
+
+      <!-- 9. REFERENCES -->
+      <section id="references">
+        <div class="section-title">
+          <h2>9. References</h2>
+          <span>Peer-reviewed + essential mission documentation</span>
+        </div>
+
+        <h3>Peer-reviewed references</h3>
+        <ol>
+          <li>
+            Gordon, H. R., &amp; Wang, M. (1994). Retrieval of water-leaving radiance and aerosol optical thickness over the oceans with SeaWiFS: a preliminary algorithm.
+            <em>Applied Optics</em>, 33(3), 443–452. DOI: <a class="link" href="https://doi.org/10.1364/AO.33.000443">10.1364/AO.33.000443</a>
+          </li>
+          <li>
+            Gordon, H. R. (1997). Atmospheric correction of ocean color imagery in the Earth Observing System era.
+            <em>Journal of Geophysical Research</em>, 102(D14), 17081–17106. DOI: <a class="link" href="https://doi.org/10.1029/96JD02443">10.1029/96JD02443</a>
+          </li>
+          <li>
+            O’Reilly, J. E., et al. (1998). Ocean color chlorophyll algorithms for SeaWiFS.
+            <em>JGR: Oceans</em>, 103(C11), 24937–24953. DOI: <a class="link" href="https://doi.org/10.1029/98JC02160">10.1029/98JC02160</a>
+          </li>
+          <li>
+            Hu, C., Lee, Z., &amp; Franz, B. (2012). Chlorophyll-a algorithms for oligotrophic oceans: A novel approach based on three-band reflectance difference.
+            <em>JGR: Oceans</em>, 117, C01011. DOI: <a class="link" href="https://doi.org/10.1029/2011JC007395">10.1029/2011JC007395</a>
+          </li>
+          <li>
+            Maritorena, S., Siegel, D. A., &amp; Peterson, A. R. (2002). Optimization of a semianalytical ocean color model for global-scale applications.
+            <em>Applied Optics</em>, 41(15), 2705–2714. DOI: <a class="link" href="https://doi.org/10.1364/AO.41.002705">10.1364/AO.41.002705</a>
+          </li>
+          <li>
+            Lee, Z. P., Carder, K. L., &amp; Arnone, R. A. (2002). Deriving inherent optical properties from water color: a multiband quasi-analytical algorithm for optically deep waters.
+            <em>Applied Optics</em>, 41(27), 5755–5772. DOI: <a class="link" href="https://doi.org/10.1364/AO.41.005755">10.1364/AO.41.005755</a>
+          </li>
+          <li>
+            Werdell, P. J., et al. (2013). Generalized ocean color inversion model for retrieving marine inherent optical properties.
+            <em>Applied Optics</em>, 52(10), 2019–2037. DOI: <a class="link" href="https://doi.org/10.1364/AO.52.002019">10.1364/AO.52.002019</a>
+          </li>
+          <li>
+            McClain, C. R. (2009). A decade of satellite ocean color observations.
+            <em>Annual Review of Marine Science</em>, 1, 19–42. DOI: <a class="link" href="https://doi.org/10.1146/annurev.marine.010908.163650">10.1146/annurev.marine.010908.163650</a>
+          </li>
+          <li>
+            Groom, S., et al. (2019). Satellite Ocean Colour: Current Status and Future Perspective.
+            <em>Frontiers in Marine Science</em>, 6, 485. DOI: <a class="link" href="https://doi.org/10.3389/fmars.2019.00485">10.3389/fmars.2019.00485</a>
+          </li>
+          <li>
+            Mélin, F. (2022). Validation of ocean color remote sensing reflectance data: Analysis of results at European coastal sites.
+            <em>Remote Sensing of Environment</em>, 280, 113153. DOI: <a class="link" href="https://doi.org/10.1016/j.rse.2022.113153">10.1016/j.rse.2022.113153</a>
+          </li>
+          <li>
+            Werdell, P. J., et al. (2019). The Plankton, Aerosol, Cloud, ocean Ecosystem (PACE) mission: Status, science, advances.
+            <em>Bulletin of the American Meteorological Society</em>, 100(9), 1775–1794. DOI: <a class="link" href="https://doi.org/10.1175/BAMS-D-18-0056.1">10.1175/BAMS-D-18-0056.1</a>
+          </li>
+        </ol>
+
+        <div class="callout">
+          <strong>Best practice:</strong> When you publish figures/results, report the product suite (OC_AOP vs OC_BGC),
+          processing version, and any quality flags applied.
+        </div>
+      </section>
+    </article>
+
+    <footer role="contentinfo">
+      <div>OCNG 689/600 — Optical Remote Sensing: Ocean Color</div>
+      <span class="foot-badge">HTML + tooltip glossary</span>
+    </footer>
+  </main>
+
+  <script>
+    // Mobile nav toggle (pairs with styles-light*.css)
+    const btn = document.querySelector('.menu-btn');
+    const nav = document.querySelector('.nav');
+    if (btn && nav) btn.addEventListener('click', () => nav.classList.toggle('open'));
+  </script>
+</body>
+</html>

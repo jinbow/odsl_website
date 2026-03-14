@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Assignments | OCNG 689 — Satellite Oceanography (Spring 2026)</title>
+  <meta name="description" content="OCNG 689 assignments page: homework sets, graduate literature reviews, project milestones, and submission policies." />
+  <link rel="stylesheet" href="styles-light.css" />
+</head>
+
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <!-- Topbar -->
+  <header class="topbar" role="banner">
+    <div class="topbar-inner">
+      <div class="brand">
+        <a href="index.html">OCNG 689 • Satellite Oceanography</a>
+        <small>Spring 2026 • TR 9:35–10:50 • OMB 602 • Texas A&amp;M University</small>
+      </div>
+
+      <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-nav" id="menuBtn">
+        Menu
+      </button>
+
+      <nav class="nav" id="site-nav" aria-label="Primary navigation">
+        <a href="index.html">Home</a>
+        <a href="schedule.html">Schedule</a>
+        <a class="active" href="assignments.html" aria-current="page">Assignments</a>
+        <a href="resources.html">Resources</a>
+        <a href="literature.html">Literature</a>
+        <a href="about.html">Course Info</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="container" role="main" style="padding-top:72px;">
+    <section class="panel">
+      <h1>Assignments</h1>
+      <p>
+        This page lists all major deliverables for OCNG 689. Homework is designed to build practical competency with
+        satellite oceanography data products and interpretation. Graduate students additionally complete literature
+        reviews and a term project.
+      </p>
+
+      <div class="grid" role="list" style="margin-top:14px;">
+        <article class="card" role="listitem">
+          <h3>Submission</h3>
+          <ul class="bullets">
+            <li>Submit through Canvas unless otherwise specified.</li>
+            <li>Include figures with labeled axes, units, and short captions.</li>
+            <li>Code must be reproducible (scripts/notebooks + brief README of steps).</li>
+          </ul>
+        </article>
+
+        <article class="card" role="listitem">
+          <h3>Default Due Pattern</h3>
+          <ul class="bullets">
+            <li>Assignments are typically released after Tuesday lecture.</li>
+            <li>Due the following <strong>Tuesday</strong> (unless a different date is stated).</li>
+            <li>Spring Break week has no due items.</li>
+          </ul>
+        </article>
+
+        <article class="card" role="listitem">
+          <h3>Academic Integrity</h3>
+          <ul class="bullets">
+            <li>You may discuss concepts and approaches with classmates.</li>
+            <li>Your submitted work (writing, code, figures) must be your own.</li>
+            <li>Cite any external sources, including code snippets and AI assistance.</li>
+          </ul>
+        </article>
+      </div>
+
+      <p class="callout" style="margin-top:14px;">
+        <strong>Instructor note:</strong> The item list below mirrors the schedule page. If you revise dates in
+        <span class="tag">schedule.html</span>, update them here as well to keep a single source of truth.
+      </p>
+    </section>
+
+    <!-- Homework -->
+    <section>
+      <div class="section-title">
+        <h2>Homework (All Students)</h2>
+        <span>Problem sets and applied mini-analyses</span>
+      </div>
+
+      <div class="list" aria-label="Homework list">
+        <div class="item">
+          <div class="top">
+            <strong>HW 1 — EM wave calculations</strong>
+            <span class="tag">Due Jan 27</span>
+          </div>
+          <p>
+            Core EM relationships, radiometric quantities, unit handling, and basic atmospheric transmission reasoning.
+            Aligned with <a class="link" href="module02-em-radiation.html">Module 2</a>.
+          </p>
+        </div>
+
+        <div class="item">
+          <div class="top">
+            <strong>HW 2 — Sensor types and functionalities</strong>
+            <span class="tag">Available Jan 27 • Due Feb 3</span>
+          </div>
+          <p>
+            Identify passive vs active sensors, typical bands, and which ocean variables each supports; interpret
+            Level 1–4 product concepts. Aligned with <a class="link" href="module03-sensors-data-levels.html">Module 3</a>.
+          </p>
+        </div>
+
+        <div class="item">
+          <div class="top">
+            <strong>HW 3 — Chlorophyll analysis</strong>
+            <span class="tag">Due Feb 10</span>
+          </div>
+          <p>
+            Simple ocean color analysis workflow (masking, compositing, and interpretation of spatial patterns).
+            Aligned with <a class="link" href="module04-ocean-color.html">Module 4</a>.
+          </p>
+        </div>
+
+        <div class="item">
+          <div class="top">
+            <strong>HW 4 — SST case study</strong>
+            <span class="tag">Due Feb 17</span>
+          </div>
+          <p>
+            SST retrieval interpretation and an oceanographic feature case (fronts, eddies, or upwelling).
+            Aligned with <a class="link" href="module05-sst.html">Module 5</a>.
+          </p>
+        </div>
+
+        <div class="item">
+          <div class="top">
+            <strong>HW 5 — Wind/SST analysis</strong>
+            <span class="tag">Due Feb 24</span>
+          </div>
+          <p>
+            Compare wind and SST patterns; discuss plausible coupling mechanisms and observational limitations.
+            Aligned with <a class="link" href="module06-passive-microwave.html">Module 6</a>.
+          </p>
+        </div>
+
+        <div class="item">
+          <div class="top">
+            <strong>HW 6 — Scatterometry application</strong>
+            <span class="tag">Due Mar 3</span>
+          </div>
+          <p>
+            Analyze wind vectors from scatterometry and connect signatures to weather/ocean context.
+            Aligned with <a class="link" href="module07-scatterometry.html">Module 7</a>.
+          </p>
+        </div>
+
+        <div class="item">
+          <div class="top">
+            <strong>HW 7 — Altimetry analysis</strong>
+            <span class="tag">Due Mar 17</span>
+          </div>
+          <p>
+            Interpret SSH/SSHA products, apply basic corrections reasoning, and infer geostrophic flow patterns.
+            Aligned with <a class="link" href="module08-altimetry.html">Module 8</a>.
+          </p>
+        </div>
+
+        <div class="item">
+          <div class="top">
+            <strong>HW 8 — Coastal SAR case</strong>
+            <span class="tag">Due (week of Mar 16–20)</span>
+          </div>
+          <p>
+            SAR-based coastal interpretation: surface roughness signatures, slicks, or wave/current interactions.
+            Aligned with <a class="link" href="module09-sar.html">Module 9</a>.
+          </p>
+        </div>
+
+        <div class="item">
+          <div class="top">
+            <strong>HW 9 — Gravity/Lidar case</strong>
+            <span class="tag">Due Mar 31</span>
+          </div>
+          <p>
+            Interpret GRACE/ICESat-2 type products conceptually; connect measurement physics to observables and uncertainty.
+            Aligned with <a class="link" href="module10-gravity-lidar.html">Module 10</a>.
+          </p>
+        </div>
+
+        <div class="item">
+          <div class="top">
+            <strong>HW 10 — Ocean dynamics from space</strong>
+            <span class="tag">Due Apr 7</span>
+          </div>
+          <p>
+            Use satellite products to reason about circulation/eddies; emphasize interpretation over algorithmic detail.
+            Aligned with <a class="link" href="module11-circulation.html">Module 11</a>.
+          </p>
+        </div>
+
+        <div class="item">
+          <div class="top">
+            <strong>HW 11 — ENSO/Sea level / Sea ice case</strong>
+            <span class="tag">Due Apr 14</span>
+          </div>
+          <p>
+            Large-scale application analysis using multi-sensor products; focus on signal vs. artifacts and uncertainty.
+            Aligned with <a class="link" href="module12-sea-ice-sea-level.html">Module 12</a>.
+          </p>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Graduate deliverables -->
+    <section>
+      <div class="section-title">
+        <h2>Graduate Deliverables</h2>
+        <span>Literature reviews + term project milestones</span>
+      </div>
+
+      <div class="grid" role="list">
+        <article class="card" role="listitem">
+          <h3>Literature Reviews (4)</h3>
+          <p>
+            Each review should provide: (1) context and research question, (2) methods and data,
+            (3) key results, (4) limitations/uncertainty, (5) implications for satellite oceanography,
+            and (6) your critique and proposed next steps.
+          </p>
+          <ul class="bullets">
+            <li><strong>Lit Review 1:</strong> Ocean color — <span class="tag">Due Feb 26</span></li>
+            <li><strong>Lit Review 2:</strong> SST/Wind — <span class="tag">Due Mar 19</span></li>
+            <li><strong>Lit Review 3:</strong> SAR — <span class="tag">Due Apr 2</span></li>
+            <li><strong>Lit Review 4:</strong> Eddy — <span class="tag">Due Apr 16</span></li>
+          </ul>
+          <a class="btn" href="literature.html">Open literature page</a>
+        </article>
+
+        <article class="card" role="listitem">
+          <h3>Term Project</h3>
+          <p>
+            A focused research-style analysis using one or more satellite datasets. The project should include a clear
+            objective, data description, method, results, and uncertainty-aware interpretation.
+          </p>
+          <ul class="bullets">
+            <li><strong>Topic/Proposal:</strong> <span class="tag">Due Mar 26</span></li>
+            <li><strong>Draft:</strong> <span class="tag">Due Apr 23</span></li>
+          </ul>
+          <a class="btn" href="about.html#grading">See grading &amp; format</a>
+        </article>
+
+        <article class="card" role="listitem">
+          <h3>Midterm Exam</h3>
+          <p>
+            In-class exam covering Weeks 1–7 (fundamentals through scatterometry), emphasizing conceptual mastery and
+            defensible reasoning with equations and units.
+          </p>
+          <ul class="bullets">
+            <li><strong>Date:</strong> <span class="tag">Mar 5</span></li>
+          </ul>
+          <a class="btn" href="schedule.html">Back to schedule</a>
+        </article>
+      </div>
+    </section>
+
+    <!-- Policies (concise, editable) -->
+    <section>
+      <div class="section-title">
+        <h2>Policies (Concise)</h2>
+        <span>Keep this aligned with the syllabus</span>
+      </div>
+
+      <div class="panel">
+        <h3 style="margin-top:0;">Late Work</h3>
+        <p>
+          Follow the syllabus policy. If you want, I can paste the exact syllabus wording here verbatim once you provide
+          the relevant paragraph (or if you upload the syllabus PDF).
+        </p>
+
+        <h3>Formatting Expectations</h3>
+        <ul class="bullets">
+          <li>Figures: labeled axes, units, colorbars, and brief captions.</li>
+          <li>Text: concise methods + interpretation; do not rely on “black box” descriptions.</li>
+          <li>References: cite datasets/missions and any external sources used.</li>
+        </ul>
+      </div>
+    </section>
+
+    <footer role="contentinfo">
+      <div>OCNG 689 (Section 600) • Department of Oceanography • Texas A&amp;M University</div>
+      <div class="foot-badge">Last updated: <span id="lastUpdated"></span></div>
+    </footer>
+  </main>
+
+  <script>
+    // Mobile nav toggle
+    (function(){
+      const btn = document.getElementById('menuBtn');
+      const nav = document.getElementById('site-nav');
+      if (!btn || !nav) return;
+
+      btn.addEventListener('click', () => {
+        const open = nav.classList.toggle('open');
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+    })();
+
+    // Footer "last updated"
+    (function(){
+      const el = document.getElementById('lastUpdated');
+      if (!el) return;
+      const d = new Date(document.lastModified);
+      el.textContent = d.toLocaleDateString(undefined, { year:'numeric', month:'short', day:'2-digit' });
+    })();
+  </script>
+</body>
+</html>

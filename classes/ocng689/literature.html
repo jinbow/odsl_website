@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OCNG 489/689 — Literature</title>
+  <link rel="stylesheet" href="styles-light.css" />
+</head>
+
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="topbar" role="banner">
+    <div class="topbar-inner">
+      <div class="brand">
+        <a href="index.html">OCNG 489/689 Study the Oceans from Space</a>
+        <small>Spring 2026 • TR 9:35–10:50 • OMB 602 • Texas A&amp;M University</small>
+
+      </div>
+
+      <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="primaryNav">
+        Menu
+      </button>
+
+      <nav class="nav" id="primaryNav" aria-label="Primary navigation">
+        <a href="index.html">Class Home</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="container" role="main">
+    <div class="page-head">
+      <h1>Literature (incomplete)</h1>
+    </div>
+
+    <section class="panel" aria-label="Literature overview">
+      <div class="section-title" style="margin-top:0;">
+        <h2>Textbooks</h2>
+        <span>Core background</span>
+      </div>
+
+      <div class="list">
+        <div class="item">
+          <div class="top">
+            <strong>Satellite Oceanography (introductory)</strong>
+            <span class="tag">textbook</span>
+          </div>
+          <p>
+            Robinson, I. (Satellite Oceanography: An Introduction for Oceanographers and Remote-Sensing Scientists).
+            Use for broad conceptual framing across variables.
+          </p>
+        </div>
+
+        <div class="item">
+          <div class="top">
+            <strong>An Introduction to Ocean Remote Sensing (2nd edition)</strong>
+            <span class="tag">textbook</span>
+          </div>
+          <p>
+            Seele, M. (An Introduction to Ocean Remote Sensing, 2nd edition).
+            Use for technical details on physical principles and retrieval methods.
+          </p>
+
+      </div>
+
+    </section>
+
+    <section class="panel" aria-label="Paper collections">
+      <div class="section-title" style="margin-top:0;">
+        <h2>Papers</h2>
+        <span>Curated reading lists</span>
+      </div>
+
+      <div class="list">
+        <div class="item">
+          <div class="top">
+            <strong>Ocean Color Foundational Papers</strong>
+            <span class="tag">collection</span>
+          </div>
+          <p>
+            Seminal papers on ocean color remote sensing covering atmospheric correction, chlorophyll algorithms,
+            inherent optical properties, and bio-optical modeling.
+            <a class="link" href="ocean_color_papers.html">View collection →</a>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <footer role="contentinfo">
+      <span>© <span id="year"></span> OCNG 489/689</span>
+      <span class="foot-badge">Last modified: <span id="lastModified">—</span></span>
+    </footer>
+  </main>
+
+  <script>
+    (function () {
+      const menuBtn = document.getElementById("menuBtn");
+      const nav = document.getElementById("primaryNav");
+      function setExpanded(isOpen){
+        menuBtn.setAttribute("aria-expanded", String(isOpen));
+        nav.classList.toggle("open", isOpen);
+      }
+      menuBtn?.addEventListener("click", () => setExpanded(!nav.classList.contains("open")));
+      nav?.addEventListener("click", (e) => {
+        const t = e.target;
+        if (t && t.tagName === "A" && nav.classList.contains("open")) setExpanded(false);
+      });
+      document.getElementById("year").textContent = new Date().getFullYear();
+      document.getElementById("lastModified").textContent = document.lastModified || "—";
+    })();
+  </script>
+</body>
+</html>

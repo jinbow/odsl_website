@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapter 3 — EM waves and radiative transfer</title>
+  <link rel="stylesheet" href="styles-light.css">
+</head>
+<body>
+
+  <a class="skip" href="#main">Skip to main content</a>
+
+  <!-- Top Navigation Bar -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <a href="index.html">OCNG 489/689</a>
+        <small>Studying the Oceans from Space • Spring 2026</small>
+      </div>
+      <button class="menu-btn" onclick="document.querySelector('.nav').classList.toggle('open')">Menu</button>
+      <nav class="nav">
+        <a href="#outcomes">Learning Outcomes</a>
+        <a href="#em-waves" class="active">EM Waves</a>
+        <a href="#spectrum">Spectrum</a>
+        <a href="#polarization">Polarization</a>
+        <a href="#atmosphere">Atmosphere</a>
+        <a href="#calculations">Calculations</a>
+        <a href="#problems">Problems</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="container">
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="panel">
+        <h1>Electromagnetic Waves in Satellite Oceanography</h1>
+        <p>Satellite oceanography is, at its core, a measurement-physics discipline: satellites measure electromagnetic (EM) radiation and we infer ocean variables by modeling how that radiation is generated, modified, and detected. This chapter establishes the EM-wave toolkit that you will use repeatedly for ocean color, sea-surface temperature, sea-surface salinity, winds, waves, and sea-surface height.</p>
+        <div class="cta-row">
+          <a href="#equations" class="btn primary">Equation Sheet</a>
+          <a href="#examples" class="btn">Worked Examples</a>
+          <a href="#problems" class="btn">Problem Set</a>
+          <a href="#graduate" class="btn good">Graduate Extension</a>
+        </div>
+      </div>
+      <div class="mini">
+        <h2>Week Context</h2>
+        <dl class="kv">
+          <div><dt>Module</dt><dd>EM Radiation Fundamentals</dd></div>
+          <div><dt>Reading</dt><dd>Ch. 2</dd></div>
+          <div><dt>Assignment</dt><dd>HW 1 – EM wave calculations (due Jan 27)</dd></div>
+          <div><dt>Core Skills</dt><dd>Spectrum • Polarization • Radiative transfer • Unit conversions</dd></div>
+        </dl>
+        <div class="callout">
+          <strong>Big picture:</strong> Ocean variables are not "seen" directly. Satellites observe radiation; we retrieve the ocean by physics + statistics.
+        </div>
+      </div>
+    </section>
+
+    <!-- Learning Outcomes -->
+    <section id="outcomes">
+      <div class="section-title">
+        <h2>Chapter Learning Outcomes</h2>
+        <span>By the end of this chapter/week, students will be able to…</span>
+      </div>
+      <div class="grid">
+        <div class="card">
+          <h3><span class="tag">1</span> Spectrum</h3>
+          <p>Describe the electromagnetic spectrum and explain why different wavelength regions are used to observe different ocean variables.</p>
+        </div>
+        <div class="card">
+          <h3><span class="tag">2</span> Polarization</h3>
+          <p>Explain polarization concepts and describe how satellites exploit polarization in passive and active measurements.</p>
+        </div>
+        <div class="card">
+          <h3><span class="tag">3</span> Atmosphere</h3>
+          <p>Identify atmospheric effects that modify EM signals between the ocean and satellite sensors, including radiative transfer.</p>
+        </div>
+        <div class="card">
+          <h3><span class="tag">4</span> Calculations</h3>
+          <p>Apply core EM-wave equations to solve basic remote-sensing calculations (aligned to HW 1).</p>
+        </div>
+        <div class="card">
+          <h3><span class="tag">5</span> Sensors</h3>
+          <p>Connect EM radiation properties to oceanographic sensor capabilities.</p>
+        </div>
+        <div class="card">
+          <h3><span class="tag">6</span> Graduate</h3>
+          <p>Evaluate how atmospheric corrections impact data accuracy, including uncertainty propagation and bias/error sources.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Why EM Waves Matter -->
+    <section id="em-waves">
+      <div class="section-title">
+        <h2>1. Why EM Waves Matter for Satellite Oceanography</h2>
+        <span>Satellites measure radiation; we infer ocean variables through an end-to-end physical chain</span>
+      </div>
+      
+      <div class="panel">
+        <h3>1.1 Remote Sensing as an Inference Chain</h3>
+        <p>A useful mental model for satellite oceanography is an inference chain. The ocean variable you care about (e.g., chlorophyll, SST, salinity, winds) is not observed directly. Instead, it modifies an EM signal that travels through the atmosphere and into a sensor, where it is converted into numbers.</p>
+        
+        <!-- Figure 1: End-to-end measurement chain SVG -->
+        <figure style="margin: 20px 0;">
+          <svg viewBox="0 0 900 180" style="width:100%; max-width:900px; height:auto; display:block; margin:0 auto;">
+            <defs>
+              <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                <polygon points="0 0, 10 3.5, 0 7" fill="#60a5fa"/>
+              </marker>
+            </defs>
+            
+            <!-- Background -->
+            <rect width="900" height="180" fill="rgba(15,26,46,0.6)" rx="12"/>
+            
+            <!-- Box 1: Ocean State -->
+            <rect x="30" y="40" width="140" height="100" rx="10" fill="rgba(52,211,153,0.2)" stroke="rgba(52,211,153,0.5)" stroke-width="2"/>
+            <text x="100" y="70" text-anchor="middle" fill="#34d399" font-weight="bold" font-size="14">Ocean State</text>
+            <text x="100" y="90" text-anchor="middle" fill="#94a3b8" font-size="11">(SST, SSS, Chl,</text>
+            <text x="100" y="105" text-anchor="middle" fill="#94a3b8" font-size="11">winds, waves, SSH)</text>
+            <text x="100" y="125" text-anchor="middle" fill="#60a5fa" font-size="10">Geophysical variable</text>
+            
+            <!-- Arrow 1 -->
+            <line x1="175" y1="90" x2="205" y2="90" stroke="#60a5fa" stroke-width="2" marker-end="url(#arrowhead)"/>
+            
+            <!-- Box 2: EM Interaction -->
+            <rect x="210" y="40" width="140" height="100" rx="10" fill="rgba(96,165,250,0.2)" stroke="rgba(96,165,250,0.5)" stroke-width="2"/>
+            <text x="280" y="70" text-anchor="middle" fill="#60a5fa" font-weight="bold" font-size="14">EM Interaction</text>
+            <text x="280" y="90" text-anchor="middle" fill="#94a3b8" font-size="11">reflection / emission</text>
+            <text x="280" y="105" text-anchor="middle" fill="#94a3b8" font-size="11">/ backscatter</text>
+            <text x="280" y="125" text-anchor="middle" fill="#60a5fa" font-size="10">surface + water column</text>
+            
+            <!-- Arrow 2 -->
+            <line x1="355" y1="90" x2="385" y2="90" stroke="#60a5fa" stroke-width="2" marker-end="url(#arrowhead)"/>
+            
+            <!-- Box 3: Atmosphere -->
+            <rect x="390" y="40" width="140" height="100" rx="10" fill="rgba(251,191,36,0.2)" stroke="rgba(251,191,36,0.5)" stroke-width="2"/>
+            <text x="460" y="65" text-anchor="middle" fill="#fbbf24" font-weight="bold" font-size="14">Atmosphere</text>
+            <text x="460" y="85" text-anchor="middle" fill="#94a3b8" font-size="11">absorption</text>
+            <text x="460" y="100" text-anchor="middle" fill="#94a3b8" font-size="11">scattering</text>
+            <text x="460" y="115" text-anchor="middle" fill="#94a3b8" font-size="11">emission</text>
+            <text x="460" y="132" text-anchor="middle" fill="#60a5fa" font-size="10">radiative transfer</text>
+            
+            <!-- Arrow 3 -->
+            <line x1="535" y1="90" x2="565" y2="90" stroke="#60a5fa" stroke-width="2" marker-end="url(#arrowhead)"/>
+            
+            <!-- Box 4: Sensor -->
+            <rect x="570" y="40" width="140" height="100" rx="10" fill="rgba(148,163,184,0.2)" stroke="rgba(148,163,184,0.5)" stroke-width="2"/>
+            <text x="640" y="65" text-anchor="middle" fill="#94a3b8" font-weight="bold" font-size="14">Sensor</text>
+            <text x="640" y="85" text-anchor="middle" fill="#94a3b8" font-size="11">bandpass</text>
+            <text x="640" y="100" text-anchor="middle" fill="#94a3b8" font-size="11">noise</text>
+            <text x="640" y="115" text-anchor="middle" fill="#94a3b8" font-size="11">calibration</text>
+            <text x="640" y="132" text-anchor="middle" fill="#60a5fa" font-size="10">geometry</text>
+            
+            <!-- Arrow 4 -->
+            <line x1="715" y1="90" x2="745" y2="90" stroke="#60a5fa" stroke-width="2" marker-end="url(#arrowhead)"/>
+            
+            <!-- Box 5: Retrieval -->
+            <rect x="750" y="40" width="120" height="100" rx="10" fill="rgba(52,211,153,0.2)" stroke="rgba(52,211,153,0.5)" stroke-width="2"/>
+            <text x="810" y="65" text-anchor="middle" fill="#34d399" font-weight="bold" font-size="14">Retrieval</text>
+            <text x="810" y="85" text-anchor="middle" fill="#94a3b8" font-size="11">model +</text>
+            <text x="810" y="100" text-anchor="middle" fill="#94a3b8" font-size="11">ancillary</text>
+            <text x="810" y="115" text-anchor="middle" fill="#94a3b8" font-size="11">+ stats</text>
+            <text x="810" y="132" text-anchor="middle" fill="#60a5fa" font-size="10">product</text>
+            
+            <!-- Caption -->
+            <text x="450" y="165" text-anchor="middle" fill="#94a3b8" font-size="11" font-style="italic">From physics to products: satellites observe radiation; we infer the ocean</text>
+          </svg>
+          <figcaption style="text-align:center; color:#94a3b8; font-size:0.9rem; margin-top:8px;">
+            <strong>Figure 1.</strong> An end-to-end "measurement chain" view of satellite oceanography. This is the logic you will reuse for every sensor: surface interaction + atmosphere + instrument response + retrieval assumptions. 
+          </figcaption>
+        </figure>
+        
+        <div class="callout">
+          <strong>Course theme:</strong> You will repeatedly identify which part of the chain dominates error and how "corrections" work. 
+        </div>
+      </div>
+    </section>
+
+    <!-- EM Wave Fundamentals -->
+    <section id="fundamentals">
+      <div class="section-title">
+        <h2>2. EM Wave Fundamentals</h2>
+        <span>A minimal physics toolkit: definitions, relationships, and propagation</span>
+      </div>
+      
+      <div class="panel">
+        <h3>2.1 Wave Descriptions and Terminology</h3>
+        <p>EM radiation can be described as a traveling wave with electric and magnetic field components. In most ocean remote-sensing contexts, we can treat EM waves as propagating at a speed close to the speed of light in vacuum. </p>
+        
+        <!-- Figure 2: Wave geometry SVG -->
+        <figure style="margin: 20px 0;">
+          <svg viewBox="0 0 600 200" style="width:100%; max-width:600px; height:auto; display:block; margin:0 auto;">
+            <defs>
+              <marker id="arrow2" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                <polygon points="0 0, 10 3.5, 0 7" fill="#60a5fa"/>
+              </marker>
+            </defs>
+            
+            <!-- Background -->
+            <rect width="600" height="200" fill="rgba(15,26,46,0.6)" rx="12"/>
+            
+            <!-- Sine wave -->
+            <path d="M 50 100 Q 100 30 150 100 Q 200 170 250 100 Q 300 30 350 100 Q 400 170 450 100 Q 500 30 550 100" 
+                  stroke="#60a5fa" stroke-width="3" fill="none"/>
+            
+            <!-- Wavelength markers -->
+            <line x1="50" y1="100" x2="50" y2="160" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4,4"/>
+            <line x1="250" y1="100" x2="250" y2="160" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4,4"/>
+            <line x1="50" y1="155" x2="250" y2="155" stroke="#34d399" stroke-width="2"/>
+            <polygon points="50,155 60,150 60,160" fill="#34d399"/>
+            <polygon points="250,155 240,150 240,160" fill="#34d399"/>
+            <text x="150" y="175" text-anchor="middle" fill="#34d399" font-weight="bold" font-size="14">wavelength λ</text>
+            
+            <!-- Propagation arrow -->
+            <line x1="400" y1="50" x2="530" y2="50" stroke="#fbbf24" stroke-width="2" marker-end="url(#arrow2)"/>
+            <text x="465" y="40" text-anchor="middle" fill="#fbbf24" font-size="12">propagation direction</text>
+            
+            <!-- Amplitude markers -->
+            <line x1="150" y1="30" x2="150" y2="100" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4,4"/>
+            <text x="165" y="65" fill="#94a3b8" font-size="11">amplitude</text>
+          </svg>
+          <figcaption style="text-align:center; color:#94a3b8; font-size:0.9rem; margin-top:8px;">
+            <strong>Figure 2.</strong> A reminder of basic wave geometry. For remote sensing, it is essential to move comfortably between wavelength- and frequency-based thinking. 
+          </figcaption>
+        </figure>
+        
+        <h4>Key Wave Quantities:</h4>
+        <div class="table-wrap">
+          <table class="course">
+            <thead>
+              <tr>
+                <th>Quantity</th>
+                <th>Symbol</th>
+                <th>Definition</th>
+                <th>Units</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-label="Quantity">Wavelength</td>
+                <td data-label="Symbol">λ</td>
+                <td data-label="Definition">Distance between repeating wave crests</td>
+                <td data-label="Units">meters (m)</td>
+              </tr>
+              <tr>
+                <td data-label="Quantity">Frequency</td>
+                <td data-label="Symbol">ν</td>
+                <td data-label="Definition">Cycles per second</td>
+                <td data-label="Units">Hz</td>
+              </tr>
+              <tr>
+                <td data-label="Quantity">Period</td>
+                <td data-label="Symbol">T</td>
+                <td data-label="Definition">Time per cycle (T = 1/ν)</td>
+                <td data-label="Units">seconds (s)</td>
+              </tr>
+              <tr>
+                <td data-label="Quantity">Angular frequency</td>
+                <td data-label="Symbol">ω</td>
+                <td data-label="Definition">ω = 2πν</td>
+                <td data-label="Units">rad/s</td>
+              </tr>
+              <tr>
+                <td data-label="Quantity">Wavenumber</td>
+                <td data-label="Symbol">k</td>
+                <td data-label="Definition">k = 2π/λ</td>
+                <td data-label="Units">rad/m</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+        <!-- Spectrum and Windows -->
+    <section id="spectrum">
+      <div class="section-title">
+        <h2>3. The EM Spectrum and Ocean-Relevant Windows</h2>
+        <span>Band choice is driven by ocean signal physics and atmospheric transmission</span>
+      </div>
+      
+      <div class="panel">
+        <!-- Figure 3: EM Spectrum (external image) -->
+        <figure style="margin: 20px 0;">
+          <img src="https://assets.science.nasa.gov/dynamicimage/assets/science/cds/learn/images/ems/EMS_Diagram_09172025.jpg?w=2500&h=1406&fit=clip&crop=faces%2Cfocalpoint" 
+               alt="Electromagnetic spectrum chart showing wavelength regions from radio waves to gamma rays, with visible light expanded to show colors" 
+               style="width:100%; max-width:800px; display:block; margin:0 auto; border-radius:8px;">
+          <figcaption style="text-align:center; color:#94a3b8; font-size:0.9rem; margin-top:8px;">
+            <strong>Figure 3.</strong> A general electromagnetic spectrum chart (credit: NASA). This chapter will repeatedly connect these regions to ocean variables.
+          </figcaption>
+        </figure>
+
+        <h3>3.1 Spectrum Regions Used in Ocean Remote Sensing</h3>
+        <p>Satellite oceanography uses a subset of the EM spectrum. The most common regions are:</p>
+        
+        <div class="list">
+          <div class="item">
+            <div class="top"><strong>UV/Visible (ocean color)</strong><time>VIS</time></div>
+            <p>Sunlight reflected from the ocean; sensitive to pigments and particles.</p>
+          </div>
+          <div class="item">
+            <div class="top"><strong>NIR/SWIR</strong><time>Near/Shortwave IR</time></div>
+            <p>Atmospheric correction, land/cloud screening, glint handling; also useful in turbid waters.</p>
+          </div>
+          <div class="item">
+            <div class="top"><strong>Thermal IR (TIR)</strong><time>SST</time></div>
+            <p>Ocean skin temperature under clear skies.</p>
+          </div>
+          <div class="item">
+            <div class="top"><strong>Microwave</strong><time>Passive</time></div>
+            <p>Passive emission (SSS, winds, sea ice); operates day/night and through many clouds.</p>
+          </div>
+          <div class="item">
+            <div class="top"><strong>Radar</strong><time>Active</time></div>
+            <p>Active backscatter (scatterometry, SAR) and range/time delay (altimetry).</p>
+          </div>
+        </div>
+
+        <!-- Figure 4: Ocean Remote Sensing Bands SVG -->
+        <figure style="margin: 20px 0;">
+          <svg viewBox="0 0 900 280" style="width:100%; max-width:900px; height:auto; display:block; margin:0 auto;">
+            <!-- Background -->
+            <rect width="900" height="280" fill="rgba(15,26,46,0.6)" rx="12"/>
+            
+            <!-- Labels at top -->
+            <text x="150" y="30" text-anchor="middle" fill="#94a3b8" font-size="11">Shorter λ / higher ν / higher photon energy</text>
+            <text x="750" y="30" text-anchor="middle" fill="#94a3b8" font-size="11">Longer λ / lower ν / lower photon energy</text>
+            
+            <!-- Arrow -->
+            <line x1="50" y1="45" x2="850" y2="45" stroke="#60a5fa" stroke-width="2"/>
+            <polygon points="850,45 840,40 840,50" fill="#60a5fa"/>
+            
+            <!-- Spectrum bands -->
+            <rect x="50" y="60" width="120" height="50" rx="8" fill="rgba(96,165,250,0.3)" stroke="rgba(96,165,250,0.6)" stroke-width="2"/>
+            <text x="110" y="90" text-anchor="middle" fill="#60a5fa" font-weight="bold" font-size="14">VIS</text>
+            
+            <rect x="180" y="60" width="120" height="50" rx="8" fill="rgba(52,211,153,0.3)" stroke="rgba(52,211,153,0.6)" stroke-width="2"/>
+            <text x="240" y="90" text-anchor="middle" fill="#34d399" font-weight="bold" font-size="14">NIR</text>
+            
+            <rect x="310" y="60" width="120" height="50" rx="8" fill="rgba(251,191,36,0.3)" stroke="rgba(251,191,36,0.6)" stroke-width="2"/>
+            <text x="370" y="90" text-anchor="middle" fill="#fbbf24" font-weight="bold" font-size="14">SWIR</text>
+            
+            <rect x="440" y="60" width="120" height="50" rx="8" fill="rgba(248,113,113,0.3)" stroke="rgba(248,113,113,0.6)" stroke-width="2"/>
+            <text x="500" y="90" text-anchor="middle" fill="#f87171" font-weight="bold" font-size="14">TIR</text>
+            
+            <rect x="570" y="60" width="150" height="50" rx="8" fill="rgba(148,163,184,0.3)" stroke="rgba(148,163,184,0.6)" stroke-width="2"/>
+            <text x="645" y="90" text-anchor="middle" fill="#94a3b8" font-weight="bold" font-size="14">Microwave</text>
+            
+            <rect x="730" y="60" width="120" height="50" rx="8" fill="rgba(167,139,250,0.3)" stroke="rgba(167,139,250,0.6)" stroke-width="2"/>
+            <text x="790" y="90" text-anchor="middle" fill="#a78bfa" font-weight="bold" font-size="14">Radar*</text>
+            
+            <!-- Products section -->
+            <text x="450" y="140" text-anchor="middle" fill="#e5e7eb" font-weight="bold" font-size="13">Typical ocean products</text>
+            
+            <text x="110" y="165" text-anchor="middle" fill="#94a3b8" font-size="10">• Ocean color (Chl, CDOM, SPM)</text>
+            <text x="110" y="180" text-anchor="middle" fill="#94a3b8" font-size="10">• Coastal plumes, fronts</text>
+            
+            <text x="240" y="165" text-anchor="middle" fill="#94a3b8" font-size="10">• Atm correction</text>
+            <text x="240" y="180" text-anchor="middle" fill="#94a3b8" font-size="10">• Cloud/land screening</text>
+            
+            <text x="370" y="165" text-anchor="middle" fill="#94a3b8" font-size="10">• Atm correction</text>
+            <text x="370" y="180" text-anchor="middle" fill="#94a3b8" font-size="10">• Turbid water support</text>
+            
+            <text x="500" y="165" text-anchor="middle" fill="#94a3b8" font-size="10">• SST (skin)</text>
+            <text x="500" y="180" text-anchor="middle" fill="#94a3b8" font-size="10">• Clear-sky constraint</text>
+            
+            <text x="645" y="165" text-anchor="middle" fill="#94a3b8" font-size="10">• SSS, sea ice, winds</text>
+            <text x="645" y="180" text-anchor="middle" fill="#94a3b8" font-size="10">• All-weather tendency</text>
+            
+            <text x="790" y="165" text-anchor="middle" fill="#94a3b8" font-size="10">• Winds (scat), SAR</text>
+            <text x="790" y="180" text-anchor="middle" fill="#94a3b8" font-size="10">• SSH (altimetry)</text>
+            
+            <!-- Footnote -->
+            <text x="450" y="220" text-anchor="middle" fill="#94a3b8" font-size="10" font-style="italic">*"Radar" uses microwave frequencies but is separated to emphasize active (transmit/receive) measurement mode.</text>
+          </svg>
+          <figcaption style="text-align:center; color:#94a3b8; font-size:0.9rem; margin-top:8px;">
+            <strong>Figure 4.</strong> A simplified "ocean remote-sensing spectrum map." Note that radar uses microwave frequencies but is separated here to emphasize the active (transmit/receive) measurement mode. 
+          </figcaption>
+        </figure>
+
+        <h3>3.2 Ocean Remote Sensing Bands Summary Table</h3>
+        <div class="table-wrap">
+          <table class="course">
+            <caption>Ocean Remote Sensing Bands</caption>
+            <thead>
+              <tr>
+                <th>Spectrum Region</th>
+                <th>Dominant Signal Source</th>
+                <th>Primary Ocean Products</th>
+                <th>Major Atmospheric Issue</th>
+                <th>Polarization Usage</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-label="Region"><span class="tag">VIS</span></td>
+                <td data-label="Signal">Reflected solar (water-leaving + surface + atmosphere)</td>
+                <td data-label="Products">Chlorophyll, CDOM, SPM, coastal plumes</td>
+                <td data-label="Atmosphere">Rayleigh + aerosols; clouds; glint</td>
+                <td data-label="Polarization">Affects glint/scattering; some polarimetry</td>
+              </tr>
+              <tr>
+                <td data-label="Region"><span class="tag">NIR/SWIR</span></td>
+                <td data-label="Signal">Reflected solar</td>
+                <td data-label="Products">Atmospheric correction, masking</td>
+                <td data-label="Atmosphere">Aerosols, water vapor; clouds</td>
+                <td data-label="Polarization">Less central</td>
+              </tr>
+              <tr>
+                <td data-label="Region"><span class="tag">Thermal IR</span></td>
+                <td data-label="Signal">Thermal emission</td>
+                <td data-label="Products">SST (skin)</td>
+                <td data-label="Atmosphere">Water vapor absorption/emission; clouds</td>
+                <td data-label="Polarization">Usually not exploited</td>
+              </tr>
+              <tr>
+                <td data-label="Region"><span class="tag">Passive MW</span></td>
+                <td data-label="Signal">Thermal emission (brightness temperature)</td>
+                <td data-label="Products">SSS, sea ice, wind speed proxies</td>
+                <td data-label="Atmosphere">Atmospheric emission/attenuation; rain</td>
+                <td data-label="Polarization">H/V channels and differences</td>
+              </tr>
+              <tr>
+                <td data-label="Region"><span class="tag">Active Radar</span></td>
+                <td data-label="Signal">Backscatter</td>
+                <td data-label="Products">Winds, waves, surface films/features</td>
+                <td data-label="Atmosphere">Rain/attenuation; ionosphere</td>
+                <td data-label="Polarization">HH/VV/HV/VH; co-pol vs cross-pol</td>
+              </tr>
+              <tr>
+                <td data-label="Region"><span class="tag">Altimetry</span></td>
+                <td data-label="Signal">Time delay + waveform shape</td>
+                <td data-label="Products">SSH, wave height, wind speed proxies</td>
+                <td data-label="Atmosphere">Wet/dry troposphere, ionosphere, sea-state bias</td>
+                <td data-label="Polarization">Not primary</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- EM Interaction with Ocean -->
+    <section id="interaction">
+      <div class="section-title">
+        <h2>5. EM Interaction with the Ocean</h2>
+        <span>How the air–sea interface and seawater determine what a sensor can observe</span>
+      </div>
+
+      <div class="panel">
+        <h3>5.1 Air–Sea Interface Physics</h3>
+        <p>The air–sea interface is where many remote-sensing signals are created and modified. Incoming radiation can be reflected and transmitted; outgoing radiation can be emitted or scattered. </p>
+
+        <!-- Figure 5: Sunglint (external image) -->
+        <figure style="margin: 20px 0;">
+          <img src="https://assets.science.nasa.gov/dynamicimage/assets/science/esd/eo/images/imagerecords/90000/90132/arabiansea_tmo_2017101.jpg?w=720&h=480&fit=clip&crop=faces%2Cfocalpoint" 
+               alt="Satellite image showing sunglint on the Arabian Sea, with bright specular reflection of sunlight from the ocean surface" 
+               style="width:100%; max-width:700px; display:block; margin:0 auto; border-radius:8px;">
+          <figcaption style="text-align:center; color:#94a3b8; font-size:0.9rem; margin-top:8px;">
+            <strong>Figure 5.</strong> Sunglint is specular reflection of sunlight from the sea surface; surface roughness and viewing geometry control its intensity. (NASA Earth Observatory image: "Sunglint on the Arabian Sea.")
+          </figcaption>
+        </figure>
+
+        <figure style="margin: 20px 0:">
+          <img src="https://www.lpi.usra.edu/publications/slidesets/oceans/images/tifs/ocean01.tif" 
+               alt="Diagram illustrating the air-sea interface with incident, reflected, and transmitted radiation at the ocean surface" 
+               style="width:100%; max-width:700px; display:block; margin:0 auto; border-radius:8px;">
+          <figcaption style="text-align:center; color:#94a3b8; font-size:0.9rem; margin-top:8px;">
+            <strong>Figure 5a.</strong> STS-41G, October 1984. Picture #17-41-046, showing sunglint on the Pacific Ocean. (NASA Johnson Space Center.) The air–sea interface controls reflection and transmission of EM radiation. Brighter areas indicate stronger reflection. Darker areas indicate more wave scattering. The eddy size is on the order of 10s of km.
+          </figcaption>
+        </figure>
+
+        <h3>5.2 Visible/NIR: Penetration and Water-Leaving Radiance</h3>
+        <p>In the visible (and some NIR) region, sunlight can penetrate the ocean and interact with constituents in the water column. The sensor receives a mixture of water-leaving radiance, surface reflection, and atmospheric path radiance. </p>
+
+        <!-- Figure 6: MODIS Ocean Color (external image) -->
+        <figure style="margin: 20px 0;">
+          <img src="https://svs.gsfc.nasa.gov/vis/a030000/a030700/a030786/A2016145.L3m_DAY_CHL_chlor_a_9km.nc.png" 
+               alt="Global ocean color product showing surface chlorophyll concentration derived from MODIS satellite data" 
+               style="width:100%; max-width:800px; display:block; margin:0 auto; border-radius:8px;">
+          <figcaption style="text-align:center; color:#94a3b8; font-size:0.9rem; margin-top:8px;">
+            <strong>Figure 6.</strong> Example global ocean color product (surface chlorophyll) derived from MODIS with one-day data. Ocean color uses visible bands but requires careful treatment of atmosphere, clouds, and glint. (NASA Scientific Visualization Studio.) 
+          </figcaption>
+        </figure>
+
+        <h3>5.3 Thermal IR: The "Skin" Temperature Concept</h3>
+        <p>Thermal infrared radiation from the ocean originates from an extremely thin near-surface layer (the "skin") because water absorbs strongly in the IR. IR sensors measure a skin temperature representative of the upper tens of micrometers of the ocean surface.</p>
+
+        <!-- Figure 7: Global SST (external image) -->
+        <figure style="margin: 20px 0;">
+          <img src="https://www.nesdis.noaa.gov/s3/styles/webp/s3/migrated/1927v1_20160913-SVM16.png.webp?itok=34im3hGu" 
+               alt="Skin temperature measured by VIIRS on Suomi NPP satellite"
+               style="width:100%; max-width:800px; display:block; margin:0 auto; border-radius:8px;">
+          <figcaption style="text-align:center; color:#94a3b8; font-size:0.9rem; margin-top:8px;">
+            <strong>Figure 7.</strong> Example skin surface temperature measured by VIIRS on Suomi NPP satellite. Thermal emission in infrared (and microwave) enables temperature retrievals, but IR is strongly limited by clouds. This image shows clear-sky SST on September 13, 2016. (NOAA NESDIS.) 
+          </figcaption>
+        </figure>
+
+        <h3>5.4 Microwave Emission and Radar Backscatter</h3>
+        <p>At microwave wavelengths the ocean is an efficient emitter but also a highly conductive medium, so penetration depths are typically on the order of millimeters. The observed signal is therefore dominated by the sea surface and its dielectric/roughness properties. </p>
+
+        <!-- Figure 8: Conceptual Penetration Comparison SVG -->
+        <figure style="margin: 20px 0;">
+          <svg viewBox="0 0 900 300" style="width:100%; max-width:900px; height:auto; display:block; margin:0 auto;">
+            <!-- Background -->
+            <rect width="900" height="300" fill="rgba(15,26,46,0.6)" rx="12"/>
+            
+            <!-- Panel 1: Visible -->
+            <rect x="30" y="30" width="260" height="220" rx="10" fill="rgba(96,165,250,0.15)" stroke="rgba(96,165,250,0.4)" stroke-width="2"/>
+            <text x="160" y="55" text-anchor="middle" fill="#60a5fa" font-weight="bold" font-size="14">Visible (ocean color)</text>
+            <!-- Water surface -->
+            <line x1="340" y1="100" x2="560" y2="100" stroke="#f87171" stroke-width="2"/>
+            <text x="345" y="95" fill="#94a3b8" font-size="10">surface</text>
+            
+            <!-- Skin layer -->
+            <rect x="340" y="100" width="220" height="8" fill="rgba(248,113,113,0.3)"/>
+            <text x="450" y="130" text-anchor="middle" fill="#94a3b8" font-size="10">skin layer (~μm)</text>
+            
+            <!-- Emission arrows -->
+            <line x1="400" y1="108" x2="400" y2="70" stroke="#f87171" stroke-width="2"/>
+            <polygon points="400,70 395,80 405,80" fill="#f87171"/>
+            <line x1="450" y1="108" x2="450" y2="70" stroke="#f87171" stroke-width="2"/>
+            <polygon points="450,70 445,80 455,80" fill="#f87171"/>
+            <line x1="500" y1="108" x2="500" y2="70" stroke="#f87171" stroke-width="2"/>
+            <polygon points="500,70 495,80 505,80" fill="#f87171"/>
+            
+            <!-- Labels -->
+            <text x="450" y="180" text-anchor="middle" fill="#94a3b8" font-size="10">Emission originates from the skin</text>
+            <text x="450" y="195" text-anchor="middle" fill="#94a3b8" font-size="10">layer (very thin). Clouds block IR.</text>
+            
+            <!-- Panel 3: Microwave/Radar -->
+            <rect x="610" y="30" width="260" height="220" rx="10" fill="rgba(148,163,184,0.15)" stroke="rgba(148,163,184,0.4)" stroke-width="2"/>
+            <text x="740" y="55" text-anchor="middle" fill="#94a3b8" font-weight="bold" font-size="14">Microwave / Radar</text>
+            
+            <!-- Water surface -->
+            <line x1="630" y1="100" x2="850" y2="100" stroke="#94a3b8" stroke-width="2"/>
+            <text x="635" y="95" fill="#94a3b8" font-size="10">surface</text>
+            
+            <!-- Surface roughness -->
+            <path d="M 630 100 Q 650 95 670 100 Q 690 105 710 100 Q 730 95 750 100 Q 770 105 790 100 Q 810 95 830 100 Q 850 105 850 100" 
+                  stroke="#a78bfa" stroke-width="2" fill="none"/>
+            
+            <!-- Radar arrows -->
+            <line x1="700" y1="70" x2="740" y2="98" stroke="#a78bfa" stroke-width="2"/>
+            <polygon points="740,98 730,92 735,102" fill="#a78bfa"/>
+            <line x1="740" y1="98" x2="780" y2="70" stroke="#a78bfa" stroke-width="2"/>
+            <polygon points="780,70 770,76 780,82" fill="#a78bfa"/>
+            
+            <!-- Labels -->
+            <text x="740" y="180" text-anchor="middle" fill="#94a3b8" font-size="10">Sensitive to dielectric + roughness</text>
+            <text x="740" y="195" text-anchor="middle" fill="#94a3b8" font-size="10">in top mm; radar sees wavelength-</text>
+            <text x="740" y="210" text-anchor="middle" fill="#94a3b8" font-size="10">scale roughness.</text>
+            
+            <!-- Caption -->
+            <text x="450" y="270" text-anchor="middle" fill="#94a3b8" font-size="10" font-style="italic">Conceptual comparison: not to scale. Different wavelengths sample different physical depths and processes.</text>
+          </svg>
+          <figcaption style="text-align:center; color:#94a3b8; font-size:0.9rem; margin-top:8px;">
+            <strong>Figure 8.</strong> Conceptual comparison of where the ocean "signal" comes from at different wavelengths: volumetric (VIS) vs skin (IR) vs surface dielectric/roughness (microwave/radar). 
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- Polarization Section -->
+    <section id="polarization">
+      <div class="section-title">
+        <h2>6. Polarization Concepts</h2>
+        <span>How satellites exploit polarization in passive and active measurements</span>
+      </div>
+
+      <div class="panel">
+        <h3>6.1 What Polarization Is</h3>
+        <p>Polarization describes the time evolution of the electric field vector perpendicular to the direction of propagation. Different polarization states include: </p>
+        
+        <!-- Figure 9: Polarization States SVG -->
+        <figure style="margin: 20px 0;">
+          <svg viewBox="0 0 700 200" style="width:100%; max-width:700px; height:auto; display:block; margin:0 auto;">
+            <!-- Background -->
+            <rect width="700" height="200" fill="rgba(15,26,46,0.6)" rx="12"/>
+            
+            <!-- Title -->
+            <text x="350" y="25" text-anchor="middle" fill="#e5e7eb" font-weight="bold" font-size="13">Polarization states and the polarization ellipse</text>
+            
+            <!-- Panel 1: Linear -->
+            <rect x="30" y="45" width="200" height="120" rx="8" fill="rgba(96,165,250,0.15)" stroke="rgba(96,165,250,0.4)" stroke-width="1"/>
+            <text x="130" y="65" text-anchor="middle" fill="#60a5fa" font-weight="bold" font-size="12">Linear</text>
+            
+            <!-- Linear polarization line -->
+            <line x1="80" y1="110" x2="180" y2="110" stroke="#60a5fa" stroke-width="2"/>
+            <polygon points="180,110 170,105 170,115" fill="#60a5fa"/>
+            <polygon points="80,110 90,105 90,115" fill="#60a5fa"/>
+            <text x="130" y="145" text-anchor="middle" fill="#94a3b8" font-size="10">fixed line</text>
+            
+            <!-- Panel 2: Circular -->
+            <rect x="250" y="45" width="200" height="120" rx="8" fill="rgba(52,211,153,0.15)" stroke="rgba(52,211,153,0.4)" stroke-width="1"/>
+            <text x="350" y="65" text-anchor="middle" fill="#34d399" font-weight="bold" font-size="12">Circular</text>
+            
+            <!-- Circular polarization -->
+            <circle cx="350" cy="110" r="25" stroke="#34d399" stroke-width="2" fill="none"/>
+            <line x1="350" y1="110" x2="370" y2="95" stroke="#34d399" stroke-width="2"/>
+            <polygon points="370,95 362,100 368,106" fill="#34d399"/>
+            <text x="350" y="150" text-anchor="middle" fill="#94a3b8" font-size="10">equal amp, ±90° phase</text>
+            
+            <!-- Panel 3: Elliptical -->
+            <rect x="470" y="45" width="200" height="120" rx="8" fill="rgba(167,139,250,0.15)" stroke="rgba(167,139,250,0.4)" stroke-width="1"/>
+            <text x="570" y="65" text-anchor="middle" fill="#a78bfa" font-weight="bold" font-size="12">Elliptical</text>
+            
+            <!-- Elliptical polarization -->
+            <ellipse cx="570" cy="110" rx="35" ry="20" stroke="#a78bfa" stroke-width="2" fill="none" transform="rotate(-20,570,110)"/>
+            <text x="570" y="150" text-anchor="middle" fill="#94a3b8" font-size="10">general case</text>
+            
+            <!-- Bottom label -->
+            <text x="350" y="185" text-anchor="middle" fill="#94a3b8" font-size="10" font-style="italic">Electric-field tip trajectory in plane ⟂ to propagation</text>
+          </svg>
+          <figcaption style="text-align:center; color:#94a3b8; font-size:0.9rem; margin-top:8px;">
+            <strong>Figure 9.</strong> Polarization as the trajectory of the electric-field vector tip. Remote-sensing instruments often measure polarization because it is sensitive to scattering, reflection, and dielectric properties. 
+          </figcaption>
+        </figure>
+
+        <h3>6.2 Polarization in Ocean Remote Sensing</h3>
+        <div class="table-wrap">
+          <table class="course">
+            <thead>
+              <tr>
+                <th>Sensor Type</th>
+                <th>Polarization Usage</th>
+                <th>Application</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-label="Sensor">Passive Microwave Radiometers</td>
+                <td data-label="Usage">H/V polarization channels (T<sub>B,H</sub>, T<sub>B,V</sub>)</td>
+                <td data-label="Application">Roughness sensitivity; separate surface and atmosphere </td>
+              </tr>
+              <tr>
+                <td data-label="Sensor">Ocean Color (VIS)</td>
+                <td data-label="Usage">Polarimetric capabilities</td>
+                <td data-label="Application">Improved aerosol characterization </td>
+              </tr>
+              <tr>
+                <td data-label="Sensor">Active Radar (SAR/Scatterometer)</td>
+                <td data-label="Usage">HH/VV/HV/VH channels</td>
+                <td data-label="Application">Wind/roughness retrieval; breaking waves detection </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Atmosphere Section -->
+    <section id="atmosphere">
+      <div class="section-title">
+        <h2>7. Atmospheric Effects</h2>
+        <span>The atmosphere modifies and adds radiation between ocean and sensor</span>
+      </div>
+
+      <div class="panel">
+        <h3>7.1 Radiative Transfer Concept</h3>
+        <p>Signal at sensor ≈ (surface contribution) × (atmospheric transmission) + (path radiance) + (atmospheric emission) </p>
+        
+        <div class="callout">
+          <strong>Key insight:</strong> The atmosphere is not just "noise." It is an active component of the measurement equation. 
+        </div>
+
+        <!-- Figure 10: Atmospheric Transmittance (external image) -->
+        <figure style="margin: 20px 0;">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/8/83/Atmospheric_electromagnetic_transmittance_or_opacity.jpg" 
+               alt="Atmospheric opacity/transmittance chart across wavelength showing visible window and complex absorption in the infrared" 
+               style="width:100%; max-width:800px; display:block; margin:0 auto; border-radius:8px;">
+          <figcaption style="text-align:center; color:#94a3b8; font-size:0.9rem; margin-top:8px;">
+            <strong>Figure 10.</strong> Atmospheric opacity/transmittance across wavelength (public domain; NASA via Wikimedia Commons). Notice the visible window and complex absorption in the infrared. 
+          </figcaption>
+        </figure>
+
+        <h3>7.2 Scattering Processes</h3>
+        <div class="grid">
+          <div class="card">
+            <h3><span class="tag">Rayleigh</span> Molecular Scattering</h3>
+            <p>Strong wavelength dependence (~λ⁻⁴), very important in the blue. Major contributor to ocean color atmospheric path radiance. </p>
+          </div>
+          <div class="card">
+            <h3><span class="tag">Aerosol</span> Mie Scattering</h3>
+            <p>Weaker wavelength dependence; highly variable. Often the dominant uncertainty in ocean color atmospheric correction. </p>
+          </div>
+          <div class="card">
+            <h3><span class="tag">Clouds</span> Contamination</h3>
+            <p>Dominant contamination in VIS and TIR. Cloud masking is a first-order step in many products. </p>
+          </div>
+        </div>
+
+        <h3>7.3 Key Absorbing Gases</h3>
+        <div class="list">
+          <div class="item">
+            <div class="top"><strong>Water Vapor (H₂O)</strong><time>IR/MW</time></div>
+            <p>Strong absorption features across IR and microwave; key for IR SST correction and microwave attenuation/emission. </p>
+          </div>
+          <div class="item">
+            <div class="top"><strong>Ozone (O₃)</strong><time>UV/VIS</time></div>
+            <p>Important in UV and parts of visible spectrum. </p>
+          </div>
+          <div class="item">
+            <div class="top"><strong>Oxygen (O₂)</strong><time>MW</time></div>
+            <p>Strong microwave absorption bands useful for atmospheric profiling. </p>
+          </div>
+        </div>
+
+        <!-- Figure 11: Internal Waves (external image) -->
+        <figure style="margin: 20px 0;">
+          <img src="https://eol.jsc.nasa.gov/DatabaseImages/ISD/highres/STS098/STS098-712-29_3.JPG" 
+               alt="Internal Waves in the Strait of Gibraltar showing surface manifestations of ocean dynamics visible from space" 
+               style="width:100%; max-width:700px; display:block; margin:0 auto; border-radius:8px;">
+          <figcaption style="text-align:center; color:#94a3b8; font-size:0.9rem; margin-top:8px;">
+            <strong>Figure 11.</strong> Surface manifestations of ocean dynamics (like internal wave packets) can become visible because they modulate surface roughness and surfactants, which changes reflection and scattering. This photography was taken by STS-98 crew in February 2001 over the Strait of Gibraltar. (NASA Johnson Space Center.) 
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- Equation Sheet -->
+    <section id="equations">
+      <div class="section-title">
+        <h2>Equation Sheet (HW-aligned)</h2>
+        <span>Core equations for calculations — HW 1 due Jan 27 [1]</span>
+      </div>
+      
+      <div class="grid">
+        <div class="card">
+          <h3>Wave Relationships</h3>
+          <p><strong>Speed of light:</strong> c = λν</p>
+          <p><strong>Angular frequency:</strong> ω = 2πν</p>
+          <p><strong>Wavenumber:</strong> k = 2π/λ</p>
+        </div>
+        <div class="card">
+          <h3>Energy & Optics</h3>
+          <p><strong>Photon energy:</strong> E = hν = hc/λ</p>
+          <p><strong>Period:</strong> T = 1/ν</p>
+          <p><strong>Snell's law:</strong> n₁ sin θ₁ = n₂ sin θ₂</p>
+        </div>
+        <div class="card">
+          <h3>Constants</h3>
+          <p><strong>c</strong> ≈ 2.998 × 10⁸ m/s</p>
+          <p><strong>h</strong> ≈ 6.626 × 10⁻³⁴ J·s</p>
+          <p><strong>1 eV</strong> = 1.602 × 10⁻¹⁹ J</p>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top: 14px;">
+        <h3>Useful Unit Conversions</h3>
+        <p>• 1 nm = 10⁻⁹ m &nbsp;&nbsp; • 1 μm = 10⁻⁶ m &nbsp;&nbsp; • 1 GHz = 10⁹ Hz </p>
+      </div>
+    </section>
+
+    <!-- Worked Examples -->
+    <section id="examples">
+      <div class="section-title">
+        <h2>Worked Examples</h2>
+        <span>Calculation toolkit aligned to HW 1</span>
+      </div>
+      
+      <div class="list">
+        <div class="item">
+          <div class="top">
+            <strong>Example 1: Wavelength of a 6.8 GHz Channel</strong>
+            <time>Microwave</time>
+          </div>
+          <p><strong>Problem:</strong> A microwave radiometer has a channel at 6.8 GHz. What is its wavelength?</p>
+          <p><strong>Solution:</strong> λ = c/ν</p>
+          <p>• Convert: 6.8 GHz = 6.8 × 10⁹ Hz</p>
+          <p>• Use c ≈ 3.00 × 10⁸ m/s</p>
+          <p>• Compute: λ ≈ (3.00 × 10⁸) / (6.8 × 10⁹) ≈ 4.41 × 10⁻² m = <strong>4.41 cm</strong></p>
+          <p><em>Interpretation: A wavelength of a few centimeters is in the microwave regime; it is sensitive to surface emission and roughness. </em></p>
+        </div>
+        
+        <div class="item">
+          <div class="top">
+            <strong>Example 2: Photon Energy at 550 nm vs 11 μm</strong>
+            <time>VIS vs TIR</time>
+          </div>
+          <p><strong>Problem:</strong> Compare photon energies for green light (550 nm) and thermal IR (11 μm).</p>
+          <p><strong>Solution:</strong> E = hc/λ</p>
+          <p>• 550 nm = 5.50×10⁻⁷ m → E ≈ 3.61×10⁻¹⁹ J ≈ <strong>2.25 eV</strong></p>
+          <p>• 11 μm = 1.10×10⁻⁵ m → E ≈ 1.81×10⁻²⁰ J ≈ <strong>0.113 eV</strong></p>
+          <p><em>Interpretation: Visible photons carry much higher energy than thermal IR photons. Visible remote sensing is usually reflected solar; thermal IR is emitted radiation. </em></p>
+        </div>
+        
+        <div class="item">
+          <div class="top">
+            <strong>Example 3: Viewing Angle and Path Length</strong>
+            <time>Geometry</time>
+          </div>
+          <p><strong>Problem:</strong> If viewing zenith angle increases from 0° (nadir) to 60°, how does the atmospheric path length change?</p>
+          <p><strong>Solution:</strong> m ≈ 1/cos(θ)</p>
+          <p>• At θ = 0°: m = 1/cos(0) = 1</p>
+          <p>• At θ = 60°: m = 1/cos(60°) = 1/0.5 = <strong>2</strong></p>
+          <p><em>Interpretation: At 60° zenith angle, path length is doubled, increasing atmospheric correction challenges. </em></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Problem Set -->
+    <section id="problems">
+      <div class="section-title">
+        <h2>Problem Set (Feeds HW 1)</h2>
+        <span>Show your work and include unit conversions explicitly </span>
+      </div>
+      
+      <div class="panel">
+        <h3>Conversion Problems</h3>
+        <div class="list">
+          <div class="item">
+            <div class="top"><strong>Problem 1</strong><time>λ → ν</time></div>
+            <p>Convert the following wavelengths to frequency: (a) 500 nm, (b) 865 nm, (c) 11 μm. </p>
+          </div>
+          <div class="item">
+            <div class="top"><strong>Problem 2</strong><time>ν → λ</time></div>
+            <p>Convert the following frequencies to wavelength: (a) 1.413 GHz (L-band), (b) 5.3 GHz (C-band), (c) 13.6 GHz (Ku-band). </p>
+          </div>
+          <div class="item">
+            <div class="top"><strong>Problem 3</strong><time>Units</time></div>
+            <p>A sensor has a band centered at 0.665 μm. Express this center wavelength in nm and in meters. </p>
+          </div>
+          <div class="item">
+            <div class="top"><strong>Problem 4</strong><time>Photon Energy</time></div>
+            <p>Compute photon energies (in J and eV) for (a) 412 nm (blue), (b) 555 nm (green), (c) 1.6 μm (SWIR), (d) 10.8 μm (TIR). </p>
+          </div>
+          <div class="item">
+            <div class="top"><strong>Problem 5</strong><time>Geometry</time></div>
+            <p>A satellite observes at zenith angle θ = 45°. Using the air-mass approximation m≈1/cos θ, estimate the factor increase in path length relative to nadir. </p>
+          </div>
+          <div class="item">
+            <div class="top"><strong>Problem 6</strong><time>Radar Range</time></div>
+            <p>A radar pulse travels from a satellite to the sea surface and back. If the round-trip time is 3.4 ms, what is the range to the surface (ignore atmosphere)? </p>
+          </div>
+        </div>
+
+        <h3 style="margin-top: 18px;">Conceptual Problems</h3>
+        <div class="list">
+          <div class="item">
+            <div class="top"><strong>Problem 7</strong><time>Conceptual</time></div>
+            <p>You have to retrieve SST. Would you choose visible, thermal IR, or microwave bands? Give two reasons for your choice and one limitation. </p>
+          </div>
+          <div class="item">
+            <div class="top"><strong>Problem 8</strong><time>Conceptual</time></div>
+            <p>You have to retrieve chlorophyll in clear open ocean water. Why do you need visible bands, and why do you also need NIR/SWIR bands? </p>
+          </div>
+          <div class="item">
+            <div class="top"><strong>Problem 9</strong><time>Polarization</time></div>
+            <p>A scatterometer reports σ₀ in VV and HH. What additional information might polarization provide about the sea surface? </p>
+          </div>
+          <div class="item">
+            <div class="top"><strong>Problem 10</strong><time>Band Choice</time></div>
+            <p>"Band choice logic": Pick one ocean variable (SST, chlorophyll, SSS, winds, SSH). Identify: (i) the spectral region used, (ii) the dominant signal source, (iii) the dominant atmospheric issue, and (iv) one reason polarization does or does not matter. </p>
+          </div>
+        </div>
+
+        <div class="callout">
+          <strong>Optional self-check:</strong> 6.8 GHz corresponds to ~4.41 cm (see Worked Example 1). 550 nm photon energy is ~2.25 eV (see Worked Example 2). 
+        </div>
+      </div>
+    </section>
+
+    <!-- Graduate Extension -->
+    <section id="graduate">
+      <div class="section-title">
+        <h2>Graduate Extension: Atmospheric Correction & Error Budgets</h2>
+        <span>Move from "identify effects" to "evaluate impacts on retrieval accuracy" </span>
+      </div>
+
+      <div class="panel">
+        <h3>10.1 What an Atmospheric Correction Is</h3>
+        <p>An "atmospheric correction" is not just subtracting something off the measurement. In general, it is an inversion problem in which we attempt to separate coupled contributions: </p>
+        <div class="list">
+          <div class="item">
+            <p>• Surface term(s) (what we want)</p>
+            <p>• Atmospheric term(s) (scattering/absorption/emission)</p>
+            <p>• Instrument/geometry effects</p>
+          </div>
+        </div>
+        
+        <div class="callout">
+          <strong>Graduate-level mindset:</strong> Many corrections require assuming an aerosol model, a water vapor profile, or a cloud screening rule. Those assumptions can generate bias. 
+        </div>
+
+        <h3 style="margin-top: 18px;">10.2 Error Sources Framework</h3>
+        <div class="grid">
+          <div class="card">
+            <h3><span class="tag">Random</span> Noise</h3>
+            <p>Tends to average down with repeated sampling. </p>
+          </div>
+          <div class="card">
+            <h3><span class="tag">Bias</span> Systematic Error</h3>
+            <p>Does not average down; can generate spurious trends and spatial artifacts. </p>
+          </div>
+          <div class="card">
+            <h3><span class="tag">Representativeness</span> Error</h3>
+            <p>Mismatch between what satellite samples (skin, footprint, time) and what in situ samples. </p>
+          </div>
+        </div>
+
+        <h3 style="margin-top: 18px;">Uncertainty Propagation</h3>
+        <p>For a retrieved variable y = f(x₁, x₂, …), a first-order uncertainty propagation is: </p>
+        <p style="font-family: var(--mono); background: rgba(148,163,184,.08); padding: 10px; border-radius: 8px; margin: 10px 0;">
+          σ²<sub>y</sub> ≈ Σ (∂f/∂x<sub>i</sub>)² σ²<sub>x<sub>i</sub></sub> &nbsp;&nbsp; (+ covariance terms when needed)
+        </p>
+
+        <h3 style="margin-top: 18px;">Graduate Problems</h3>
+        <div class="list">
+          <div class="item">
+            <div class="top"><strong>Problem G1</strong><time>Atmospheric Correction Critique</time></div>
+            <p>Choose an ocean color or SST algorithm description (paper or ATBD). Identify one key atmospheric assumption. Explain how violation could produce bias rather than noise. </p>
+          </div>
+          <div class="item">
+            <div class="top"><strong>Problem G2</strong><time>Uncertainty Propagation</time></div>
+            <p>Consider a simplified SST retrieval T = a + bT<sub>B,11</sub> + c(T<sub>B,11</sub> − T<sub>B,12</sub>). Derive σ(T) using first-order propagation assuming independent uncertainties. Identify which term dominates when σ(T<sub>B,11</sub>) ≈ σ(T<sub>B,12</sub>). </p>
+          </div>
+          <div class="item">
+            <div class="top"><strong>Problem G3</strong><time>Error Budget Prioritization</time></div>
+            <p>For SSS or SSH, list the top three correction terms and argue which one dominates regional biases. Propose an empirical test using matchups or cross-mission comparisons. </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Key Takeaways -->
+    <section id="takeaways">
+      <div class="section-title">
+        <h2>Key Takeaways</h2>
+        <span>Core concepts to remember</span>
+      </div>
+
+      <div class="grid">
+        <div class="card">
+          <h3>Measurement Chain</h3>
+          <p>Satellites measure radiation; ocean variables are inferred through models (surface + atmosphere + instrument + retrieval). </p>
+        </div>
+        <div class="card">
+          <h3>Band Choice = Physics Choice</h3>
+          <p>Different bands probe different processes and depths (water column vs skin vs surface dielectric/roughness). </p>
+        </div>
+        <div class="card">
+          <h3>Polarization Adds Information</h3>
+          <p>Helps separate competing effects, especially in microwave/radar measurements. </p>
+        </div>
+        <div class="card">
+          <h3>Atmosphere is Active</h3>
+          <p>Scattering/absorption/emission must be modeled and corrected—it's part of the measurement. </p>
+        </div>
+        <div class="card">
+          <h3>Core Equations</h3>
+          <p>c=λν and E=hc/λ are used constantly for band interpretation and calculations. </p>
+        </div>
+        <div class="card">
+          <h3>Graduate Focus</h3>
+          <p>Atmospheric correction assumptions often dominate accuracy; evaluate error budgets and bias explicitly. </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Key Terms -->
+    <section id="terms">
+      <div class="section-title">
+        <h2>Key Terms</h2>
+        <span>Vocabulary for this chapter</span>
+      </div>
+
+      <div class="panel">
+        <div class="grid">
+          <div class="card">
+            <p><strong>wavelength (λ)</strong> • <strong>frequency (ν)</strong> • <strong>radiance</strong> • <strong>irradiance</strong> • <strong>reflectance</strong> • <strong>remote-sensing reflectance</strong> • <strong>emissivity</strong> • <strong>brightness temperature</strong> </p>
+          </div>
+          <div class="card">
+            <p><strong>backscatter (σ₀)</strong> • <strong>polarization</strong> • <strong>Stokes parameters</strong> • <strong>atmospheric window</strong> • <strong>scattering</strong> • <strong>absorption</strong> • <strong>transmittance</strong> • <strong>radiative transfer</strong> </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+  <div class="list">
+    <div class="item">
+      <div class="top">
+        <strong>Further Reading</strong>
+      </div>
+      <p><a href="https://pace.oceansciences.org/docs/TourEMSprectrumNASA-compressed.pdf" class="permalink" aria-label="Permalink to Further Reading">Tour of the Electromagnetic Spectrum</a> • NASA PACE Mission</p>
+    </div>
+  </div>
+
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="container">
+    <span>OCNG 689/489 — Satellite Oceanography • Spring 2026</span>
+    <span class="foot-badge">Ch. 2: EM Radiation</span>
+  </footer>
+
+</body>
+</html>
